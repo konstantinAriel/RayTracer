@@ -2,7 +2,7 @@
 from myPackages.readExelfile.ReadXls import ReadXls
 
 
-path = "/home/kosta/RayTracer/files/settingsfiles/testSheets4py.xls"
+path = "/home/kosta/RayTracer/RayTracer/files/settingsfiles/testSheets4py.xls"
 
 xlsFile = ReadXls(path)
 #print(xlsFile.path)
@@ -16,6 +16,7 @@ raysIn = xlsFile.getSysPAram(paramFile)
 count = 0
 
 for i in sysParam.Rin:
+    print(sysParam.Rin)
     if i>=0:
         print("i = ", i)
         print("sysParam  = ", sysParam.Rout[count])
