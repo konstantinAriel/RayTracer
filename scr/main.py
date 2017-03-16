@@ -1,4 +1,4 @@
-
+import  numpy as np
 from myPackages.readExelfile.ReadXls import ReadXls
 
 
@@ -14,15 +14,15 @@ sysParam = xlsFile.getSysPAram(paramFile)
 raysIn = xlsFile.getSysPAram(paramFile)
 
 count = 0
-
+mirrorList = []
+print(mirrorList)
 for i in sysParam.Rin:
-    print(sysParam.Rin)
-    if i>=0:
-        print("i = ", i)
-        print("sysParam  = ", sysParam.Rout[count])
-
-        for j in range (i,sysParam.Rout[count]):
-            mirror = xlsFile.getMirrorParam(paramFile, j+3)
-            print("j = ", j)
-            print("mirror = ", mirror)
+    print('count = ', count)
+    print('i = ', i)
+    if  np.isnan(i):
+        break
+    else:
+        for j in range(int(sysParam.Rin[count]), int(sysParam.Rout[count])+1):
+            print('j= ', j)
+        mirrorList.insert(j, )
         count = count+1

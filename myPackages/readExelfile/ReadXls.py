@@ -15,15 +15,15 @@ class ReadXls:
         return paramFile
 
     def getLineParam(self, paramDataFile):
-        lineParam = paramDataFile.parse(sheetname=0)
+        lineParam = paramDataFile.parse(sheetname='LineParam')
         return lineParam
 
     def getSysPAram(self, paramDataFile):
-        sysParam = paramDataFile.parse(sheetname=1)
+        sysParam = paramDataFile.parse(sheetname='SysParam')
         return sysParam
 
     def getRaysIn(self, paramDataFile):
-        raysIn = paramDataFile.parse(sheetname=2)
+        raysIn = paramDataFile.parse(sheetname='RaysIn')
         return raysIn
 
     def getMirrorParam(self,paramDatafile, sheetname):
