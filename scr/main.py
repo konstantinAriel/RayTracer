@@ -13,16 +13,24 @@ sysParam = xlsFile.getSysPAram(paramFile)
 #print((sysParam.Rin))
 raysIn = xlsFile.getSysPAram(paramFile)
 
-count = 0
-mirrorList = []
-print(mirrorList)
-for i in sysParam.Rin:
-    print('count = ', count)
-    print('i = ', i)
-    if  np.isnan(i):
-        break
-    else:
-        for j in range(int(sysParam.Rin[count]), int(sysParam.Rout[count])+1):
-            print('j= ', j)
-        mirrorList.insert(j, )
-        count = count+1
+
+def getMirrorList():
+    count = 0
+    mirrorDict = {}
+    print(mirrorDict)
+    for i in sysParam.Rin:
+            if np.isnan(i):
+              break
+            else:
+                mirrorList = []
+                position = 0
+                for j in range(int(sysParam.Rin[count]), int(sysParam.Rout[count]) + 1):
+                    mirrorList.insert(position, 'mirror' + str(j))
+                    position = position + 1
+                mirrorDict['mirrorDict'+str(count+1)] = mirrorList
+                count = count + 1
+    return mirrorDict
+
+mD = getMirrorList()
+print('mdict = ', mD)
+
