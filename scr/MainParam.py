@@ -18,7 +18,6 @@ class Parametrs:
         self.paramTable = paramDataFile.parse(sheetname=paramName)
 
     def getMirrorList(self, sysParam):
-        print("paramTable", sysParam.Rin)
         count = 0
         mirrorDict = {}
         for i in sysParam.Rin:
@@ -28,7 +27,7 @@ class Parametrs:
                 mirrorList = []
                 position = 0
                 for j in range(int(sysParam.Rin[count]), int(sysParam.Rout[count]) + 1):
-                    mirrorList.insert(position, 'mirror' + str(j))
+                    mirrorList.insert(position, 'Mirror' + str(j))
                     position += 1
                 mirrorDict['mirrorDict'+str(count+1)] = mirrorList
                 count += 1
