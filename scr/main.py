@@ -1,11 +1,13 @@
 import  numpy as np
+import pandas as pd
 from myPackages.readExelfile.ReadXls import ReadXls
 from scr.Rays import Rays
 from scr.MainParam import Parametrs
 
 #path = "/home/kosta/RayTracer/RayTracer/files/settingsfiles/testSheets4py.xls"
-path = "/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/testSheets4py.xls"
-
+mainPath = "/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/"
+sysParamFname = 'sysParam_1.xls'
+path1 = "/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/KinSheets.xls"
 tLine = Parametrs("LineParam")
 sys = Parametrs("SysParam")
 
@@ -24,6 +26,10 @@ for mirrorDictSub in mirrorDictMain.keys():
         RaysNameOut = 'Rays' + str(countMirror+1)
         Rin = Parametrs(RaysNameIn)
         RaysHeads = Rin.paramTable.columns
+        RayCount = 0
+        numberOfRays = len(Rin.paramTable.KxIn)
+        KinNormalArray = np.zeros( (numberOfRays,3) )
+        print(KinNormalArray)
         for RinIndex in Rin.paramTable.index:
             KinArray = np.array([Rin.paramTable.KxIn[RinIndex],
                                  Rin.paramTable.KyIn[RinIndex],
@@ -34,12 +40,15 @@ for mirrorDictSub in mirrorDictMain.keys():
                                  Rin.paramTable.Zin[RinIndex]])
             Kin = Rays(KinArray)
             KinNormal = Kin.calcRInNormal(KinArray)
-            
-            print(KinArray)
-            print(KinNormal)
-
-            print(XinArray)
-            
-
+            KinNormalArray[RinIndex,:] = KinNormal
+            print(KinNormalArray)
+            # print(KinArray)
+            # print(KinNormal)
+            # print(XinArray)
+            RayCount += 1
             print('=========================')
+        kInDF = pd.DataFrame(KinNormalArray, columns=['KxIN', 'KyIn', 'KzIn'])
+        kInDF.to_excel(path1, sheet_name='Sheet2')
+        print('KinDF = ')
+        print(kInDF)
         countMirror += 1
