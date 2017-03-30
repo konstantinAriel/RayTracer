@@ -2,16 +2,16 @@ import pandas as pd
 import numpy as np
 
 class Parametrs:
-    def __init__(self, paramName):
-        self.path = "/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/testSheets4py.xls"
+    def __init__(self, paramName, path):
+        self.path = path
         self.paramName = paramName
         self.paramFile = pd.ExcelFile(self.path)
         self.sheetsNames = self.paramFile.sheet_names
         self.mNumber = len(self.sheetsNames) - 3
-        self.paramTable = self.getParam()
+        self.paramTable = self.getParam(self.paramFile, self.paramName)
 
-    def getParam(self):
-        self.setParam(self.paramFile, self.paramName)
+    def getParam(self,paramDataFile, paramName):
+        self.paramTable = paramDataFile.parse(sheetname=paramName)
         return self.paramTable
 
     def setParam(self, paramDataFile, paramName):
