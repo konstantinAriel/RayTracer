@@ -8,11 +8,17 @@ from scr.MainParam import Parametrs
 mainPath = "/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/"
 sysParamFname = 'sysParam_1.xls'
 RaysInFname = 'RaysIn.xls'
-RaysNormalisedFNname = 'RaysNormalised_' + sysParamFname
+RaysNormalisedFNname = mainPath + 'RaysNormalised_' + sysParamFname
 tLine = Parametrs("LineParam", mainPath+sysParamFname)
 sys = Parametrs("SysParam", mainPath+sysParamFname)
-Rin = Parametrs("Rin", mainPath+RaysInFname)
 
+#=============  Normilise Rin for Mirror  ===========================
+Rin = Parametrs("Rin", mainPath+RaysInFname)
+#print(Rin.paramTable)
+
+rInNormalized = Rays()
+
+RaysInDF = rInNormalized.saveExecelRin(Rin.paramTable,RaysNormalisedFNname)
 
 def printFromExel():
     print('==============================')
@@ -29,39 +35,42 @@ def printFromExel():
 mirrorDictMain = sys.getMirrorList(sys.paramTable)
 print(mirrorDictMain)
 for mirrorDictSub in mirrorDictMain.keys():
-     print(mirrorDictSub)
-     countMirror = 0
-     for mirrorList in mirrorDictMain.get(mirrorDictSub):
-        Mirror = sys.getParam(sys.paramFile, mirrorList)
-        print("Current Mirror = ", mirrorList)
-        print(Mirror)
-            #         RaysNameIn = 'Rays' + str(countMirror)
-            #         RaysNameOut = 'Rays' + str(countMirror+1)
-            #         Rin = Parametrs(RaysNameIn)
-            #         RaysHeads = Rin.paramTable.columns
-            #         RayCount = 0
-            #         numberOfRays = len(Rin.paramTable.KxIn)
-            #         KinNormalArray = np.zeros( (numberOfRays,3) )
-            #         print(KinNormalArray)
-            #         for RinIndex in Rin.paramTable.index:
-            #             KinArray = np.array([Rin.paramTable.KxIn[RinIndex],
-            #                                  Rin.paramTable.KyIn[RinIndex],
-            #                                  Rin.paramTable.KzIn[RinIndex]])
-            #
-            #             XinArray = np.array([Rin.paramTable.Xin[RinIndex],
-            #                                  Rin.paramTable.Yin[RinIndex],
-            #                                  Rin.paramTable.Zin[RinIndex]])
-            #             Kin = Rays(KinArray)
-            #             KinNormal = Kin.calcRInNormal(KinArray)
-            #             KinNormalArray[RinIndex,:] = KinNormal
-            #             print(KinNormalArray)
-            #             # print(KinArray)
-            #             # print(KinNormal)
-            #             # print(XinArray)
-            #             RayCount += 1
-            #             print('=========================')
-            #         kInDF = pd.DataFrame(KinNormalArray, columns=['KxIN', 'KyIn', 'KzIn'])
-            #         kInDF.to_excel(path1, sheet_name='Sheet2')
-            #         print('KinDF = ')
-            #         print(kInDF)
-            #         countMirror += 1
+    countMirror = int(sys.paramTable.Rin[0])
+    #print(mirrorDictSub)
+    #print(countMirror)
+    for mirrorList in mirrorDictMain.get(mirrorDictSub):
+        #print("Current Mirror = ", mirrorList)
+
+        Mirror = sys.getParam(sys.paramFile, mirrorList)  ## mirror List - The name of SHeets in Exel file
+        a11 = 1/(4*Mirror.Focus[0])
+        a22 = 1/(4*Mirror.Focus[1])
+        a3 = 1
+
+        ################################################################
+        #print('=============',RaysInDF)
+
+        for RinIndex in Rin.paramTable.index:
+            k1 = RaysInDF.Kxin[RinIndex]
+            k2 = RaysInDF.Kyin[RinIndex]
+            k3 = RaysInDF.Kzin[RinIndex]
+            print(RinIndex)
+            print('k1 = ', k1)
+            print('k2 = ', k2)
+            print('k3 = ', k3)
+
+
+            RaysNameIn = 'inRay_' + (str(countMirror-1)) + '_' + str(countMirror)
+            RaysNameOut = 'refRay_' + str(countMirror) + '_' + str(countMirror+1)
+            RaysNormal2Surf = 'normalRay_' + str(countMirror) + '_' + str(countMirror)
+
+            A = a11*(k1**2) + a22*(k2**2)
+            B = 2*(
+                (a11*k1*(X1-dx1)) + (a22*k2*(X2-dx2))
+                ) - (a3*k3)
+            C = (a11*((X1-dx1)**2)) + (a22*((X2 -dx2)**2)) - (a3*(X3-dx3))
+
+
+    print("Count = ",countMirror)
+    countMirror += 1
+
+
