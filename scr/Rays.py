@@ -14,7 +14,7 @@ class Rays:
     #def findCrossPoint(self, Rin):
 
 
-    def saveExecelRin(self, RinParamTable, FileName):
+    def saveExecelRin(self, RinParamTable, FileName, RaysNameIn):
         RaysHeads = RinParamTable.columns
         RayCount = 0
         numberOfRays = len(RinParamTable.KxIn)
@@ -58,8 +58,20 @@ class Rays:
                               'Ezin': EinArray[:, 2],
                               'Ain': EinArray[:, 3]
                               })
-        RaysInDF.to_excel(FileName, sheet_name='Sheet2')
+        RaysInDF.to_excel(FileName, sheet_name=RaysNameIn)
         # print('KinDF = ')
         # print(RaysInDF)
         return  RaysInDF
+
+
+    def calcReflectedRays(self, Mirror,  RaysInDF):
+        for RinIndex in RaysInDF.index:  # Loop for all Rays
+
+            k1 = RaysInDF.Kxin[RinIndex]
+            k2 = RaysInDF.Kyin[RinIndex]
+            k3 = RaysInDF.Kzin[RinIndex]
+            print(RinIndex)
+            print('k1 = ', k1)
+            print('k2 = ', k2)
+            print('k3 = ', k3)
 
