@@ -37,12 +37,12 @@ class Rays:
                                               ])
             KinNormal = KinArray/(np.sqrt(np.dot(KinArray, KinArray.T)))
             KinNormalArray[RinIndex, :] = KinNormal
-            print('KinNormalArray : ',KinNormalArray)
-            print('KinArray',KinArray)
-            print('KinNormal',KinNormal)
             RayCount += 1
-            print('=========================')
-            print('XinArray=', XinArray)
+            # print('KinNormalArray : ',KinNormalArray)
+            # print('KinArray',KinArray)
+            # print('KinNormal',KinNormal)
+            # print('=========================')
+            # print('XinArray=', XinArray)
         raysDF = pd.DataFrame({'Xin': XinArray[:, 0],
                                'Yin': XinArray[:, 1],
                                'Zin': XinArray[:, 2],
@@ -54,12 +54,12 @@ class Rays:
                                'Ezin': EinArray[:, 2],
                                'Ain': EinArray[:, 3]
                               })
-        print('*************')
-        print('KinDF = ')
-        print('raysDF', raysDF)
+        # print('*************')
+        # print('KinDF = ')
+        # print('raysDF', raysDF)
         return  raysDF
 
-    def saveExecelRin(self,FileName, raysDF,RaysSheetName):
+    def saveRays2Execel(self, FileName, raysDF, RaysSheetName):
         raysDF.to_excel(FileName, sheet_name=RaysSheetName)
 
     def calcReflectedRays(self, Mirror,  RaysInDF, RaysName):

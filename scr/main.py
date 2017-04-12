@@ -13,14 +13,15 @@ raysNormalisedFname = mainPath + 'raysNormalised_' + raysInFname+'_' + sysParamF
 tLine = Parametrs("LineParam", mainPath+sysParamFname + fExtend)
 sys = Parametrs("SysParam", mainPath+sysParamFname + fExtend)
 
-#=============  Normilise Rin for Mirror  ===========================
+#  Read  Excel file with Rays Data in
 Rin = Parametrs("Rin", mainPath + raysInFname + fExtend)
-print('Rin.paramTable', Rin.paramTable)
 
-rInObject = Rays()
-RaysSheetName = 'inRay_' + str(int(sys.paramTable.Rin[0] - 1)) + '_' + str(int(sys.paramTable.Rin[0]))
+rInObject = Rays()  # Create object of Rays
+RaysSheetName = 'Ray_' + str(int(sys.paramTable.Rin[0] - 1)) + '_' + str(int(sys.paramTable.Rin[0]))
+#=============  Normilise Rin for Mirror  ===========================
 raysDF = rInObject.rInNormalise(Rin.paramTable)
-rInObject.saveExecelRin(raysNormalisedFname + fExtend, raysDF, RaysSheetName)
+# seve to Excel
+rInObject.saveRays2Execel(raysNormalisedFname + fExtend, raysDF, RaysSheetName)
 
 def printFromExel():
     print('==============================')
@@ -31,10 +32,12 @@ def printFromExel():
     print(Rin.paramTable)
     print('==============================')
 
-# printFromExel()
-
 mirrorDictMain = sys.getMirrorList(sys.paramTable)
-print(mirrorDictMain)
+
+# print('Rin.paramTable', Rin.paramTable)
+# printFromExel()
+# print(mirrorDictMain)
+
 for mirrorDictSub in mirrorDictMain.keys():
     countMirror = int(sys.paramTable.Rin[0])
     #print(mirrorDictSub)
@@ -44,17 +47,17 @@ for mirrorDictSub in mirrorDictMain.keys():
         # print("Current Mirror = ", mirrorList)
 
         Mirror = sys.getParam(sys.paramFile, mirrorList)  ## mirror List - The name of Sheets in Exel file
-        # print('Mirror = ')
-        # print(Mirror)
+        print('Mirror = ')
+        print(Mirror)
 
         ################################################################
         #print('=============',RaysInDF)
 
-        RaysNameList = ['inRay_' + (str(countMirror - 1)) + '_' + str(countMirror),
-                        'refRay_' + str(countMirror) + '_' + str(countMirror + 1),
+        RaysNameList = ['Ray_' + (str(countMirror - 1)) + '_' + str(countMirror),
+                        'Ray_' + str(countMirror) + '_' + str(countMirror + 1),
                         'normalRay_' + str(countMirror) + '_' + str(countMirror)]
 
-        # RaysFileObject =  ReadXls(raysNormalisedFname)
+        RaysFileObject =  ReadXls(raysNormalisedFname)
         # raysParamFile = RaysFileObject.readXlsFile(raysNormalisedFname)
         # RaysInDF = RaysFileObject.getDataSheet(raysParamFile, RaysNameList[0])
         # print(RaysInDF)
