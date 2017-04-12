@@ -5,13 +5,7 @@ import numpy as np
 
 
 
-x1, x2, x3, dx1, dx2, dx3, a11, a22, a3, x01Ray, x02Ray, x03Ray, k1,k2,k3, t = sp.symbols('x1 x2 x3 '
-                                                                                          'dx1 dx2 dx3 '
-                                                                                          'a11 a22 a3 '
-                                                                                          'x01Ray x02Ray x03Ray '
-                                                                                          'k1 k2 k3'
-                                                                                          ' t')
-x1R, x2R, x3R, dx1R, dx2R, dx3R = sp.symbols('x1R x2R x3R dx1R dx2R dx3R')
+
 
 xDegree = -90
 yDegree = 0
@@ -30,61 +24,9 @@ k1 = 0
 k2 = 1
 k3 = 0
 
-def degree2Rarian(alphaDegree):
-    return (alphaDegree*pi)/180
-
-def cs(alphaDegree):
-    alphaRadian = degree2Rarian(alphaDegree)
-    if np.abs(cos(alphaRadian)) < 1e-4:
-        csAlpha = 0
-    else:
-        csAlpha =  cos(alphaRadian)
-    return csAlpha
 
 
-def sn(alphaDegree):
-    alphaRadian = degree2Rarian(alphaDegree)
-    if np.abs(sin(alphaRadian)) < 1e-4:
-            snAlpha = 0
-    else:
-            snAlpha = sin(alphaRadian)
-    return snAlpha
 
-
-def getRotateMatrix(xDegree,yDegree, zDegree):
-    csX = cs(xDegree)
-    snX = sn(xDegree)
-    csY = cs(yDegree)
-    print(csY)
-    snY = sn(yDegree)
-    print(snY)
-    csZ = cs(zDegree)
-    snZ = sn(zDegree)
-    Rx = np.array([
-        [1, 0, 0],
-        [0, csX, -snX],
-        [0, snX, csX]
-    ])
-    Ry = np.array([
-        [csY, 0, snY],
-        [0, 1, 0],
-        [-snY, 0, csY]
-    ])
-    Rz = np.array([
-        [csZ, -snZ, 0],
-        [snZ, csZ, 0],
-        [0, 0, 1]
-    ])
-    print('******************************')
-    Mr = (Rx.dot(Ry)).dot(Rz)
-    print(Rx)
-    print(Ry)
-    print(Rz)
-    print('===================')
-    print('Mr = ')
-    print(Mr)
-    print('=======================')
-    return  Mr
 
 
 

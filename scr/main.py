@@ -17,7 +17,7 @@ Rin = Parametrs("Rin", mainPath+RaysInFname)
 #print(Rin.paramTable)
 
 rInObject = Rays()
-RaysNameIn = 'inRay_' + str(int(sys.paramTable.Rin[0])) + '_' + str(int(sys.paramTable.Rin[0]+1))
+RaysNameIn = 'inRay_' + str(int(sys.paramTable.Rin[0]-1)) + '_' + str(int(sys.paramTable.Rin[0]))
 RaysInDF = rInObject.saveExecelRin(Rin.paramTable, RaysNormalisedFname,RaysNameIn)
 
 def printFromExel():
@@ -38,24 +38,24 @@ for mirrorDictSub in mirrorDictMain.keys():
     #print(mirrorDictSub)
     #print(countMirror)
     for mirrorList in mirrorDictMain.get(mirrorDictSub):
-        #print("Current Mirror = ", mirrorList)
+        # print("Count = ", countMirror)
+        # print("Current Mirror = ", mirrorList)
 
         Mirror = sys.getParam(sys.paramFile, mirrorList)  ## mirror List - The name of Sheets in Exel file
-        a11 = 1/(4*Mirror.Focus[0])
-        a22 = 1/(4*Mirror.Focus[1])
-        a3 = 1
+        # print('Mirror = ')
+        # print(Mirror)
 
         ################################################################
         #print('=============',RaysInDF)
 
-        rInObject.calcReflectedRays(Mirror, RaysInDF)
+        RaysNameList = ['inRay_' + (str(countMirror - 1)) + '_' + str(countMirror),
+                        'refRay_' + str(countMirror) + '_' + str(countMirror + 1),
+                        'normalRay_' + str(countMirror) + '_' + str(countMirror)]
 
-        RaysNameIn = 'inRay_' + (str(countMirror - 1)) + '_' + str(countMirror)
-        RaysNameOut = 'refRay_' + str(countMirror) + '_' + str(countMirror + 1)
-        RaysNormal2Surf = 'normalRay_' + str(countMirror) + '_' + str(countMirror)
+        RaysFileObject =  ReadXls(RaysNormalisedFname)
+        raysParamFile = RaysFileObject.readXlsFile(RaysNormalisedFname)
+        RaysInDF = RaysFileObject.getDataSheet(raysParamFile, RaysNameList[0])
+        print(RaysInDF)
+        rInObject.calcReflectedRays(Mirror, RaysInDF, RaysNameList)
 
-
-    print("Count = ",countMirror)
-    countMirror += 1
-
-
+        countMirror += 1

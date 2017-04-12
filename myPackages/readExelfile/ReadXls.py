@@ -1,9 +1,6 @@
 import pandas as pd
 import numpy as np
 
-
-
-
 class ReadXls:
     def __init__(self, path):
         self.path = path
@@ -11,6 +8,7 @@ class ReadXls:
     def readXlsFile(self, path):
         paramFile = pd.ExcelFile(path)
         sheets = paramFile.sheet_names
+        print(sheets)
         Mnumber = len(sheets) - 3
         return paramFile
 
@@ -26,6 +24,5 @@ class ReadXls:
         raysIn = paramDataFile.parse(sheetname='RaysIn')
         return raysIn
 
-    def getMirrorParam(self,paramDatafile, sheetname):
-        mirror = paramDatafile.parse(sheetname=sheetname)
-        return mirror
+    def getDataSheet(self,paramDatafile, sheetname):
+        return paramDatafile.parse(sheetname=sheetname)
