@@ -8,7 +8,7 @@ class ReadXls:
     def readXlsFile(self, path):
         paramFile = pd.ExcelFile(path)
         sheets = paramFile.sheet_names
-        print(sheets)
+        print('sheets:', sheets)
         Mnumber = len(sheets) - 3
         return paramFile
 

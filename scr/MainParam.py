@@ -14,8 +14,8 @@ class Parametrs:
         self.paramTable = paramDataFile.parse(sheetname=paramName)
         return self.paramTable
 
-    def setParam(self, paramDataFile, paramName):
-        self.paramTable = paramDataFile.parse(sheetname=paramName)
+    # def setParam(self, paramDataFile, paramName):
+    #     self.paramTable = paramDataFile.parse(sheetname=paramName)
 
     def getMirrorList(self, sysParam):
         count = 0

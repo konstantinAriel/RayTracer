@@ -24,13 +24,6 @@ k1 = 0
 k2 = 1
 k3 = 0
 
-
-
-
-
-
-
-
     Mr = getRotateMatrix(xDegree, yDegree, zDegree)
     x1Ray = x01Ray + k1*t
     x2Ray = x02Ray + k2*t

@@ -10,19 +10,15 @@ class Rays:
     def __init__(self):
        pass
 
-    def calcRInNormal(self,kInArray):
-        return (kInArray/(np.sqrt(np.dot(kInArray, kInArray.T))))
-
-    #def findCrossPoint(self, Rin):
-
-
-    def saveExecelRin(self, RinParamTable, FileName, RaysNameIn):
+    def rInNormalise(self,RinParamTable):
         RaysHeads = RinParamTable.columns
         RayCount = 0
         numberOfRays = len(RinParamTable.KxIn)
+        KinArray = np.zeros((0, 3))
         KinNormalArray = np.zeros((numberOfRays, 3))
         XinArray = np.zeros((numberOfRays, 3))
         EinArray = np.zeros((numberOfRays, 4))
+
         for RinIndex in RinParamTable.index:
             #print(RinIndex)
             KinArray = np.array([RinParamTable.KxIn[RinIndex],
@@ -39,32 +35,32 @@ class Rays:
                                               RinParamTable.EzIn[RinIndex],
                                               RinParamTable.Ain[RinIndex]
                                               ])
-            #Kin = Rays(KinArray)
-            KinNormal = self.calcRInNormal(KinArray)
+            KinNormal = KinArray/(np.sqrt(np.dot(KinArray, KinArray.T)))
             KinNormalArray[RinIndex, :] = KinNormal
-            # print(KinNormalArray)
-            # print(KinArray)
-            # print(KinNormal)
+            print('KinNormalArray : ',KinNormalArray)
+            print('KinArray',KinArray)
+            print('KinNormal',KinNormal)
             RayCount += 1
-            # print('=========================')
-        # print('XinArray=', XinArray)
-        # print('*************')
-        RaysInDF = pd.DataFrame({'Xin': XinArray[:, 0],
-                              'Kxin': KinNormalArray[:, 0],
-                              'Yin': XinArray[:, 1],
-                              'Kyin': KinNormalArray[:, 1],
-                              'Zin': XinArray[:, 2],
-                              'Kzin': KinNormalArray[:, 2],
-                              'Exin': EinArray[:, 0],
-                              'Eyin': EinArray[:, 1],
-                              'Ezin': EinArray[:, 2],
-                              'Ain': EinArray[:, 3]
+            print('=========================')
+            print('XinArray=', XinArray)
+        raysDF = pd.DataFrame({'Xin': XinArray[:, 0],
+                               'Yin': XinArray[:, 1],
+                               'Zin': XinArray[:, 2],
+                               'Kxin': KinNormalArray[:, 0],
+                               'Kyin': KinNormalArray[:, 1],
+                               'Kzin': KinNormalArray[:, 2],
+                               'Exin': EinArray[:, 0],
+                               'Eyin': EinArray[:, 1],
+                               'Ezin': EinArray[:, 2],
+                               'Ain': EinArray[:, 3]
                               })
-        RaysInDF.to_excel(FileName, sheet_name=RaysNameIn)
-        # print('KinDF = ')
-        # print(RaysInDF)
-        return  RaysInDF
+        print('*************')
+        print('KinDF = ')
+        print('raysDF', raysDF)
+        return  raysDF
 
+    def saveExecelRin(self,FileName, raysDF,RaysSheetName):
+        raysDF.to_excel(FileName, sheet_name=RaysSheetName)
 
     def calcReflectedRays(self, Mirror,  RaysInDF, RaysName):
         print(RaysName)
@@ -120,7 +116,6 @@ class Rays:
             csAlpha =  cos(alphaRadian)
         return csAlpha
 
-
     def sn(self, alphaDegree):
         alphaRadian = self.degree2Radian(self, alphaDegree)
         if np.abs(sin(alphaRadian)) < 1e-4:
@@ -128,37 +123,38 @@ class Rays:
         else:
                 snAlpha = sin(alphaRadian)
         return snAlpha
-def getRotateMatrix(self, xDegree,yDegree, zDegree):
-    csX = self.cs(xDegree)
-    snX = self.sn(xDegree)
-    csY = self.cs(yDegree)
-    print(csY)
-    snY = self.sn(yDegree)
-    print(snY)
-    csZ = self.cs(zDegree)
-    snZ = self.sn(zDegree)
-    Rx = np.array([
-        [1, 0, 0],
-        [0, csX, -snX],
-        [0, snX, csX]
-    ])
-    Ry = np.array([
-        [csY, 0, snY],
-        [0, 1, 0],
-        [-snY, 0, csY]
-    ])
-    Rz = np.array([
-        [csZ, -snZ, 0],
-        [snZ, csZ, 0],
-        [0, 0, 1]
-    ])
-    print('******************************')
-    Mr = (Rx.dot(Ry)).dot(Rz)
-    print(Rx)
-    print(Ry)
-    print(Rz)
-    print('===================')
-    print('Mr = ')
-    print(Mr)
-    print('=======================')
-    return  Mr
+
+    def getRotateMatrix(self, xDegree,yDegree, zDegree):
+        csX = self.cs(xDegree)
+        snX = self.sn(xDegree)
+        csY = self.cs(yDegree)
+        print(csY)
+        snY = self.sn(yDegree)
+        print(snY)
+        csZ = self.cs(zDegree)
+        snZ = self.sn(zDegree)
+        Rx = np.array([
+            [1, 0, 0],
+            [0, csX, -snX],
+            [0, snX, csX]
+        ])
+        Ry = np.array([
+            [csY, 0, snY],
+            [0, 1, 0],
+            [-snY, 0, csY]
+        ])
+        Rz = np.array([
+            [csZ, -snZ, 0],
+            [snZ, csZ, 0],
+            [0, 0, 1]
+        ])
+        print('******************************')
+        Mr = (Rx.dot(Ry)).dot(Rz)
+        print(Rx)
+        print(Ry)
+        print(Rz)
+        print('===================')
+        print('Mr = ')
+        print(Mr)
+        print('=======================')
+        return  Mr
