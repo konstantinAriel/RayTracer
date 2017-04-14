@@ -10,30 +10,31 @@ class Rays:
     def __init__(self):
         pass
 
-    def rInNormalise(self, RinParamTable):
-        RaysHeads = RinParamTable.columns
+    def rInNormalise(self, mirrorDataFrame, rInDataFrame):
+
+        RaysHeads = rInDataFrame.columns
         RayCount = 0
-        numberOfRays = len(RinParamTable.KxIn)
+        numberOfRays = len(rInDataFrame.KxIn)
         KinArray = np.zeros((0, 3))
         KinNormalArray = np.zeros((numberOfRays, 3))
         XinArray = np.zeros((numberOfRays, 3))
         EinArray = np.zeros((numberOfRays, 4))
 
-        for RinIndex in RinParamTable.index:
+        for RinIndex in rInDataFrame.index:
             # print(RinIndex)
-            KinArray = np.array([RinParamTable.KxIn[RinIndex],
-                                 RinParamTable.KyIn[RinIndex],
-                                 RinParamTable.KzIn[RinIndex]
+            KinArray = np.array([rInDataFrame.KxIn[RinIndex],
+                                 rInDataFrame.KyIn[RinIndex],
+                                 rInDataFrame.KzIn[RinIndex]
                                  ])
 
-            XinArray[RinIndex, :] = np.array([RinParamTable.Xin[RinIndex],
-                                              RinParamTable.Yin[RinIndex],
-                                              RinParamTable.Zin[RinIndex]
+            XinArray[RinIndex, :] = np.array([rInDataFrame.Xin[RinIndex] + mirrorDataFrame.Source[0],
+                                              rInDataFrame.Yin[RinIndex] + mirrorDataFrame.Source[1],
+                                              rInDataFrame.Zin[RinIndex] + mirrorDataFrame.Source[2]
                                               ])
-            EinArray[RinIndex, :] = np.array([RinParamTable.ExIn[RinIndex],
-                                              RinParamTable.EyIn[RinIndex],
-                                              RinParamTable.EzIn[RinIndex],
-                                              RinParamTable.Ain[RinIndex]
+            EinArray[RinIndex, :] = np.array([rInDataFrame.ExIn[RinIndex],
+                                              rInDataFrame.EyIn[RinIndex],
+                                              rInDataFrame.EzIn[RinIndex],
+                                              rInDataFrame.Ain[RinIndex]
                                               ])
             KinNormal = KinArray / (np.sqrt(np.dot(KinArray, KinArray.T)))
             KinNormalArray[RinIndex, :] = KinNormal
@@ -59,11 +60,12 @@ class Rays:
         # print('raysDF', raysDF)
         return raysDF
 
-    def saveRays2Execel(self, FileName, raysDF, RaysSheetName):
-        raysDF.to_excel(FileName, sheet_name=RaysSheetName)
+    def saveRays2Execel(self, fileName, raysDataFrame, raysSheetName):
+        raysDataFrame.to_excel(fileName, sheet_name=raysSheetName)
 
-    def calcReflectedRays(self, Mirror, raysDF, RaysName):
-        print(RaysName)
+    def calcReflectedRays(self, Mirror, raysDataframe, RaysName):
+        L=100
+        # print(RaysName)
         x1, x2, x3, a11, a22, a3, x01Ray, x02Ray, x03Ray, k1, k2, k3, v1, v2, v3, t = sp.symbols('x1 x2 x3 a11 a22 a3 x01Ray x02Ray x03Ray k1 k2 k3 v1 v2 v3 t')
 
         x1R, x2R, x3R, dx1R, dx2R, dx3R = sp.symbols('x1R x2R x3R dx1R dx2R dx3R')
@@ -74,16 +76,16 @@ class Rays:
 
         Mr = self.getRotateMatrix(xDegree, yDegree, zDegree)
 
-        for RinIndex in raysDF.index:  # Loop for all Rays
+        for RinIndex in raysDataframe.index:  # Loop for all Rays
 
-            print(RinIndex)
+            #print(RinIndex)
 
-            x01Ray = raysDF.Xin[RinIndex]
-            x02Ray = raysDF.Yin[RinIndex]
-            x03Ray = raysDF.Zin[RinIndex]
-            k1 = raysDF.Kxin[RinIndex]
-            k2 = raysDF.Kyin[RinIndex]
-            k3 = raysDF.Kzin[RinIndex]
+            x01Ray = raysDataframe.Xin[RinIndex]
+            x02Ray = raysDataframe.Yin[RinIndex]
+            x03Ray = raysDataframe.Zin[RinIndex]
+            k1 = raysDataframe.Kxin[RinIndex]
+            k2 = raysDataframe.Kyin[RinIndex]
+            k3 = raysDataframe.Kzin[RinIndex]
             a11 = 1/(4 * Mirror.Focus[0])
             a22 = 1/(4 * Mirror.Focus[2])
             a3 = 1
@@ -93,16 +95,16 @@ class Rays:
 
             # print(a11, a22, a3)
             # print(v1, v2, v3)
-            # print('x01 = ', x01Ray)
-            # print('x02 = ', x02Ray)
-            # print('x03 = ', x03Ray)
+            # print('x01Ray = ', x01Ray)
+            # print('x02Ray = ', x02Ray)
+            # print('x03Ray = ', x03Ray)
             # print('k1 = ', k1)
             # print('k2 = ', k2)
             # print('k3 = ', k3)
 
-            x1Ray = x01Ray + k1 * t
-            x2Ray = x02Ray + k2 * t
-            x3Ray = x03Ray + k3 * t
+            x1RayS = x01Ray + k1*t
+            x2RayS = x02Ray + k2*t
+            x3RayS = x03Ray + k3*t
 
             x1R = (x1 - v1) * Mr[0, 0] + (x2 - v2) * Mr[0, 1] + (x3 - v3) * Mr[0, 2]
             x2R = (x1 - v1) * Mr[1, 0] + (x2 - v2) * Mr[1, 1] + (x3 - v3) * Mr[1, 2]
@@ -121,44 +123,72 @@ class Rays:
             # x3 = x3Ray
 
             mainExpr = a11 * Expr_A11 + a22 * Expr_A22 - a3 * Expr_A3
-
-            # mainExprSubsx1 = mainExpr.subs(x1, x1Ray)
-            # mainExprSubsx2 = mainExprSubsx1.subs(x2, x2Ray)
-            # mainExprSubsx3 = mainExprSubsx2.subs(x3, x3Ray)
-            mainExprSubs = mainExpr.subs(x1, x1Ray)
-            mainExprSubs = mainExprSubs.subs(x2, x2Ray)
-            mainExprSubs = mainExprSubs.subs(x3, x3Ray)
+            mainExprSubs = mainExpr.subs(x1, x1RayS)
+            mainExprSubs = mainExprSubs.subs(x2, x2RayS)
+            mainExprSubs = mainExprSubs.subs(x3, x3RayS)
             mainExprExpanded = sp.expand(mainExprSubs)
             mainExprCollcted = sp.collect(mainExprExpanded, t)
             tSolver = sp.solveset(mainExprCollcted, t)
 
-            # print('mainExpr = ')
-            # pprint(mainExpr)
-            # print('mainExprSubs = ')
-            # pprint(mainExprSubs)
-            # print('mainExprExpanded = ')
-            # pprint(mainExprExpanded)
-            # print('Expr Collected = ')
-            # pprint(mainExprCollcted)
-            # print('t = ')
-            # pprint(tSolver)
-
-
-            # if len(tSolver) == 2:
-
             tList= []
             for tindex in tSolver:
-                    if tindex > 0:
-                        tList.append(tindex)
+                if tindex > 0:
+                    tList.append(tindex)
             tRoot = min(tList)
             print('tRoot = ', (tRoot))
 
-            x1Ray = x01Ray + k1*tRoot
-            x2Ray = x02Ray + k2*tRoot
-            x3Ray = x03Ray + k3*tRoot
-            print('x1Ray = ', x1Ray)
-            print('x2Ray = ', x2Ray)
-            print('x3Ray = ', x3Ray)
+            x1RayN = x01Ray + k1*tRoot
+            x2RayN = x02Ray + k2*tRoot
+            x3RayN = x03Ray + k3*tRoot
+
+            N1s = sp.diff(mainExpr, x1)
+            N2s = sp.diff(mainExpr, x2)
+            N3s = sp.diff(mainExpr, x3)
+
+            N1 = N1s.subs(x1, x1RayN)
+            N2 = N2s.subs(x2, x2RayN)
+            N3 = N3s.subs(x3, x3RayN)
+
+            nArray = np.array([N1, N2, N3])
+            nNormal = nArray / (np.dot(nArray, nArray.T))**0.5
+
+            x1Normal = x1RayN + L*nNormal[0]
+            x2Normal = x2RayN + L*nNormal[1]
+            x3Normal = x3RayN + L*nNormal[2]
+            xNormal = [x1Normal, x2Normal, x3Normal]
+
+            self.pprintSymbol(N1s, N2s, N3s, N1, N2,N3, mainExpr, mainExprCollcted, mainExprSubs, nArray, nNormal, xNormal)
+            print('========== END OF LOOP  ============')
+            print('x1RayN = ', x1RayN)
+            print('x2RayN = ', x2RayN)
+            print('x3RayN = ', x3RayN)
+
+    def pprintSymbol(self, N1sym, N2sym, N3sym, N1,N2, N3, mainExpr, mainExprCollcted, mainExprSubs, nArray, nNormal, xNormal):
+        print('mainExpr = ')
+        pprint(mainExpr)
+        print('mainExprSubs = ')
+        pprint(mainExprSubs)
+        # print('mainExprExpanded = ')
+        # pprint(mainExprExpanded)
+        print('Expr Collected = ')
+        pprint(mainExprCollcted)
+        # print('t = ')
+        # pprint(tSolver)
+        print('N1sym = ')
+        pprint(N1sym)
+        print('N2sym = ')
+        pprint(N2sym)
+        print('N3sym = ')
+        pprint(N3sym)
+        print('N1 = ')
+        pprint(N1)
+        print('N2 = ')
+        pprint(N2)
+        print('N3 = ')
+        pprint(N3)
+        print('nArray = ', nArray)
+        print('nNormal = ', nNormal)
+        print('xNormal =', xNormal)
 
     def degree2Radian(self, alphaDegree):
         return (alphaDegree * pi) / 180

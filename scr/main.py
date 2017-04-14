@@ -10,18 +10,23 @@ fExtend = '.xls'
 sysParamFname = 'sysParam_1'
 raysInFname = 'RaysIn'
 raysNormalisedFname = mainPath + 'raysNormalised_' + raysInFname+'_' + sysParamFname
-tLine = Parametrs("LineParam", mainPath+sysParamFname + fExtend)
-sys = Parametrs("SysParam", mainPath+sysParamFname + fExtend)
 
 #  Read  Excel file with Rays Data in
+tLine = Parametrs("LineParam", mainPath+sysParamFname + fExtend)
+sys = Parametrs("SysParam", mainPath+sysParamFname + fExtend)
 Rin = Parametrs("Rin", mainPath + raysInFname + fExtend)
+raysSheetName = 'Ray_' + str(int(sys.dataSheet.Rin[0] - 1)) + '_' + str(int(sys.dataSheet.Rin[0]))
 
 rInObject = Rays()  # Create object of Rays
-RaysSheetName = 'Ray_' + str(int(sys.dataSheet.Rin[0] - 1)) + '_' + str(int(sys.dataSheet.Rin[0]))
+
 #=============  Normilise Rin for Mirror  ===========================
-raysDF = rInObject.rInNormalise(Rin.dataSheet)
+mirror1SheetName = 'Mirror' + str(int(sys.dataSheet.Rin[0]))
+mirrorObject = Parametrs('Mirror1', mainPath+sysParamFname + fExtend)
+
+# print(Mirror1)
+raysDataFrame = rInObject.rInNormalise(mirrorObject.dataSheet, Rin.dataSheet)
 # seve to Excel
-rInObject.saveRays2Execel(raysNormalisedFname + fExtend, raysDF, RaysSheetName)
+rInObject.saveRays2Execel(raysNormalisedFname + fExtend, raysDataFrame, raysSheetName)
 
 def printFromExel():
     print('==============================')
@@ -31,6 +36,8 @@ def printFromExel():
     print('==============================')
     print(Rin.dataSheet)
     print('==============================')
+
+# print('sys.DataSheet',sys.dataSheet)
 
 mirrorDictMain = sys.getMirrorList(sys.dataSheet)
 
