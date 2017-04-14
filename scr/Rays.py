@@ -5,13 +5,11 @@ import numpy as np
 import pandas as pd
 import scipy as sy
 
-
 class Rays:
     def __init__(self):
         pass
 
     def rInNormalise(self, mirrorDataFrame, rInDataFrame):
-
         RaysHeads = rInDataFrame.columns
         RayCount = 0
         numberOfRays = len(rInDataFrame.KxIn)
@@ -19,14 +17,12 @@ class Rays:
         KinNormalArray = np.zeros((numberOfRays, 3))
         XinArray = np.zeros((numberOfRays, 3))
         EinArray = np.zeros((numberOfRays, 4))
-
         for RinIndex in rInDataFrame.index:
             # print(RinIndex)
             KinArray = np.array([rInDataFrame.KxIn[RinIndex],
                                  rInDataFrame.KyIn[RinIndex],
                                  rInDataFrame.KzIn[RinIndex]
                                  ])
-
             XinArray[RinIndex, :] = np.array([rInDataFrame.Xin[RinIndex] + mirrorDataFrame.Source[0],
                                               rInDataFrame.Yin[RinIndex] + mirrorDataFrame.Source[1],
                                               rInDataFrame.Zin[RinIndex] + mirrorDataFrame.Source[2]
@@ -44,6 +40,13 @@ class Rays:
             # print('KinNormal',KinNormal)
             # print('=========================')
             # print('XinArray=', XinArray)
+        raysDF = self.setRaysDataFrame(EinArray, KinNormalArray, XinArray)
+        # print('*************')
+        # print('KinDF = ')
+        # print('raysDF', raysDF)
+        return raysDF
+
+    def setRaysDataFrame(self, EinArray, KinNormalArray, XinArray):
         raysDF = pd.DataFrame({'Xin': XinArray[:, 0],
                                'Yin': XinArray[:, 1],
                                'Zin': XinArray[:, 2],
@@ -55,15 +58,12 @@ class Rays:
                                'Ezin': EinArray[:, 2],
                                'Ain': EinArray[:, 3]
                                })
-        # print('*************')
-        # print('KinDF = ')
-        # print('raysDF', raysDF)
         return raysDF
 
-    def saveRays2Execel(self, fileName, raysDataFrame, raysSheetName):
-        raysDataFrame.to_excel(fileName, sheet_name=raysSheetName)
+    def saveRays2Execel(self, fileName, raysDataFrame):
+        raysDataFrame.to_excel(fileName)
 
-    def calcReflectedRays(self, Mirror, raysDataframe, RaysName):
+    def calcReflectedRays(self, path, Mirror, raysDataFrame):
         L=100
         # print(RaysName)
         x1, x2, x3, a11, a22, a3, x01Ray, x02Ray, x03Ray, k1, k2, k3, v1, v2, v3, t = sp.symbols('x1 x2 x3 a11 a22 a3 x01Ray x02Ray x03Ray k1 k2 k3 v1 v2 v3 t')
@@ -75,17 +75,17 @@ class Rays:
         zDegree = Mirror.direction[2]
 
         Mr = self.getRotateMatrix(xDegree, yDegree, zDegree)
-
-        for RinIndex in raysDataframe.index:  # Loop for all Rays
-
+        xCrossArray = np.zeros((len(raysDataFrame.index), 3))
+        eCrossArray = np.zeros((len(raysDataFrame.index), 4))
+        kCrossNormalArray = np.zeros((len(raysDataFrame.index), 3))
+        for RinIndex in raysDataFrame.index:  # Loop for all Rays
             #print(RinIndex)
-
-            x01Ray = raysDataframe.Xin[RinIndex]
-            x02Ray = raysDataframe.Yin[RinIndex]
-            x03Ray = raysDataframe.Zin[RinIndex]
-            k1 = raysDataframe.Kxin[RinIndex]
-            k2 = raysDataframe.Kyin[RinIndex]
-            k3 = raysDataframe.Kzin[RinIndex]
+            x01Ray = raysDataFrame.Xin[RinIndex]
+            x02Ray = raysDataFrame.Yin[RinIndex]
+            x03Ray = raysDataFrame.Zin[RinIndex]
+            k1 = raysDataFrame.Kxin[RinIndex]
+            k2 = raysDataFrame.Kyin[RinIndex]
+            k3 = raysDataFrame.Kzin[RinIndex]
             a11 = 1/(4 * Mirror.Focus[0])
             a22 = 1/(4 * Mirror.Focus[2])
             a3 = 1
@@ -150,18 +150,30 @@ class Rays:
             N3 = N3s.subs(x3, x3RayN)
 
             nArray = np.array([N1, N2, N3])
-            nNormal = nArray / (np.dot(nArray, nArray.T))**0.5
+            nNormalArray = nArray / (np.dot(nArray, nArray.T))**0.5
 
-            x1Normal = x1RayN + L*nNormal[0]
-            x2Normal = x2RayN + L*nNormal[1]
-            x3Normal = x3RayN + L*nNormal[2]
+            x1Normal = x1RayN + L*nNormalArray[0]
+            x2Normal = x2RayN + L*nNormalArray[1]
+            x3Normal = x3RayN + L*nNormalArray[2]
             xNormal = [x1Normal, x2Normal, x3Normal]
 
-            self.pprintSymbol(N1s, N2s, N3s, N1, N2,N3, mainExpr, mainExprCollcted, mainExprSubs, nArray, nNormal, xNormal)
+            #self.pprintSymbol(N1s, N2s, N3s, N1, N2,N3, mainExpr, mainExprCollcted, mainExprSubs, nArray, nNormalArray, xNormal)
+
             print('========== END OF LOOP  ============')
             print('x1RayN = ', x1RayN)
             print('x2RayN = ', x2RayN)
             print('x3RayN = ', x3RayN)
+
+            xCrossArray[RinIndex, :] = np.array([x1Normal, x2Normal, x3Normal])
+            eCrossArray[RinIndex, :] = np.array([raysDataFrame.Exin[RinIndex],
+                                                 raysDataFrame.Eyin[RinIndex],
+                                                 raysDataFrame.Ezin[RinIndex],
+                                                 raysDataFrame.Ain[RinIndex]
+                                                 ])
+            kCrossNormalArray[RinIndex, :] = nNormalArray
+
+        NormalRaysDataFrame = self.setRaysDataFrame(eCrossArray, kCrossNormalArray, xCrossArray)
+        self.saveRays2Execel(path, NormalRaysDataFrame)
 
     def pprintSymbol(self, N1sym, N2sym, N3sym, N1,N2, N3, mainExpr, mainExprCollcted, mainExprSubs, nArray, nNormal, xNormal):
         print('mainExpr = ')

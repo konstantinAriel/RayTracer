@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 class Parametrs:
-    def __init__(self, sheetName, path):
+    def __init__(self, path, sheetName):
         self.path = path
         self.sheetName = sheetName
         self.paramFile = pd.ExcelFile(self.path)
