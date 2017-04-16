@@ -15,11 +15,11 @@ def pathName():
 def mirrorLoop(mirrorDictMain):
     for mirrorDictSub in mirrorDictMain.keys():
         countMirror = int(sys.dataSheet.Rin[0])
+        print('========= Mirror Loop',countMirror)
         # print(mirrorDictSub)
-        # print(countMirror)
         for mirrorList in mirrorDictMain.get(mirrorDictSub):
             # print("Count = ", countMirror)
-            # print("Current Mirror = ", mirrorList)
+            print("Current Mirror = ", mirrorList)
 
             Mirror = sys.getParam(sys.paramFile, mirrorList)  ## mirror List - The name of Sheets in Exel file
             # print('Mirror = ')
@@ -28,14 +28,15 @@ def mirrorLoop(mirrorDictMain):
             ################################################################
             # print('=============',RaysInDF)
 
-            raysSheetName = ['Ray_' + (str(countMirror - 1)) + '_' + str(countMirror),
+            raysFName = ['Ray_' + (str(countMirror - 1)) + '_' + str(countMirror),
                              'Ray_' + str(countMirror) + '_' + str(countMirror + 1),
                              'normalRay_' + str(countMirror) + '_' + str(countMirror)]
 
-            RaysObject = Parametrs(mainPath + raysSheetName[0] + fExtend, 'Sheet1')
-            print(RaysObject.dataSheet)
-            rInObject.calcReflectedRays(mainPath + raysSheetName[2] + fExtend, Mirror, RaysObject.dataSheet)
-
+            RaysObject = Parametrs(mainPath + raysFName[0] + fExtend, 'Sheet1')
+            #print(RaysObject.dataSheet)
+            path = [mainPath, raysFName, fExtend]
+            # print('path = ', path )
+            rInObject.calcReflectedRays(path, Mirror, RaysObject.dataSheet)
             countMirror += 1
 def printFromExel():
     print('==============================')
