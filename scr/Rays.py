@@ -66,7 +66,7 @@ class Rays:
         tList = []
         for tindex in tSolver:
             if tindex > 0   :
-                print('tindex', tindex)
+                #print('tindex', tindex)
                 tList.append(tindex)
         tRoot = min(tList)
         # print('TSolver = ', tSolver)
@@ -190,7 +190,7 @@ class Rays:
         xDetArray[0] = xDetArray[0] - MirrorDataSheet.Detector[0]
         xDetArray[1] = xDetArray[1] - MirrorDataSheet.Detector[1]
         xDetArray[2] = xDetArray[2] - MirrorDataSheet.Detector[2]
-        print('xDetArray', xDetArray)
+        #print('xDetArray', xDetArray)
         return xDetArray
     def getKreflected(self, kinArray, nNormalArray):
         r1 = self.rotor(nNormalArray, kinArray)
@@ -206,7 +206,7 @@ class Rays:
         L = 100
         fName = path[1]
         pathReflctedRay = path[0] + fName[1] + path[2]
-        pathNormalRay =   path[0] + fName[2] + path[2]
+        pathNormalRay = path[0] + fName[2] + path[2]
 
         # print('pathReflctedRay', pathReflctedRay)
         # print('pathNormalRay', pathNormalRay)
@@ -216,9 +216,9 @@ class Rays:
 
         x1R, x2R, x3R, dx1R, dx2R, dx3R = sp.symbols('x1R x2R x3R dx1R dx2R dx3R')
 #  Mirror Parameters
-        xDegree = Mirror.direction[0]
-        yDegree = Mirror.direction[1]
-        zDegree = Mirror.direction[2]
+        xDegree = Mirror.Direction[0]
+        yDegree = Mirror.Direction[1]
+        zDegree = Mirror.Direction[2]
 
         a11 = 1 / (4 * Mirror.Focus[0])
         a22 = 1 / (4 * Mirror.Focus[2])
@@ -245,7 +245,7 @@ class Rays:
         eDetectorArray2D = np.zeros((len(raysDataFrame.index), 4))
         # Loop for all Rays
         for RinIndex in raysDataFrame.index:
-            print('===========Ray Loop  ==============', RinIndex )
+            #print('===========Ray Loop  ==============', RinIndex )
         #  RayIn parmetrs
 
             x0RayAraay = np.array([raysDataFrame.Xin[RinIndex] + Mirror.Source[0],
@@ -290,20 +290,20 @@ class Rays:
             mainExprCollctedSym = sp.collect(mainExprExpanded, t)
             mainExprCollctedN = sp.collect(mainExprExpandedN, t)
 
-            print('mainExpr = ')
-            pprint(mainExpr)
-            print('mainExprSubs = ')
-            pprint(mainExprSubs)
-            print('mainExprExpanded = ')
-            pprint(mainExprExpanded)
-            print('Expr Collected = ')
-            pprint(mainExprCollctedSym)
-            print('mainExprCollctedN = ')
-            pprint(mainExprCollctedN)
+            # print('mainExpr = ')
+            # pprint(mainExpr)
+            # print('mainExprSubs = ')
+            # pprint(mainExprSubs)
+            # print('mainExprExpanded = ')
+            # pprint(mainExprExpanded)
+            # print('Expr Collected = ')
+            # pprint(mainExprCollctedSym)
+            # print('mainExprCollctedN = ')
+            # pprint(mainExprCollctedN)
 
 
             tSolver = sp.solveset(mainExprCollctedN, t)
-            print('Tsolver', tSolver)
+            # print('Tsolver', tSolver)
             xRayCrossArray = self.getXRayCrossArray(tSolver, kinArray, x0RayAraay)
 
         # Differentional of MirrorSurf
@@ -343,7 +343,7 @@ class Rays:
         # print('xRayCrossArray = ', xRayCrossArray2D)
         # print('nNormallArray2D', nNormallArray2D)
         # print('eCrossArray2D', eCrossArray2D)
-        print('============= End Ray Loop')
+        #print('============= End Ray Loop')
         NormalRaysDataFrame = self.setRaysDataFrame(xRayCrossArray2D,
                                                     nNormallArray2D,
                                                     eCrossArray2D)
