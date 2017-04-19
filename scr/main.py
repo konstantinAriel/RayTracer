@@ -9,8 +9,6 @@ from scr.Ploting import Ploting
 from scr.Rays import Rays
 from scr.MainParam import Parametrs
 
-py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
-
 def pathName():
     global mainPath, fExtend, sysParamFname, raysInFname
     mainPath = "/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/"
@@ -18,6 +16,7 @@ def pathName():
     sysParamFname = 'sysParam_1'
     raysInFname = 'RaysIn'
     raysNormalisedFname = mainPath + 'raysNormalised_' + raysInFname + '_' + sysParamFname
+
 def mirrorLoop(mirrorDictMain):
     for mirrorDictSub in mirrorDictMain.keys():
         #print(sys.dataSheet.Rin[0])
@@ -43,6 +42,7 @@ def mirrorLoop(mirrorDictMain):
             # print('path = ', path )
             rInObject.calcReflectedRays(path, Mirror, RaysObject.dataSheet)
             countMirror += 1
+
 def printFromExel():
     print('==============================')
     print(tLine.dataSheet)
@@ -51,7 +51,9 @@ def printFromExel():
     print('==============================')
     print(Rin.dataSheet)
     print('==============================')
+
 def plotLoop(mirrorDictMain):
+    data = []
     for mirrorDictSub in mirrorDictMain.keys():
         # print(sys.dataSheet)
         countMirror = int(sys.dataSheet.Rin[0])
@@ -74,19 +76,22 @@ def plotLoop(mirrorDictMain):
             path = [mainPath, raysFName, fExtend]
             # print('path = ', path )
             plotObject = Ploting(path, mirrorObject.dataSheet, mirrorList)
-            plotObject.setMirrorSurf(mirrorObject.dataSheet)
+
+            surfR = plotObject.setMirrorSurf(mirrorObject.dataSheet)
+
             #print('plotObject.data = ',plotObject.data)
             data.append(plotObject.rayInDict)
             data.append(plotObject.rayReflectedDict)
+            data.append(surfR)
+
             print('===========================================================================  End Mirror Loop')
             countMirror += 1
         data.append(plotObject.Tline1)
         data.append(plotObject.Tline2)
         layout = plotObject.layout
+    print(data)
     fig = dict(data=data, layout=layout)
     py.offline.plot(fig, filename='line-mode.html')
-
-
 
 pathName()
 
@@ -95,7 +100,6 @@ tLine = Parametrs(mainPath+sysParamFname + fExtend, "LineParam")
 sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
 Rin = Parametrs(mainPath + raysInFname + fExtend, "Rin")
 raysSheetName0 = 'Ray_' + str(int(sys.dataSheet.Rin[0] - 1)) + '_' + str(int(sys.dataSheet.Rin[0]))
-
 rInObject = Rays()  # Create object of Rays
 
 #=============  Normilise Rin for Mirror  ===================================
@@ -108,13 +112,15 @@ rInObject.saveRays2Execel(mainPath + 'Ray'+'_' +
                           str(int(sys.dataSheet.Rin[0]))
                           + fExtend,
                           raysDataFrame)
-#==============  Get List of Section for calculation ========================
+
+#==============  Get List of Section for calculation ========================#
 mirrorDictMain = sys.getMirrorList(sys.dataSheet)
 
-#=============== Ray Tracing =================================================
+#=============== Ray Tracing =================================================#
 #mirrorLoop(mirrorDictMain)
 
 #=============== Plotting ====================================================
 sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
+py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
 plotLoop(mirrorDictMain)
 

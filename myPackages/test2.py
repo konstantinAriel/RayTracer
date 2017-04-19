@@ -7,29 +7,38 @@ import plotly.graph_objs  as go
 py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
 
 
-xTLine1 = [-125, -125, -125,  -125,  -125, -125, -125, 3675, 3675, 3675]
-yTLine1 = [-400,  125,  125,   125,  125,4125, 4125,4125, 4125,4125]
-zTLine1 = [-125, -125, -125,   1175,1175, 1175, 1175, 1175, 1175, 600]
+# xTLine1 = [-125, -125, -125,  -125,  -125, -125, -125, 3675, 3675, 3675]
+# yTLine1 = [-400,  125,  125,   125,  125,4125, 4125,4125, 4125,4125]
+# zTLine1 = [-125, -125, -125,   1175,1175, 1175, 1175, 1175, 1175, 600]
+#
+# xTLine2 = [125, 125, 125, 125, 125, 125, 125, 3925, 3925, 3925]
+# yTLine2 = [-400,-125, -125, -125, -125,3875, 3875, 3875, 3875,3875]
+# zTLine2 = [125, 125, 125, 1425, 1425, 1425, 1425,1425, 1425, 600]
 
-xTLine2 = [125, 125, 125, 125, 125, 125, 125, 3925, 3925, 3925]
-yTLine2 = [-400,-125, -125, -125, -125,3875, 3875, 3875, 3875,3875]
-zTLine2 = [125, 125, 125, 1425, 1425, 1425, 1425,1425, 1425, 600]
+
+# x = [[0, 0], [10, 10], [50, 50]]
+# y = [[0, 0], [10, 10], [50, 50]]
+# z = [[0, 0], [10, 10], [50, 50]]
+
+x = [[0, 0], [0, 10], [50, 50]]
+y = [[0, 10], [20, 10], [50, 50]]
+z = [[0, 0], [10, 10], [0, 50]]
 
 def rMatrix(alpha, beta, gama):
     global R11, R12, R13, R21, R22, R23, R31, R32, R33
 
 #################################################################
 data=[dict(
-           go.Scatter3d(x=xTLine1, y=yTLine1, z=zTLine1,
+           go.Scatter3d(x=x, y=y, z=z,
            mode = 'lines',
            name = 'T line 1',
            line = dict(width=2, color='black')
            )),
-    dict (go.Scatter3d(x = xTLine2 , y = yTLine2, z = zTLine2,
-          mode = 'lines',
-          name = 'T line 2',
-          line = dict(width=2, color = 'black')
-          )),
+    # dict (go.Scatter3d(x = xTLine2 , y = yTLine2, z = zTLine2,
+    #       mode = 'lines',
+    #       name = 'T line 2',
+    #       line = dict(width=2, color = 'black')
+    #       )),
     # dict(go.Scatter3d(x=x1, y=x2, z=x3,
     #         # name = 'Axes rotated',
     #         # colorscale='',

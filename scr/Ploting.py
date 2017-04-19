@@ -33,7 +33,6 @@ class Ploting:
         # print(RaysNormalObject.dataSheet)
         #print(mirrorDataSheet)
 
-        rayReflectedDict = {}
         xRayInData = []
         yRayInData = []
         zRayInData = []
@@ -50,21 +49,27 @@ class Ploting:
             # print(rIndex)
             xRayInData.append(RaysInObject.dataSheet.Xin[rIndex] + mirrorDataSheet.Source[0])
             xRayInData.append(RaysNormalObject.dataSheet.Xin[rIndex])
+            xRayInData.append(np.nan)
 
             yRayInData.append(RaysInObject.dataSheet.Yin[rIndex] + mirrorDataSheet.Source[1])
             yRayInData.append(RaysNormalObject.dataSheet.Yin[rIndex])
+            yRayInData.append(np.nan)
 
             zRayInData.append(RaysInObject.dataSheet.Zin[rIndex] + mirrorDataSheet.Source[2])
             zRayInData.append(RaysNormalObject.dataSheet.Zin[rIndex])
+            zRayInData.append(np.nan)
             ##########################
             xRayReflectedData.append(RaysNormalObject.dataSheet.Xin[rIndex])
             xRayReflectedData.append(RayReflectedObject.dataSheet.Xin[rIndex] + mirrorDataSheet.Detector[0])
+            xRayReflectedData.append(np.nan)
 
             yRayReflectedData.append(RaysNormalObject.dataSheet.Yin[rIndex])
             yRayReflectedData.append(RayReflectedObject.dataSheet.Yin[rIndex] + mirrorDataSheet.Detector[1])
+            yRayReflectedData.append(np.nan)
 
             zRayReflectedData.append(RaysNormalObject.dataSheet.Zin[rIndex])
             zRayReflectedData.append(RayReflectedObject.dataSheet.Zin[rIndex] + mirrorDataSheet.Detector[2])
+            zRayReflectedData.append(np.nan)
             #########################
 
         rayInDict = dict(
@@ -131,6 +136,7 @@ class Ploting:
         xDegree = mirroDataSheet.Direction.x
         yDegree = mirroDataSheet.Direction.y
         zDegree = mirroDataSheet.Direction.z
+
         xLim1 = mirroDataSheet.Lim1.x
         yLim1 = mirroDataSheet.Lim1.y
         zLim1 = mirroDataSheet.Lim1.z
@@ -146,13 +152,13 @@ class Ploting:
         a22 = 1 / (4 * mirroDataSheet.Focus[2])
         a3 = 1
 
-        MrNegativ = rayObject.getRotateMatrix(-xDegree, -yDegree, -zDegree)
-        M2Positive = rayObject.getRotateMatrix(xDegree, yDegree, zDegree)
+        MrNegativ = rayObject.getRotateMatrix(xDegree, yDegree, zDegree)
+        M2Positive = rayObject.getRotateMatrix(-xDegree, -yDegree, -zDegree)
 
         # x3R = (xLim1 - v1) * Mr[2, 0] + (yLim1 - v2) * Mr[2, 1] + (zLim1 - v3) * Mr[2, 2]
 
         x1Lim1 = ((xLim1 - v1) * MrNegativ[0, 0] + (yLim1 - v2) * MrNegativ[0, 1] + (zLim1 - v3) * MrNegativ[0, 2]) + v1
-        x1Lim2 = ((xLim1 - v1) * MrNegativ[0, 0] + (yLim1 - v2) * MrNegativ[0, 1] + (zLim1 - v3) * MrNegativ[0, 2]) + v1
+        x1Lim2 = ((xLim2 - v1) * MrNegativ[0, 0] + (yLim2 - v2) * MrNegativ[0, 1] + (zLim2 - v3) * MrNegativ[0, 2]) + v1
 
         x2Lim1 = ((xLim1 - v1) * MrNegativ[1, 0] + (yLim1 - v2) * MrNegativ[1, 1] + (zLim1 - v3) * MrNegativ[1, 2]) + v2
         x2Lim2 = ((xLim2 - v1) * MrNegativ[1, 0] + (yLim2 - v2) * MrNegativ[1, 1] + (zLim2 - v3) * MrNegativ[1, 2]) + v2
@@ -170,10 +176,28 @@ class Ploting:
 
         X1Mesh, X2Mesh = np.meshgrid(x1array, x2array)
 
-
-
         X3Mesh = (a11*((X1Mesh-v1)**2) + a22*((X2Mesh-v2)**2)) + v3
 
-        x1R = (X1Mesh - v1) * M2Positive[0, 0] + (X2Mesh- v2) * M2Positive[0, 1] + (X3Mesh - v3) * M2Positive[0, 2]
-        x2R = (X1Mesh - v1) * M2Positive[1, 0] + (X2Mesh- v2) * M2Positive[1, 1] + (X3Mesh - v3) * M2Positive[1, 2]
-        x3R = (X1Mesh - v1) * M2Positive[2, 0] + (X2Mesh- v2) * M2Positive[2, 1] + (X3Mesh - v3) * M2Positive[2, 2]
+        # x1R = ((X1Mesh - v1) * M2Positive[0, 0] + (X2Mesh - v2) * M2Positive[0, 1] + (X3Mesh - v3) * M2Positive[0, 2]) + v1
+        # x2R = ((X1Mesh - v1) * M2Positive[1, 0] + (X2Mesh - v2) * M2Positive[1, 1] + (X3Mesh - v3) * M2Positive[1, 2]) + v2
+        # x3R = ((X1Mesh - v1) * M2Positive[2, 0] + (X2Mesh - v2) * M2Positive[2, 1] + (X3Mesh - v3) * M2Positive[2, 2]) + v3
+
+        x1R = ((X1Mesh - v1)*M2Positive[0, 0] +
+               (X2Mesh - v2)*M2Positive[0, 1] +
+               (X3Mesh - v3)*M2Positive[0, 2]) + v1
+
+        x2R = ((X1Mesh - v1)*M2Positive[1, 0] +
+               (X2Mesh - v2)*M2Positive[1, 1] +
+               (X3Mesh - v3)*M2Positive[1, 2]) + v2
+
+        x3R = ((X1Mesh - v1)*M2Positive[2, 0] +
+               (X2Mesh - v2)*M2Positive[2, 1] +
+               (X3Mesh - v3)*M2Positive[2, 2]) +v3
+
+        return  dict(
+                    go.Surface(x=x1R, y=x2R, z=x3R,
+                            showscale = False,
+                            opacity = 0.9,
+                            type = 'surface',
+                            surfacecolor = 'blue',
+                            name = 'Mirror1'))

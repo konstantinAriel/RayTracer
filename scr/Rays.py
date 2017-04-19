@@ -8,6 +8,7 @@ import scipy as sy
 class Rays:
     def __init__(self):
         pass
+
     def rInNormalise(self, mirrorDataFrame, rInDataFrame):
         RaysHeads = rInDataFrame.columns
         RayCount = 0
@@ -46,6 +47,7 @@ class Rays:
         # print('KinDF = ')
         # print('raysDF', raysDF)
         return raysDF
+
     def setRaysDataFrame(self,XinArray,  KinNormalArray, EinArray):
         #print('EinArray',EinArray)
         raysDF = pd.DataFrame({'Xin': XinArray[:, 0],
@@ -60,8 +62,10 @@ class Rays:
                                'Ain': EinArray[:, 3]
                                })
         return raysDF
+
     def saveRays2Execel(self, fileName, raysDataFrame):
         raysDataFrame.to_excel(fileName)
+
     def getXRayCrossArray(self, tSolver, kinArray, x0RayAraay):
         tList = []
         for tindex in tSolver:
@@ -75,6 +79,7 @@ class Rays:
                           x0RayAraay[1] + kinArray[1]*tRoot,
                           x0RayAraay[2] + kinArray[2]*tRoot
                           ])
+
     def pprintSymbol(self, N1sym, N2sym, N3sym, N1,N2, N3, mainExpr, mainExprCollcted, mainExprSubs, nArray, nNormal, xNormal):
         print('mainExpr = ')
         pprint(mainExpr)
@@ -101,8 +106,10 @@ class Rays:
         print('nArray = ', nArray)
         print('nNormal = ', nNormal)
         print('xNormal =', xNormal)
+
     def degree2Radian(self, alphaDegree):
         return (alphaDegree * pi) / 180
+
     def cs(self, alphaDegree):
         alphaRadian = self.degree2Radian(alphaDegree)
         if np.abs(cos(alphaRadian)) < 1e-4:
@@ -110,6 +117,7 @@ class Rays:
         else:
             csAlpha = cos(alphaRadian)
         return csAlpha
+
     def sn(self, alphaDegree):
         alphaRadian = self.degree2Radian(alphaDegree)
         if np.abs(sin(alphaRadian)) < 1e-4:
@@ -117,6 +125,7 @@ class Rays:
         else:
             snAlpha = sin(alphaRadian)
         return snAlpha
+
     def getRotateMatrix(self, xDegree, yDegree, zDegree):
         csX = self.cs(xDegree)
         csY = self.cs(yDegree)
@@ -153,13 +162,16 @@ class Rays:
         # print(Mr)
         # print('*******************************')
         return Mr
+
     def rotor(self, nArray, kinArray):
         c11 = (nArray[1]*kinArray[2]) - (nArray[2]*kinArray[1])
         c12 = -((nArray[0]*kinArray[2]) - (nArray[2]*kinArray[0]))
         c13 = (nArray[0]*kinArray[1]) - (nArray[1]*kinArray[0])
         return [c11, c12, c13]
+
     def normalVector(self, inArray):
         return inArray / ((np.dot(inArray, inArray.T)))**0.5
+
     def getXDetector(self, MirrorDataSheet, kReflectedNormal, xRayCrossArray):
         xDetArray = np.array([0,0,0])
         if (MirrorDataSheet.Detector[0] - MirrorDataSheet.Offset[0]) == 0:
@@ -192,6 +204,7 @@ class Rays:
         xDetArray[2] = xDetArray[2] - MirrorDataSheet.Detector[2]
         #print('xDetArray', xDetArray)
         return xDetArray
+
     def getKreflected(self, kinArray, nNormalArray):
         r1 = self.rotor(nNormalArray, kinArray)
         r2 = self.rotor(r1, nNormalArray)
@@ -201,6 +214,7 @@ class Rays:
         kReflectedNormal = self.normalVector(kReflected)
         #print('kReflectedNormal', kReflectedNormal)
         return kReflectedNormal
+
     def calcReflectedRays(self, path, Mirror, raysDataFrame):
         # print(Mirror)
         L = 100
