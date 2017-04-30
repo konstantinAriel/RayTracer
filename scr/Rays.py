@@ -67,19 +67,23 @@ class Rays:
         raysDataFrame.to_excel(fileName)
 
     def getXRayCrossArray(self, tSolver, kinArray, x0RayAraay):
+        print('tsolver',tSolver)
         tList = []
         for tindex in tSolver:
-            if tindex > 0   :
-                #print('tindex', tindex)
+            # print('tindex', tindex)
+            if tindex > 0:
                 tList.append(tindex)
-        tRoot = min(tList)
+        # print(tList)
+        if len(tList)>1:
+            tRoot = min(tList)
+        else:
+            tRoot = tList[0]
         # print('TSolver = ', tSolver)
         # print('tRoot = ', (tRoot))
         return  np.array([x0RayAraay[0] + kinArray[0]*tRoot,
                           x0RayAraay[1] + kinArray[1]*tRoot,
                           x0RayAraay[2] + kinArray[2]*tRoot
                           ])
-
     def pprintSymbol(self, N1sym, N2sym, N3sym, N1,N2, N3, mainExpr, mainExprCollcted, mainExprSubs, nArray, nNormal, xNormal):
         print('mainExpr = ')
         pprint(mainExpr)
@@ -141,9 +145,9 @@ class Rays:
             [0, snX, csX]
         ])
         Ry = np.array([
-            [csY, 0, snY],
+            [csY, 0, -snY],
             [0, 1, 0],
-            [-snY, 0, csY]
+            [snY, 0, csY]
         ])
         Rz = np.array([
             [csZ, -snZ, 0],
@@ -152,12 +156,16 @@ class Rays:
         ])
         Mr = (Rx.dot(Ry)).dot(Rz)
         # print('******************************')
-        # # print(csY)
-        # # print(snY)
-        # # print(Rx)
-        # # print(Ry)
-        # # print(Rz)
-        # # print('===================')
+        # print(csX)
+        # print(csY)
+        # print(csZ)
+        # print(snX)
+        # print(snY)
+        # print(snZ)
+        # print(Rx)
+        # print(Ry)
+        # print(Rz)
+        # print('===================')
         # print('Mr = ')
         # print(Mr)
         # print('*******************************')
@@ -242,12 +250,7 @@ class Rays:
         v3 = Mirror.Vertex[2]
         # print(a11, a22, a3)
         # print(v1, v2, v3)
-        # print('x01Ray = ', x01Ray)
-        # print('x02Ray = ', x02Ray)
-        # print('x03Ray = ', x03Ray)
-        # print('k1 = ', k1)
-        # print('k2 = ', k2)
-        # print('k3 = ', k3)
+
 
         Mr = self.getRotateMatrix(xDegree, yDegree, zDegree)
         xRayCrossArray2D = np.zeros((len(raysDataFrame.index), 3))
@@ -257,9 +260,10 @@ class Rays:
         xDetectorlArray2D = np.zeros((len(raysDataFrame.index), 3))
         kReflectedArray2D = np.zeros((len(raysDataFrame.index), 3))
         eDetectorArray2D = np.zeros((len(raysDataFrame.index), 4))
+
         # Loop for all Rays
         for RinIndex in raysDataFrame.index:
-            #print('===========Ray Loop  ==============', RinIndex )
+            print('===========********************   Ray Loop  ***************************** ==============', RinIndex )
         #  RayIn parmetrs
 
             x0RayAraay = np.array([raysDataFrame.Xin[RinIndex] + Mirror.Source[0],
@@ -303,6 +307,9 @@ class Rays:
             mainExprExpandedN = sp.expand(mainExprSubsN)
             mainExprCollctedSym = sp.collect(mainExprExpanded, t)
             mainExprCollctedN = sp.collect(mainExprExpandedN, t)
+            A = mainExprCollctedN.coeff(t, 2)
+            B = mainExprCollctedN.coeff(t, 1)
+            C = mainExprCollctedN.coeff(t, 0)
 
             # print('mainExpr = ')
             # pprint(mainExpr)
@@ -314,11 +321,31 @@ class Rays:
             # pprint(mainExprCollctedSym)
             # print('mainExprCollctedN = ')
             # pprint(mainExprCollctedN)
+            print('A = ', A)
+            print('B = ', B)
+            print('C = ', C)
+            tSolverList = []
+            if abs(A) < 1e-6:
+                tSolver = -C/B
+                tSolverList.append(tSolver)
+            else:
+                D = (B**2 - (4*A*C))
+                if D == 0:
+                    tSolver = -B/(2*A)
+                    tSolverList.append(tSolver)
+                else:
+                    if D > 0:
+                        print('D = ', D)
+                        tSolver1 = (-B + (D**0.5))/(2*A)
+                        tSolver2 = (-B - (D**0.5))/(2*A)
+                        tSolverList.append(tSolver1)
+                        tSolverList.append(tSolver2)
+                    elif D<0:
+                        print('NO SOLITIONS FOR THIS RAYS In REAEL WORD !!!!')
 
-
-            tSolver = sp.solveset(mainExprCollctedN, t)
-            # print('Tsolver', tSolver)
-            xRayCrossArray = self.getXRayCrossArray(tSolver, kinArray, x0RayAraay)
+            xRayCrossArray = self.getXRayCrossArray(tSolverList, kinArray, x0RayAraay)
+            print('xRayCrossArray = ')
+            print(xRayCrossArray)
 
         # Differentional of MirrorSurf
             #self.pprintSymbol(N1sym, N2sym, N3sym, N1, N2,N3, mainExpr, mainExprCollctedSym, mainExprSubs, nArray, nNormalArray, xNormal)
@@ -330,6 +357,7 @@ class Rays:
                                N2sym.subs(x2, xRayCrossArray[1]),
                                N3sym.subs(x3, xRayCrossArray[2])
                                ])
+
             nNormalArray = self.normalVector(nArray)
 
             kReflectedNormalArray = self.getKreflected(kinArray, nNormalArray)
@@ -338,8 +366,11 @@ class Rays:
                                                   kReflectedNormalArray,
                                                   xRayCrossArray)
 
+            print ('xRayDetectorArray = ', xRayDetectorArray)
             xRayCrossArray2D[RinIndex, :] = xRayCrossArray
+
             nNormallArray2D[RinIndex, :] = nNormalArray
+
             eCrossArray2D[RinIndex, :] = np.array([raysDataFrame.Exin[RinIndex],
                                                    raysDataFrame.Eyin[RinIndex],
                                                    raysDataFrame.Ezin[RinIndex],
@@ -356,8 +387,8 @@ class Rays:
 
         # print('xRayCrossArray = ', xRayCrossArray2D)
         # print('nNormallArray2D', nNormallArray2D)
-        # print('eCrossArray2D', eCrossArray2D)
-        #print('============= End Ray Loop')
+        #print('eCrossArray2D', eCrossArray2D)
+        print('***********************************************************************           End Ray Loop')
         NormalRaysDataFrame = self.setRaysDataFrame(xRayCrossArray2D,
                                                     nNormallArray2D,
                                                     eCrossArray2D)

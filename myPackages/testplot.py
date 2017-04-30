@@ -121,7 +121,7 @@ trace20 = go.Surface(x=X, y=Y, z=Z, colorscale='')
 data = go.Data([trace20, trace1, trace2, trace3, trace4,trace5, trace6,trace7, trace8,trace9, trace10])
 fig = go.Figure(data=data)
 
-py.offline.plot(fig, filename='line-mode.html')
+py.offline.plot(fig, filename='5Main RaysMiror1-4.html')
 #######################################################
 
 data=[dict(

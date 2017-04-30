@@ -102,7 +102,7 @@ class Ploting:
     def plotIs(self, data, layout):
         #print('Data = ', data)
         fig = dict(data=data, layout=layout)
-        py.offline.plot(fig, filename='line-mode.html')
+        py.offline.plot(fig, filename='5Main RaysMiror1-4.html')
 
     def getTlineDict(self):
         xTLine1 = [-125, -125, -125, -125, -125, -125, -125, 3675, 3675, 3675]
@@ -197,7 +197,7 @@ class Ploting:
         return  dict(
                     go.Surface(x=x1R, y=x2R, z=x3R,
                             showscale = False,
-                            opacity = 0.9,
+                            opacity = 1,
                             type = 'surface',
                             surfacecolor = 'blue',
                             name = 'Mirror1'))

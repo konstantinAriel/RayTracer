@@ -4,6 +4,7 @@ import plotly.graph_objs  as go
 
 import plotly as py
 
+from scr.Test import Test
 from scr.MainParam import Parametrs
 from scr.Ploting import Ploting
 from scr.Rays import Rays
@@ -21,27 +22,26 @@ def mirrorLoop(mirrorDictMain):
     for mirrorDictSub in mirrorDictMain.keys():
         #print(sys.dataSheet.Rin[0])
         countMirror = int(sys.dataSheet.Rin[0])
-        #print('========= Mirror Loop',countMirror)
-        #print(mirrorDictSub)
         for mirrorList in mirrorDictMain.get(mirrorDictSub):
+            print('====================================================== ++++++++++++++++++++++++++++++++++++++++++++++++++++++        Mirror Loop         ',  mirrorList)
             # print("Count = ", countMirror)
-            #print("Current Mirror = ", mirrorList)
+            # print("Current Mirror = ", mirrorList)
 
             Mirror = sys.getParam(sys.paramFile, mirrorList)  ## mirror List - The name of Sheets in Exel file
             # print('Mirror = ')
             # print(Mirror)
 
             ################################################################
-            # print('=============',RaysInDF)
             raysFName = ['Ray_' + (str(countMirror - 1)) + '_' + str(countMirror),
                              'Ray_' + str(countMirror) + '_' + str(countMirror + 1),
                              'normalRay_' + str(countMirror) + '_' + str(countMirror)]
             RaysObject = Parametrs(mainPath + raysFName[0] + fExtend, 'Sheet1')
-            #print(RaysObject.dataSheet)
+            print(RaysObject.dataSheet)
             path = [mainPath, raysFName, fExtend]
             # print('path = ', path )
             rInObject.calcReflectedRays(path, Mirror, RaysObject.dataSheet)
             countMirror += 1
+    print('====================================================== ++++++++++++++++++++++++++++++++++++++++++++++++++++++   END      Mirror Loop         ',  mirrorList)
 
 def printFromExel():
     print('==============================')
@@ -57,14 +57,14 @@ def plotLoop(mirrorDictMain):
     for mirrorDictSub in mirrorDictMain.keys():
         # print(sys.dataSheet)
         countMirror = int(sys.dataSheet.Rin[0])
-        print('CountMirror', countMirror)
-        print('****************************************************************** Mirror Loop',countMirror)
-        print(mirrorDictSub)
+        # print('CountMirror', countMirror)
+        # print('****************************************************************** Mirror Loop',countMirror)
+        # print('====================================================== ++++++++++++++++++++++++++++++++++++++++++++++++++++++        Mirror Loop         ',countMirror)
         data = []
         layout = []
         for mirrorList in mirrorDictMain.get(mirrorDictSub):
-            print("Count = ", countMirror)
-            print("Current Mirror = ", mirrorList)
+            # print("Count = ", countMirror)
+            # print("Current Mirror = ", mirrorList)
             mirrorObject = Parametrs(mainPath + sysParamFname + fExtend, mirrorList)  ## mirror List - The name of Sheets in Exel file
             # print('Mirror = ')
             # print(mirrorObject.dataSheet)
@@ -84,17 +84,16 @@ def plotLoop(mirrorDictMain):
             data.append(plotObject.rayReflectedDict)
             data.append(surfR)
 
-            print('===========================================================================  End Mirror Loop')
+            # print('===========================================================================  End Mirror Loop')
             countMirror += 1
         data.append(plotObject.Tline1)
         data.append(plotObject.Tline2)
         layout = plotObject.layout
-    print(data)
+    #print(data)
     fig = dict(data=data, layout=layout)
-    py.offline.plot(fig, filename='line-mode.html')
+    py.offline.plot(fig, filename='5Main RaysMiror1-4.html')
 
 pathName()
-
 #=============   Read  Excel file with Rays Data in =========================
 tLine = Parametrs(mainPath+sysParamFname + fExtend, "LineParam")
 sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
@@ -117,10 +116,17 @@ rInObject.saveRays2Execel(mainPath + 'Ray'+'_' +
 mirrorDictMain = sys.getMirrorList(sys.dataSheet)
 
 #=============== Ray Tracing =================================================#
-#mirrorLoop(mirrorDictMain)
+mirrorLoop(mirrorDictMain)
 
 #=============== Plotting ====================================================
 sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
 py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
 plotLoop(mirrorDictMain)
+
+#================== Test for Aberation 1 =====================================
+# t = Test()
+# print(t.nanArray)
+
+
+
 
