@@ -84,6 +84,7 @@ class Rays:
                           x0RayAraay[1] + kinArray[1]*tRoot,
                           x0RayAraay[2] + kinArray[2]*tRoot
                           ])
+
     def pprintSymbol(self, N1sym, N2sym, N3sym, N1,N2, N3, mainExpr, mainExprCollcted, mainExprSubs, nArray, nNormal, xNormal):
         print('mainExpr = ')
         pprint(mainExpr)
