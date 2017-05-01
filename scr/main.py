@@ -11,12 +11,13 @@ from scr.Rays import Rays
 from scr.MainParam import Parametrs
 
 def pathName():
-    global mainPath, fExtend, sysParamFname, raysInFname
+    global mainPath, fExtend, sysParamFname, raysInFname, ray4test3pointFname
     mainPath = "/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/"
     fExtend = '.xls'
     sysParamFname = 'sysParam_1'
     raysInFname = 'RaysIn'
     raysNormalisedFname = mainPath + 'raysNormalised_' + raysInFname + '_' + sysParamFname
+    ray4test3pointFname = mainPath + 'ray4test3Point_'  + sysParamFname + fExtend
 
 def mirrorLoop(mirrorDictMain):
     for mirrorDictSub in mirrorDictMain.keys():
@@ -91,15 +92,53 @@ def plotLoop(mirrorDictMain):
         layout = plotObject.layout
     #print(data)
     fig = dict(data=data, layout=layout)
-    py.offline.plot(fig, filename='5Main RaysMiror1-4.html')
+    py.offline.plot(fig, filename='42RaysforTest MAtrix.html')
 
 pathName()
+
+ ####################################################################################  for Standard RUN ################
+#=============   Read  Excel file with Rays Data in =========================
+# tLine = Parametrs(mainPath+sysParamFname + fExtend, "LineParam")
+# sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
+# Rin = Parametrs(mainPath + raysInFname + fExtend, "Rin")
+# raysSheetName0 = 'Ray_' + str(int(sys.dataSheet.Rin[0] - 1)) + '_' + str(int(sys.dataSheet.Rin[0]))
+# rInObject = Rays()  # Create object of Rays
+#
+# #=============  Normilise Rin for Mirror  ===================================
+# mirror1SheetName = 'Mirror' + str(int(sys.dataSheet.Rin[0]))
+# mirrorObject = Parametrs(mainPath+sysParamFname + fExtend, 'Mirror1')
+# raysDataFrame = rInObject.rInNormalise(mirrorObject.dataSheet, Rin.dataSheet)
+# # save to Excel
+# rInObject.saveRays2Execel(mainPath + 'Ray'+'_' +
+#                           str(int(sys.dataSheet.Rin[0]-1)) + '_' +
+#                           str(int(sys.dataSheet.Rin[0]))
+#                           + fExtend,
+#                           raysDataFrame)
+
+#==============  Get List of Section for calculation ========================#
+# mirrorDictMain = sys.getMirrorList(sys.dataSheet)
+#
+# #=============== Ray Tracing =================================================#
+# mirrorLoop(mirrorDictMain)
+#
+# #=============== Plotting ====================================================
+# sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
+# py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
+# plotLoop(mirrorDictMain)
+
+#================== Test for Aberation 1 =====================================
+t = Test()
+rInObject = Rays()  # Create object of Rays
+Rays4Test3PointDF = t.raysTestGenerator()
+rInObject.saveRays2Execel(ray4test3pointFname, Rays4Test3PointDF)
+
+##########################################################  Run For Test ############################################
+
 #=============   Read  Excel file with Rays Data in =========================
 tLine = Parametrs(mainPath+sysParamFname + fExtend, "LineParam")
 sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
-Rin = Parametrs(mainPath + raysInFname + fExtend, "Rin")
+Rin = Parametrs(ray4test3pointFname, "Sheet1")
 raysSheetName0 = 'Ray_' + str(int(sys.dataSheet.Rin[0] - 1)) + '_' + str(int(sys.dataSheet.Rin[0]))
-rInObject = Rays()  # Create object of Rays
 
 #=============  Normilise Rin for Mirror  ===================================
 mirror1SheetName = 'Mirror' + str(int(sys.dataSheet.Rin[0]))
@@ -122,11 +161,3 @@ mirrorLoop(mirrorDictMain)
 sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
 py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
 plotLoop(mirrorDictMain)
-
-#================== Test for Aberation 1 =====================================
-# t = Test()
-# print(t.nanArray)
-
-
-
-
