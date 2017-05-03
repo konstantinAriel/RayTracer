@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.graph_objs  as go
 
 import plotly as py
-
+from numpy.linalg import inv
 from scr.Test import Test
 from scr.MainParam import Parametrs
 from scr.Ploting import Ploting
@@ -146,14 +146,14 @@ def testMatrixLoop(mirrorDictMain):
               ## Calilus For a11 a22 a33 a44
 
                   a11 = rayInArray.loc[indexMin, rInelement]
-                  a21 = a11**2
-                  a31 = a11**3
-                  a12 = rayInArray.loc[indexMin+1,rInelement]
-                  a22 = a12**2
-                  a32 = a12**3
-                  a13 = rayInArray.loc[indexMax, rInelement]
-                  a23 = a13**2
-                  a33 = a13**3
+                  a12 = a11**2
+                  a13 = a11**3
+                  a21 = rayInArray.loc[indexMin+1,rInelement]
+                  a22 = a21**2
+                  a23 = a21**3
+                  a31 = rayInArray.loc[indexMax, rInelement]
+                  a32= a31**2
+                  a33 = a31**3
                   rInMatrixInv33 = np.array([
                             [a11, a12, a13],
                             [a21, a22, a23],
@@ -164,7 +164,8 @@ def testMatrixLoop(mirrorDictMain):
                         rOutColumn31 = np.array([[rOutArray[indexMin]],
                                                 [rOutArray[indexMin + 1]],
                                                 [rOutArray[indexMax]]])
-                        aTemp = rInMatrixInv33.dot(rOutColumn31)
+                        rInMatrixInv33Inv = inv(rInMatrixInv33)
+                        aTemp = rInMatrixInv33Inv.dot(rOutColumn31)
                         print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ',  rayOutelement,    '^^^^^^^^^^^^^^')
                         print('rInArray = ')
                         print(rInMatrixInv33)
