@@ -52,7 +52,7 @@ def printFromExel():
     print('==============================')
     print(sys.dataSheet)
     print('==============================')
-    print(Rin.dataSheet)
+    #print(Rin.dataSheet)
     print('==============================')
 
 def plotLoop(mirrorDictMain):
@@ -100,7 +100,7 @@ def testMatrixLoop(mirrorDictMain):
     data = []
     for mirrorDictSub in mirrorDictMain.keys():
           # print(sys.dataSheet)
-          countMirror = int(sys.dataSheet.Rin[0])
+          countMirror = int(sys.dataSheet.Rin[0])+1
 
           print('****************************************************************** TestMatrixLOOP',countMirror)
 #### GET Ray_In in  the System
@@ -119,6 +119,8 @@ def testMatrixLoop(mirrorDictMain):
               raysFName = ['Ray_' + (str(countMirror - 1)) + '_' + str(countMirror),
                            'Ray_' + str(countMirror) + '_' + str(countMirror + 1),
                            'normalRay_' + str(countMirror) + '_' + str(countMirror)]
+              print('Rays Name')
+              print(raysFName)
               path = [mainPath, raysFName, fExtend]
 
               fName = path[1]
@@ -131,41 +133,46 @@ def testMatrixLoop(mirrorDictMain):
               RayReflectedDF = RayReflectedObject.dataSheet
               RaysNormalObject = Parametrs(pathNormalRay, 'Sheet1')
               # LOOP 1st ORDER
-              for i in rInList:
-                  print('i = ', i)
-                  print('*********************   Rin =  ********  ', i,'   ******************')
-                  rayDFcondition = mainRinDF[(mainRinDF.Mode == i)]
-                  indexMin = min(rayDFcondition.index)
-                  indexMax = max(rayDFcondition.index)
+              for rInelement in rInList:
+                  print('i = ', rInelement)
+                  print('*********************   Rin =  ********  ', rInelement,'   ******************')
+                  rayInArray = mainRinDF[(mainRinDF.Mode == rInelement)]
+                  indexMin = min(rayInArray.index)
+                  indexMax = max(rayInArray.index)
+                  print('rayInArray = ')
+                  print(rayInArray)
                   print('indexMax', indexMax)
                   print('indexMin', indexMin)
               ## Calilus For a11 a22 a33 a44
-                  rInArray  = RaysInDF.loc[indexMin:indexMax, i]
-                  a11 = rInArray[indexMin]
+
+                  a11 = rayInArray.loc[indexMin, rInelement]
                   a21 = a11**2
                   a31 = a11**3
-                  a12 = rInArray[indexMin+1]
+                  a12 = rayInArray.loc[indexMin+1,rInelement]
                   a22 = a12**2
                   a32 = a12**3
-                  a13 = rInArray[indexMax]
+                  a13 = rayInArray.loc[indexMax, rInelement]
                   a23 = a13**2
                   a33 = a13**3
-                  rOutArray = RayReflectedDF.loc[indexMin:indexMax, i]
-                  rOutColumn31 = np.array([[rOutArray[indexMin]], [rOutArray[indexMin + 1]], [rOutArray[indexMax]]])
                   rInMatrixInv33 = np.array([
                             [a11, a12, a13],
                             [a21, a22, a23],
                             [a31, a32, a33]
                              ])
-                  aTemp = rInMatrixInv33.dot(rOutColumn31)
-                  print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
-                  print('rInArray = ')
-                  print(rInMatrixInv33)
-                  print('rOutArray = ')
-                  print(rOutColumn31)
-                  print('A_TEMP = ')
-                  print(aTemp)
-                  print('^^^^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
+                  for rayOutelement in rInList:
+                        rOutArray = RayReflectedDF.loc[indexMin:indexMax, rayOutelement]
+                        rOutColumn31 = np.array([[rOutArray[indexMin]],
+                                                [rOutArray[indexMin + 1]],
+                                                [rOutArray[indexMax]]])
+                        aTemp = rInMatrixInv33.dot(rOutColumn31)
+                        print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ',  rayOutelement,    '^^^^^^^^^^^^^^')
+                        print('rInArray = ')
+                        print(rInMatrixInv33)
+                        print('rOutArray = ')
+                        print(rOutColumn31)
+                        print('A_TEMP = ')
+                        print(aTemp)
+                        print('^^^^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
               countMirror += 1
               # print('path = ', path)
               # print(mirrorObject.dataSheet)
@@ -218,7 +225,7 @@ mirrorDictMain = sys.getMirrorList(sys.dataSheet)
 #
 # #=============== Plotting ====================================================
 sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
-# py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
-# plotLoop(mirrorDictMain)
+py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
+plotLoop(mirrorDictMain)
 
 testMatrixLoop(mirrorDictMain)
