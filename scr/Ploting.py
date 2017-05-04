@@ -102,7 +102,7 @@ class Ploting:
     def plotIs(self, data, layout):
         #print('Data = ', data)
         fig = dict(data=data, layout=layout)
-        py.offline.plot(fig, filename='42RaysforTest MAtrix.html')
+        py.offline.plot(fig, filename='result/htmlFiles/42RaysforTest MAtrix.html')
 
     def getTlineDict(self):
         xTLine1 = [-125, -125, -125, -125, -125, -125, -125, 3675, 3675, 3675]

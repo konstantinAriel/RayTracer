@@ -12,7 +12,9 @@ from scr.Rays import Rays
 from scr.MainParam import Parametrs
 from scr.TestMatrix import TestMatrix
 
-def setZeroDict(rInList, rOutList):
+def setZeroDict(rInList, rOutList, startMirror, countMirror):
+    testMatrixFName = 'testMatrix_' + str(startMirror) + '_' + str(countMirror)
+
     tempNANarray44 = np.array([[nan, nan, nan, nan],
                              [nan, nan, nan, nan],
                              [nan, nan, nan, nan],
@@ -33,18 +35,17 @@ def setZeroDict(rInList, rOutList):
         for rInTemp2 in rInList:
             keynameA3 = 'A3' + '_' + rInTemp1 + '_' + rInTemp2
             matrixName.append(keynameA3)
-
             testMatrixDict[keynameA3] = tempNANdf4x4
     # print('matrixName = ')
     # print(matrixName)
     # print('testMatrixDict = ')
     # print(testMatrixDict['A2_Xin'])
+    writer = pd.ExcelWriter('/home/konstantin/PycharmProjects/RayTracer/result/' + str(testMatrixFName) + '.xls', na_rep='nan')
     for matrixNameElement in matrixName:
         print('matrixNameElement')
         print(matrixNameElement)
         print('testMatrixDict = ')
         print(testMatrixDict[matrixNameElement])
-        writer = pd.ExcelWriter('/home/konstantin/PycharmProjects/RayTracer/result/testMatrix.xls', na_rep='nan')
         testMatrixDict[matrixNameElement].to_excel(writer, na_rep='nan', sheet_name=matrixNameElement)
     writer.save()
 
@@ -138,6 +139,7 @@ def testMatrixLoop(mirrorDictMain):
     for mirrorDictSub in mirrorDictMain.keys():
           # print(sys.dataSheet)
           countMirror = int(sys.dataSheet.Rin[0])+1
+          startMirror = int(sys.dataSheet.Rin[0])
           raysObject = Rays()
           print('****************************************************************** TestMatrixLOOP',countMirror)
 #### GET Ray_In in  the System
@@ -160,7 +162,7 @@ def testMatrixLoop(mirrorDictMain):
                   rOutList = ['Xin', 'Kxin', 'Yin', 'Kyin']
               print('rOutList = ', rOutList)
 
-              setZeroDict(rInList, rOutList)
+              setZeroDict(rInList, rOutList, startMirror, countMirror)
 
               mirrorObject = Parametrs(mainPath + sysParamFname + fExtend,
                                        mirrorList)  ## mirror List - The name of Sheets in Exel file
