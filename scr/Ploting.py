@@ -80,9 +80,9 @@ class Ploting:
                          ))
         rayReflectedDict = dict(
             go.Scatter3d(x=xRayReflectedData, y=yRayReflectedData, z=zRayReflectedData,
-                         mode='lines',
-                         name='rayReflected' + self.mirrorList,
-                         line=dict(width=2, color='red')
+                         mode = 'lines',
+                         name = 'rayReflected' + self.mirrorList,
+                         line = dict(width=2, color='red')
                          ))
 
         return rayInDict, rayReflectedDict

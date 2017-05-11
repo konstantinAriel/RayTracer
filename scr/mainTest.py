@@ -1,5 +1,6 @@
 import  numpy as np
 import pandas as pd
+import xarray as xr
 import plotly.graph_objs  as go
 
 import plotly as py
@@ -20,34 +21,40 @@ def setZeroDict(rInList, rOutList, startMirror, countMirror):
                              [nan, nan, nan, nan],
                              [nan, nan, nan, nan]
                              ])
+    # tempDataSet = xr.Dataset()
 
     tempNANdf4x4 = pd.DataFrame(tempNANarray44, index=rOutList, columns=rInList)
     keynameA1 = 'A1'
-
-    testMatrixDict = dict()
+    # tempDataSet[keynameA1] = tempNANdf4x4
+    # testMatrixDict = dict()
     matrixName = []
-    testMatrixDict[keynameA1] = tempNANdf4x4
+    # testMatrixDict[keynameA1] = tempNANdf4x4
     matrixName.append(keynameA1)
     for rInTemp1 in rInList:
-        keynameA2 = 'A2' + '_' + rInTemp1
+        keynameA2 = 'A2'  + rInTemp1
         matrixName.append(keynameA2)
-        testMatrixDict[keynameA2] = tempNANdf4x4
+        # tempDataSet[keynameA2] = tempNANdf4x4
+        # testMatrixDict[keynameA2] = tempNANdf4x4
         for rInTemp2 in rInList:
-            keynameA3 = 'A3' + '_' + rInTemp1 + '_' + rInTemp2
+            keynameA3 = 'A3'  + rInTemp1  + rInTemp2
+            # tempDataSet[keynameA3] = tempNANdf4x4
             matrixName.append(keynameA3)
-            testMatrixDict[keynameA3] = tempNANdf4x4
-    # print('matrixName = ')
+            # testMatrixDict[keynameA3] = tempNANdf4x4
+    testMatrixDict = dict()
+    testMatrixDict = testMatrixDict.fromkeys(matrixName, tempNANdf4x4)
+    # print('matrixName')
     # print(matrixName)
     # print('testMatrixDict = ')
-    # print(testMatrixDict['A2_Xin'])
+    # print(testMatrixDict)
     writer = pd.ExcelWriter('/home/konstantin/PycharmProjects/RayTracer/result/' + str(testMatrixFName) + '.xls', na_rep='nan')
     for matrixNameElement in matrixName:
-        print('matrixNameElement')
-        print(matrixNameElement)
-        print('testMatrixDict = ')
-        print(testMatrixDict[matrixNameElement])
+        # print('matrixNameElement')
+        # print(matrixNameElement)
+        # print('testMatrixDict = ')
+        # print(testMatrixDict[matrixNameElement])
         testMatrixDict[matrixNameElement].to_excel(writer, na_rep='nan', sheet_name=matrixNameElement)
     writer.save()
+    return testMatrixDict, writer
 
 
 def pathName():
@@ -138,19 +145,19 @@ def testMatrixLoop(mirrorDictMain):
     data = []
     for mirrorDictSub in mirrorDictMain.keys():
           # print(sys.dataSheet)
-          countMirror = int(sys.dataSheet.Rin[0])+1
-          startMirror = int(sys.dataSheet.Rin[0])
+          countMirror = int(sys.dataSheet.Rin[0])
+          startMirror = int(sys.dataSheet.Rin[0])-1
           raysObject = Rays()
-          print('****************************************************************** TestMatrixLOOP',countMirror)
+          print('***********************************+******************************* TestMatrixLOOP',countMirror)
 #### GET Ray_In in  the System
           mainRinDF = mainRin.dataSheet
           # print(mainRinDF)
           data = []
           layout = []
           rInList = ['Xin', 'Kxin', 'Zin', 'Kzin']
-          rOutList = ['Xout','Kxout','Zout', 'Kzout']
+          # rOutList = ['Xout','Kxout','Zout', 'Kzout']
           # LOOP 1st ORDR
-          countMirror = int(sys.dataSheet.Rin[0])
+
           for mirrorList in mirrorDictMain.get(mirrorDictSub):
               if countMirror == 1:
                   rOutList = ['Xin', 'Kxin', 'Yin', 'Kyin']
@@ -160,10 +167,14 @@ def testMatrixLoop(mirrorDictMain):
                   rOutList = ['Yin', 'Kyin', 'Zin', 'Kzin']
               elif countMirror == 4:
                   rOutList = ['Xin', 'Kxin', 'Yin', 'Kyin']
-              print('rOutList = ', rOutList)
-
-              setZeroDict(rInList, rOutList, startMirror, countMirror)
-
+              # print('rOutList = ', rOutList)
+              print('startMirror = ')
+              print(startMirror)
+              print('countMirror = ')
+              print(countMirror)
+              testMatrixDataset, writer = setZeroDict(rInList, rOutList, startMirror, countMirror)
+              # print('testMatrixDict')
+              # print(testMatrixDict)
               mirrorObject = Parametrs(mainPath + sysParamFname + fExtend,
                                        mirrorList)  ## mirror List - The name of Sheets in Exel file
               raysFName = ['Ray_' + (str(countMirror - 1)) + '_' + str(countMirror),
@@ -182,6 +193,17 @@ def testMatrixLoop(mirrorDictMain):
               RayReflectedDF = RayReflectedObject.dataSheet
               RaysNormalObject = Parametrs(pathNormalRay, 'Sheet1')
               # LOOP 1st ORDER
+              keynameA1 = 'A1'
+              matrixName = []
+              matrixName.append(keynameA1)
+              tempNANarray44 = np.array([[nan, nan, nan, nan],
+                                         [nan, nan, nan, nan],
+                                         [nan, nan, nan, nan],
+                                         [nan, nan, nan, nan]
+                                         ])
+              tempNANdf4x4 = pd.DataFrame(tempNANarray44, index=rOutList, columns=rInList)
+
+
               for rInelement in rInList:
                   # print('i = ', rInelement)
                   # print('*********************   Rin =  ********  ', rInelement,'   ******************')
@@ -193,7 +215,14 @@ def testMatrixLoop(mirrorDictMain):
                   # print('indexMax', indexMax)
                   # print('indexMin', indexMin)
               ## Calilus For a11 a22 a33 a44
-
+                  a1 = np.array([[1, 1, 1], [2,2,2]])
+                  a2 = np.array([[3,3,3], [4,4,4]])
+                  Alist  = [a1, a2]
+                  print('Alist = ')
+                  print(Alist)
+                  Alist[a1[0,0]] = 5
+                  print('Alist = ')
+                  print(Alist)
                   a11 = rayInArray.loc[indexMin, rInelement]
                   a12 = a11**2
                   a13 = a11**3
@@ -201,43 +230,62 @@ def testMatrixLoop(mirrorDictMain):
                   a22 = a21**2
                   a23 = a21**3
                   a31 = rayInArray.loc[indexMax, rInelement]
-                  a32= a31**2
+                  a32 = a31**2
                   a33 = a31**3
                   rInMatrixInv33 = np.array([
-                            [a11, a12, a13],
-                            [a21, a22, a23],
-                            [a31, a32, a33]
-                             ])
+                                             [a11, a12, a13],
+                                             [a21, a22, a23],
+                                             [a31, a32, a33]
+                                          ])
+                  keynameA2 = 'A2' +  rInelement
+                  keynameA3 = 'A3' +  rInelement + rInelement
 
-
+                  matrixName.append(keynameA2)
+                  matrixName.append(keynameA3)
                   for rayOutelement in rOutList:
 
-                        rOutArray = RayReflectedDF.loc[indexMin:indexMax, rayOutelement]
-                        rOutColumn31 = np.array([[rOutArray[indexMin]],
-                                                [rOutArray[indexMin + 1]],
-                                                [rOutArray[indexMax]]])
-                        rInMatrixInv33Inv = inv(rInMatrixInv33)
-                        aTemp = rInMatrixInv33Inv.dot(rOutColumn31)
-                        # print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ',  rayOutelement,    '^^^^^^^^^^^^^^')
-                        # print('rInArray = ')
-                        # print(rInMatrixInv33)
-                        # print('rOutArray = ')
-                        # print(rOutColumn31)
-                        # print('A_TEMP = ')
-                        # print(aTemp)
-                        # print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
+                      rOutArray = RayReflectedDF.loc[indexMin:indexMax, rayOutelement]
+                      rOutColumn31 = np.array([[rOutArray[indexMin]],
+                                               [rOutArray[indexMin + 1]],
+                                               [rOutArray[indexMax]]])
+                      rInMatrixInv33 = inv(rInMatrixInv33)
+                      aTemp = rInMatrixInv33.dot(rOutColumn31)
+
+                      print('A_TEMP = ')
+                      print(aTemp)
+                      print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
+                      a = aTemp[0]
+                      b = aTemp[1]
+                      c = aTemp[2]
+                      print(' writer.path = ')
+                      print( writer.path)
+                      paramExelfile = pd.ExcelFile(writer.path)
+                      print(paramExelfile.sheet_names)
+                      testMatrixFName = 'testMatrix_' + str(startMirror) + '_' + str(countMirror)
+                      writer = pd.ExcelWriter(
+                                              '/home/konstantin/PycharmProjects/RayTracer/result/' + str(testMatrixFName) + '.xls',
+                                              na_rep='nan'
+                                             )
+                      for sheetNameElement in paramExelfile.sheet_names:
+                          AtempDF = Parametrs(writer.path, sheetNameElement).dataSheet
+                          if sheetNameElement == keynameA1:
+                              AtempDF.loc[rayOutelement, rInelement] = a
+                              AtempDF.to_excel(writer, na_rep='nan', sheet_name=sheetNameElement)
+                          elif sheetNameElement == keynameA2:
+                              AtempDF.loc[rayOutelement, rInelement] = b
+                              AtempDF.to_excel(writer, na_rep='nan', sheet_name=sheetNameElement)
+                          elif sheetNameElement == keynameA3:
+                              AtempDF.loc[rayOutelement, rInelement] = c
+                              AtempDF.to_excel(writer, na_rep='nan', sheet_name=sheetNameElement)
+                          else:
+                              AtempDF.to_excel(writer, na_rep='nan', sheet_name=sheetNameElement)
+                      writer.save()
+
+
               countMirror += 1
-              # print('path = ', path)
-              # print(mirrorObject.dataSheet)
-              # print(RaysInObject.dataSheet)
-              # print(RayReflectedObject.dataSheet)
-              # print(RaysNormalObject.dataSheet)
-              # print('mirrorDictMain.get(mirrorDictSub):', mirrorDictMain.get(mirrorDictSub))
-              # print("Current Mirror = ", mirrorList)
-              # print("Count = ", countMirror)
+
               print('***********************************************************    End  Ray Loop:    ', mirrorList)
-              # print('Ray In = ', raysObject.rayInDict)
-              # print('Reflected', raysObject.rayReflectedDict)
+
     print('===========================================================================  End Mirror Loop')
 
 pathName()
