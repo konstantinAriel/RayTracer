@@ -84,5 +84,5 @@ class Test:
                                  })
         return raysZeroDF
 
-    def getZeroDF(self):
-        A1
+
+
