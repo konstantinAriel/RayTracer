@@ -1,10 +1,8 @@
 import  numpy as np
 import pandas as pd
 import plotly.graph_objs  as go
-
 import plotly as py
 
-from scr.Test import Test
 from scr.MainParam import Parametrs
 from scr.Ploting import Ploting
 from scr.Rays import Rays
