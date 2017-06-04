@@ -34,3 +34,11 @@
                           # keynameA32 = 'A3' + rInelement2 + rInelement2 + '_' + rInelement1
                           # keynameA32inv11 = 'A3' + rInelement2 + rInelement1 + '_' + rInelement2
                           # keynameA32inv12 = 'A3' + rInelement1 + rInelement2 + '_' + rInelement2
+
+
+import  numpy as np
+
+a = np.array([1,2,3,4])
+b = a.T
+print(a)
+print(b)

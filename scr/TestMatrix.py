@@ -147,12 +147,12 @@ class TestMatrix:
                         header231 = 'A3' + keyNameI2 + keyNameI3 + '_' + keyNameI1
                         header312 = 'A3' + keyNameI3 + keyNameI1 + '_' + keyNameI2
                         header321 = 'A3' + keyNameI3 + keyNameI2 + '_' + keyNameI1
-                        testMatrixDF.loc[rOutElement, header123] = a
-                        testMatrixDF.loc[rOutElement, header132] = 'A132'
-                        testMatrixDF.loc[rOutElement, header213] = 'A213'
-                        testMatrixDF.loc[rOutElement, header231] = 'A231'
-                        testMatrixDF.loc[rOutElement, header312] = 'A312'
-                        testMatrixDF.loc[rOutElement, header321] = 'A321'
+                        testMatrixDF.loc[rOutElement, header123] = 6*a
+                        testMatrixDF.loc[rOutElement, header132] = 0
+                        testMatrixDF.loc[rOutElement, header213] = 0
+                        testMatrixDF.loc[rOutElement, header231] = 0
+                        testMatrixDF.loc[rOutElement, header312] = 0
+                        testMatrixDF.loc[rOutElement, header321] = 0
         testMatrixFName = 'testMatrix_' + str(startMirror) + '_' + str(countMirror)
         testMatrixDF.to_excel('/home/konstantin/PycharmProjects/RayTracer/result/' +
                               str(testMatrixFName) +
@@ -240,14 +240,14 @@ class TestMatrix:
                                                    rin23 ** 3))]
                                                  ])
                         aTemp = rInMatrixInv33.dot(rOutColumn31)
-                        testMatrixDF.loc[rayOutElement, keynameA2] = aTemp[0]
-                        testMatrixDF.loc[rayOutElement, keynameA2inv] = 'a2'
-                        testMatrixDF.loc[rayOutElement, keynameA31] = aTemp[1]
-                        testMatrixDF.loc[rayOutElement, keynameA31inv11] = 'a3'
-                        testMatrixDF.loc[rayOutElement, keynameA31inv12] = 'a3'
-                        testMatrixDF.loc[rayOutElement, keynameA32] = aTemp[2]
-                        testMatrixDF.loc[rayOutElement, keynameA32inv12] = 'a3'
-                        testMatrixDF.loc[rayOutElement, keynameA32inv11] = 'a3'
+                        testMatrixDF.loc[rayOutElement, keynameA2] = 2*aTemp[0]
+                        testMatrixDF.loc[rayOutElement, keynameA2inv] = 0
+                        testMatrixDF.loc[rayOutElement, keynameA31] = 3*aTemp[1]
+                        testMatrixDF.loc[rayOutElement, keynameA31inv11] = 0
+                        testMatrixDF.loc[rayOutElement, keynameA31inv12] = 0
+                        testMatrixDF.loc[rayOutElement, keynameA32] = 3*aTemp[2]
+                        testMatrixDF.loc[rayOutElement, keynameA32inv12] = 0
+                        testMatrixDF.loc[rayOutElement, keynameA32inv11] = 0
         testMatrixFName = 'testMatrix_' + str(startMirror) + '_' + str(countMirror)
         testMatrixDF.to_excel('/home/konstantin/PycharmProjects/RayTracer/result/' + str(testMatrixFName) + '.xls',
                               na_rep='nan')
