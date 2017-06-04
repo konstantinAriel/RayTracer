@@ -15,14 +15,14 @@ from scr.getRaysFromMatrix import RaysFromMatrix
 global mainPath, fExtend, sysParamFname, raysInFname, ray4test3pointFname, mainPathForMatrix
 
 def pathName():
-    global mainPath, fExtend, sysParamFname, raysInFname, ray4test3pointFname, mainPathForMatrix
+    global mainPath, fExtend, sysParamFname, raysInFname, ray4test3pointFname, mainPathForMatrix, raysToCompareFName
     mainPath = "/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/"
     fExtend = '.xls'
     sysParamFname = 'sysParam_1'
     raysInFname = 'RaysIn'
     raysNormalisedFname = mainPath + 'raysNormalised_' + raysInFname + '_' + sysParamFname
     ray4test3pointFname = mainPath + 'ray4test3Point_'  + sysParamFname + fExtend
-
+    raysToCompareFName = '/home/konstantin/PycharmProjects/RayTracer/result/toCompare/'
     mainPathForMatrix = '/home/konstantin/PycharmProjects/RayTracer/result/raysForMatrix/'
 
 def mirrorLoop(mirrorDictMain):
@@ -42,9 +42,9 @@ def mirrorLoop(mirrorDictMain):
             raysFName = ['Ray_' + (str(countMirror - 1)) + '_' + str(countMirror),
                              'Ray_' + str(countMirror) + '_' + str(countMirror + 1),
                              'normalRay_' + str(countMirror) + '_' + str(countMirror)]
-            RaysObject = Parametrs(mainPathForMatrix + raysFName[0] + fExtend, 'Sheet1')
+            RaysObject = Parametrs(raysToCompareFName + raysFName[0] + fExtend, 'Sheet1')
             print(RaysObject.dataSheet)
-            path = [mainPathForMatrix, raysFName, fExtend]
+            path = [raysToCompareFName, raysFName, fExtend]
             print('path = ', path )
             rInObject.calcReflectedRays(path, Mirror, RaysObject.dataSheet)
             countMirror += 1
@@ -80,7 +80,7 @@ def plotLoop(mirrorDictMain):
             raysFName = ['Ray_' + (str(countMirror - 1)) + '_' + str(countMirror),
                          'Ray_' + str(countMirror) + '_' + str(countMirror + 1),
                          'normalRay_' + str(countMirror) + '_' + str(countMirror)]
-            path = [mainPathForMatrix, raysFName, fExtend]
+            path = [raysToCompareFName, raysFName, fExtend]
             # print('path = ', path )
             plotObject = Ploting(path, mirrorObject.dataSheet, mirrorList)
 
@@ -98,7 +98,7 @@ def plotLoop(mirrorDictMain):
         layout = plotObject.layout
     #print(data)
     fig = dict(data=data, layout=layout)
-    py.offline.plot(fig, filename='42RaysforTest MAtrix.html')
+    py.offline.plot(fig, filename='/home/konstantin/PycharmProjects/RayTracer/result/toCompare/RaysToCompare.html')
 
 def testMatrixLoop(mirrorDictMain):
     data = []
@@ -174,12 +174,42 @@ def testMatrixLoop(mirrorDictMain):
     # print(path2testMatrix)
     print('===========================================================================  End Mirror Loop')
     return path2testMatrix
+
+
+def getRout(testMatrixObject):
+    for path2testMatrixElement in path2testMatrix:
+        s = path2testMatrixElement[0]
+        sIdWithExtension = s.rpartition("_")[2]
+        sId = sIdWithExtension.rpartition(".xls")
+        countMirror = sId[0]
+        print('path2testMatrixElement = ')
+        print(countMirror)
+
+        if countMirror == '1':
+            rOutList = ['Xin', 'Kxin', 'Yin', 'Kyin']
+        elif countMirror == '2':
+            rOutList = ['Xin', 'Kxin', 'Zin', 'Kzin']
+        elif countMirror == '3':
+            rOutList = ['Yin', 'Kyin', 'Zin', 'Kzin']
+        elif countMirror == '4':
+            rOutList = ['Xin', 'Kxin', 'Yin', 'Kyin']
+        print('countMirror = ')
+        print(countMirror)
+        print(path2testMatrixElement)
+        testMatrixFileObject = Parametrs(path=path2testMatrixElement[0], sheetName="Sheet1")
+        testMatrixDF = testMatrixFileObject.dataSheet
+        print(testMatrixDF)
+        testMatrixObject = RaysFromMatrix(testMatrixDF)
+        Rout1 = testMatrixObject.getFirsOderRay()
+        Rout2 = testMatrixObject.getSecondOderRay()
+
+
 pathName()
 
 #==================   Test for Aberation 1 =====================================
 
 # *******************************  Rays Generator ******************************
-# testMatrixObject = TestMatrix(mirrorList=None)
+testMatrixObject = TestMatrix(mirrorList=None)
 
 rInObject = Rays()  # Create object of Rays
 
@@ -193,14 +223,14 @@ tLine = Parametrs(mainPath+sysParamFname + fExtend, "LineParam")
 sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
 # mainRin = Parametrs(mainPath +  raysInFname +  fExtend, "Rin")
 mainRin = Parametrs(ray4test3pointFname, "Sheet1")
-raysSheetName0 = 'Ray_' + str(int(sys.dataSheet.Rin[0] - 1)) + '_' + str(int(sys.dataSheet.Rin[0]))
+# raysSheetName0 = 'Ray_' + str(int(sys.dataSheet.Rin[0] - 1)) + '_' + str(int(sys.dataSheet.Rin[0]))
 
 #=============  Normilise Rin for Mirror  ===================================
 mirror1SheetName = 'Mirror' + str(int(sys.dataSheet.Rin[0]))
 mirrorObject = Parametrs(mainPath+sysParamFname + fExtend, 'Mirror1')
 raysDataFrame = rInObject.rInNormalise(mirrorObject.dataSheet, mainRin.dataSheet)
 # # save to Excel
-rInObject.saveRays2Execel(mainPathForMatrix + 'Ray'+'_' +
+rInObject.saveRays2Execel(raysToCompareFName + 'Ray'+'_' +
                            str(int(sys.dataSheet.Rin[0]-1)) + '_' +
                            str(int(sys.dataSheet.Rin[0]))
                            + fExtend,
@@ -214,11 +244,13 @@ mirrorLoop(mirrorDictMain)
 
 # #=============== Plotting ====================================================
 sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
-# py.tools.set_credentials_file(username ='DemoAccount', api_key='lr1c37zw81')
-# plotLoop(mirrorDictMain)
+py.tools.set_credentials_file(username ='DemoAccount', api_key='lr1c37zw81')
+plotLoop(mirrorDictMain)
 
 path2testMatrix = testMatrixLoop(mirrorDictMain)
 print(path2testMatrix)
 
 # testObject = RaysFromMatrix(path2testMatrix)
 
+
+getRout()
