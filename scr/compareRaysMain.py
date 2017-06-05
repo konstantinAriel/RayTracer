@@ -117,8 +117,8 @@ py.tools.set_credentials_file(username ='DemoAccount', api_key='lr1c37zw81')
 
 for i in range(1,5):
     path2testMatrix = mainPathForMatrix + 'testMatrix_0_' + str(i) + fExtend
-    # print('i = ')
-    # print(i)
+    print('i = ')
+    print(i)
     # print('path2testMatrix = ')
     # print(path2testMatrix)
     matrixtestObject = Parametrs(path2testMatrix, 'Sheet1')
@@ -131,19 +131,20 @@ for i in range(1,5):
                  'normalRay_' + str(i) + '_' + str(i)]
     path = [mainPathToCompare, raysFName, fExtend]
     RaysObject = Parametrs(mainPathToCompare + raysFName[0] + fExtend, 'Sheet1')
-    # print('path = ', path)
-    # print(RaysObject.dataSheet)
     rOutIndexList = matrixtestDF.index
-    # print('rOutIndexList  = ')
-    # print(rOutIndexList)
-    # print('rOutIndexList[0]  = ')
-    # print(rOutIndexList[0])
-    # print('rOutIndexList[1]  = ')
-    # print(rOutIndexList[1])
-    # print('rOutIndexList[2]  = ')
-    # print(rOutIndexList[2])
-    # print('rOutIndexList[3]  = ')
-    # print(rOutIndexList[3])
     rOutObject = RaysFromMatrix(matrixtestDF, rOutIndexList)
-    rOutObject.getFirsOderRay()
-    rOutObject.getSecondOderRay()
+    Rout1 = rOutObject.getFirsOderRay()
+    Rout2 = rOutObject.getSecondOderRay()
+    Rout3 = rOutObject.getThirdOderRay()
+    RoutTotal = Rout1 + Rout2 + Rout3
+
+    print('Rout1 =')
+    print(Rout1)
+    print('Rout2 =')
+    print(Rout2)
+    print('Rout3 =')
+    print(Rout3)
+    print('RoutTotal = ')
+    print(RoutTotal)
+    print('********************^^^^^^^^^^^^^^^^^^^^^^   END LOOP ^^^^^^^^^^^^^^^ ********************')
+

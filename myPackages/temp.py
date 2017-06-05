@@ -36,9 +36,9 @@
                           # keynameA32inv12 = 'A3' + rInelement1 + rInelement2 + '_' + rInelement2
 
 
-import  numpy as np
-
-a = np.array([1,2,3,4])
-b = a.T
-print(a)
-print(b)
+for i in range(4):
+    print('i = ')
+    print(i)
+    for j in range(i,4):
+        print('j = ')
+        print(j)
