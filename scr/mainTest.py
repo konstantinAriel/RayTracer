@@ -125,7 +125,6 @@ def testMatrixLoop(mirrorDictMain):
            elif countMirror == 4:
                rOutList = ['Xin', 'Kxin', 'Yin', 'Kyin']
 
-
            # print('rOutList = ', rOutList)
            # print('startMirror = ')
            # print(startMirror)
@@ -204,7 +203,7 @@ rInObject.saveRays2Execel(mainPathForMatrix + 'Ray'+'_' +
                            str(int(sys.dataSheet.Rin[0]-1)) + '_' +
                            str(int(sys.dataSheet.Rin[0]))
                            + fExtend,
-                           raysDataFrame)
+                           raysDataFrame, 'Sheet1')
 
 #==============  Get List of Section for calculation ========================#
 mirrorDictMain = sys.getMirrorList(sys.dataSheet)
@@ -215,7 +214,7 @@ mirrorLoop(mirrorDictMain)
 # #=============== Plotting ====================================================
 sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
 # py.tools.set_credentials_file(username ='DemoAccount', api_key='lr1c37zw81')
-# plotLoop(mirrorDictMain)
+plotLoop(mirrorDictMain)
 
 path2testMatrix = testMatrixLoop(mirrorDictMain)
 print(path2testMatrix)

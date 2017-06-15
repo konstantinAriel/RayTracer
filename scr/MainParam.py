@@ -3,18 +3,18 @@ import numpy as np
 
 class Parametrs:
     def __init__(self, path, sheetName):
-        if sheetName == None:
-            pass
-        else:
-            self.sheetName = sheetName
         if path == None:
             pass
         else:
             self.path = path
         self.paramFile = pd.ExcelFile(self.path)
+        if sheetName == None:
+            pass
+        else:
+            self.sheetName = sheetName
+        self.dataSheet = self.getParam(self.paramFile, self.sheetName)
         self.sheetsNames = self.paramFile.sheet_names
         self.mNumber = len(self.sheetsNames) - 3
-        self.dataSheet = self.getParam(self.paramFile, self.sheetName)
         self.mainPath = self.getMainPath()
         self.fExtend = self.getFextend()
         self.sysParamFname = self.getSysParamFname()

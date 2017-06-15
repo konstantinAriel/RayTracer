@@ -36,11 +36,12 @@ def mirrorLoop(mirrorDictMain):
             Mirror = sys.getParam(sys.paramFile, mirrorList)  ## mirror List - The name of Sheets in Exel file
             # print('Mirror = ')
             # print(Mirror)
-
             ################################################################
+
             raysFName = ['Ray_' + (str(countMirror - 1)) + '_' + str(countMirror),
                              'Ray_' + str(countMirror) + '_' + str(countMirror + 1),
                              'normalRay_' + str(countMirror) + '_' + str(countMirror)]
+
             RaysObject = Parametrs(mainPathToCompare + raysFName[0] + fExtend, 'Sheet1')
             path = [mainPathToCompare, raysFName, fExtend]
             # print(RaysObject.dataSheet)
@@ -52,8 +53,8 @@ def mirrorLoop(mirrorDictMain):
 def plotLoop(mirrorDictMain):
     data = []
     for mirrorDictSub in mirrorDictMain.keys():
-        print('sysObject in plotLoop = ')
-        print(sysObject.dataSheet)
+        # print('sysObject in plotLoop = ')
+        # print(sysObject.dataSheet)
         countMirror = int(sysObject.dataSheet.Rin[0])
         # print('CountMirror', countMirror)
         # print('****************************************************************** Mirror Loop',countMirror)
@@ -97,15 +98,16 @@ tLine = Parametrs(mainPath+sysParamFname + fExtend, "LineParam")
 sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
 # print('sys.dataSheet = ')
 # print(sys.dataSheet)
-mainRin = Parametrs(mainPath + raysInFname + fExtend, "RinTest")
 mirror1SheetName = 'Mirror' + str(int(sys.dataSheet.Rin[0]))
 mirrorObject = Parametrs(mainPath+sysParamFname + fExtend, 'Mirror1')
+
+mainRin = Parametrs(mainPath + raysInFname + fExtend, "Xin")
 raysDataFrame = rInObject.rInNormalise(mirrorObject.dataSheet, mainRin.dataSheet)
 rInObject.saveRays2Execel(mainPathToCompare + 'Ray'+'_' +
                            str(int(sys.dataSheet.Rin[0]-1)) + '_' +
                            str(int(sys.dataSheet.Rin[0]))
                            + fExtend,
-                           raysDataFrame)
+                           raysDataFrame, 'Sheet1')
 mirrorDictMain = sys.getMirrorList(sys.dataSheet)
 
 mirrorLoop(mirrorDictMain)
@@ -113,15 +115,16 @@ mirrorLoop(mirrorDictMain)
 sysObject = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
 py.tools.set_credentials_file(username ='DemoAccount', api_key='lr1c37zw81')
 
-# plotLoop(mirrorDictMain)
+plotLoop(mirrorDictMain)
 
-for i in range(1,5):
+for i in range(1,2):
+
     path2testMatrix = mainPathForMatrix + 'testMatrix_0_' + str(i) + fExtend
-    print('i = ')
-    print(i)
+    # print('i = ')
+    # print(i)
     # print('path2testMatrix = ')
     # print(path2testMatrix)
-    matrixtestObject = Parametrs(path2testMatrix, 'Sheet1')
+    matrixtestObject = Parametrs(path=path2testMatrix, sheetName='Sheet1')
     matrixtestDF = matrixtestObject.dataSheet
     # print('matrixtestDF = ')
     # print(matrixtestDF)
@@ -131,20 +134,44 @@ for i in range(1,5):
                  'normalRay_' + str(i) + '_' + str(i)]
     path = [mainPathToCompare, raysFName, fExtend]
     RaysObject = Parametrs(mainPathToCompare + raysFName[0] + fExtend, 'Sheet1')
-    rOutIndexList = matrixtestDF.index
-    rOutObject = RaysFromMatrix(matrixtestDF, rOutIndexList)
-    Rout1 = rOutObject.getFirsOderRay()
-    Rout2 = rOutObject.getSecondOderRay()
-    Rout3 = rOutObject.getThirdOderRay()
-    RoutTotal = Rout1 + Rout2 + Rout3
-
-    print('Rout1 =')
-    print(Rout1)
-    print('Rout2 =')
-    print(Rout2)
-    print('Rout3 =')
-    print(Rout3)
-    print('RoutTotal = ')
-    print(RoutTotal)
+    RaysInSheetNameList = mainRin.sheetsNames
+    print(' RaysInShetNameList = ')
+    print(RaysInSheetNameList)
+    for rayInSheetName in RaysInSheetNameList:
+        print(' rayInSheetName = ')
+        print(rayInSheetName)
+        RaysDF = RaysObject.dataSheet
+        countOfRays = RaysDF.index
+        for indexRays in countOfRays:
+            # print('indexRays = ')
+            # print(indexRays)
+            rOutIndexList = matrixtestDF.index
+            rOutObject = RaysFromMatrix(matrixtestDF, rOutIndexList)
+            Rout1 = rOutObject.getFirsOderRay(indexRays)
+            Rout2 = rOutObject.getSecondOderRay(indexRays)
+            Rout3 = rOutObject.getThirdOderRay(indexRays)
+            # RoutTotal = Rout1 + Rout2 + Rout3
+            # print('Rout1 =')
+            # print(Rout1)
+            # print('Rout2 =')
+            # print(Rout2)
+            # print('Rout3 =')
+            # print(Rout3)
+            RoutTotalX  = Rout1[0] + Rout2[0] + Rout3[0]
+            RoutTotalKx = Rout1[1] + Rout2[1] + Rout3[1]
+            RoutTotalZ  = Rout1[2] + Rout2[2] + Rout3[2]
+            RoutTotalKz = Rout1[3] + Rout2[3] + Rout3[3]
+            # print('RoutTotal =')
+            # print(RoutTotal)
+            # print('RoutTotal = ')
+            # print(RoutTotal)
+            # print('RoutTotal X = ')
+            # print(RoutTotalX)
+            # print('RoutTotal  Kx = ')
+            # print(RoutTotalKx)
+            # print('RoutTotal  Z = ')
+            # print(RoutTotalZ)
+            # print('RoutTotal  Kz = ')
+            # print(RoutTotalKz)
     print('********************^^^^^^^^^^^^^^^^^^^^^^   END LOOP ^^^^^^^^^^^^^^^ ********************')
 

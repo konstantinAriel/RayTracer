@@ -148,11 +148,11 @@ class TestMatrix:
                         header312 = 'A3' + keyNameI3 + keyNameI1 + '_' + keyNameI2
                         header321 = 'A3' + keyNameI3 + keyNameI2 + '_' + keyNameI1
                         testMatrixDF.loc[rOutElement, header123] = a
-                        testMatrixDF.loc[rOutElement, header132] = a
-                        testMatrixDF.loc[rOutElement, header213] = a
-                        testMatrixDF.loc[rOutElement, header231] = a
-                        testMatrixDF.loc[rOutElement, header312] = a
-                        testMatrixDF.loc[rOutElement, header321] = a
+                        testMatrixDF.loc[rOutElement, header132] = 0
+                        testMatrixDF.loc[rOutElement, header213] = 0
+                        testMatrixDF.loc[rOutElement, header231] = 0
+                        testMatrixDF.loc[rOutElement, header312] = 0
+                        testMatrixDF.loc[rOutElement, header321] = 0
         testMatrixFName = 'testMatrix_' + str(startMirror) + '_' + str(countMirror)
         testMatrixDF.to_excel('/home/konstantin/PycharmProjects/RayTracer/result/' +
                               str(testMatrixFName) +
@@ -215,7 +215,25 @@ class TestMatrix:
                         [a21, a22, a23],
                         [a31, a32, a33]
                     ])
-                    rInMatrixInv33 = inv(rInMatrix33)
+
+                    detrInMatrix33 = a11 * a22 * a33 + a31 * a12 * a23 + a21 * a32 * a13 - a31 * a22 * a13 - a11 * a32 * a23 - a21 * a12 * a33
+                    print('detrInMatrix33')
+                    print(detrInMatrix33)
+                    if detrInMatrix33 == 0:
+                        print('Matrix is not Inverted')
+                        rInMatrixInv33 = rInMatrix33
+                    else:
+                        rInMatrixInv33 = inv(rInMatrix33)
+
+                    c11 = rInMatrixInv33[0, 0]
+                    c12 = rInMatrixInv33[0, 1]
+                    c13 = rInMatrixInv33[0, 2]
+                    c21 = rInMatrixInv33[1, 0]
+                    c22 = rInMatrixInv33[1, 1]
+                    c23 = rInMatrixInv33[1, 2]
+                    c31 = rInMatrixInv33[2, 0]
+                    c32 = rInMatrixInv33[2, 1]
+                    c33 = rInMatrixInv33[2, 2]
 
                     for rayOutElement in rOutList:
                         A11 = testMatrixDF.loc[rayOutElement, keynameA11ps]
@@ -226,28 +244,35 @@ class TestMatrix:
                         A23 = testMatrixDF.loc[rayOutElement, keynameA23pS]
 
                         rOutArray = RayReflectedDF.loc[index:indexMax, rayOutElement]
-                        rOutColumn31 = np.array([[rOutArray[index] -
-                                                  (A11 * rin11 + A12 * (rin11 ** 2) + A13 * (
-                                                      rin11 ** 3) + A21 * rin21 + A22 * (rin21 ** 2) + A23 * (
-                                                   rin21 ** 3))],
-                                                 [rOutArray[index + 1] -
-                                                  (A11 * rin12 + A12 * (rin12 ** 2) + A13 * (
-                                                      rin12 ** 3) + A21 * rin22 + A22 * (rin22 ** 2) + A23 * (
-                                                   rin22 ** 3))],
-                                                 [rOutArray[indexMax] -
-                                                  (A11 * rin13 + A12 * (rin13 ** 2) + A13 * (
-                                                      rin13 ** 3) + A21 * rin23 + A22 * (rin23 ** 2) + A23 * (
-                                                   rin23 ** 3))]
+                        print('rOutArray = ')
+                        print(rOutArray)
+                        rout1 = rOutArray[index]
+                        rout2 = rOutArray[index+1]
+                        rout3 = rOutArray[indexMax]
+                        rOutColumn31 = np.array([[rout1 -
+                                                  (A11 * rin11 + A12 * (rin11 ** 2) + A13 * (rin11 ** 3) +
+                                                   A21 * rin21 + A22 * (rin21 ** 2) + A23 * (rin21 ** 3))],
+                                                   [rout2 -
+                                                  (A11 * rin12 + A12 * (rin12 ** 2) + A13 * (rin12 ** 3) +
+                                                   A21 * rin22 + A22 * (rin22 ** 2) + A23 * (rin22 ** 3))],
+                                                  [rout3 -
+                                                  (A11 * rin13 + A12 * (rin13 ** 2) + A13 * (rin13 ** 3) +
+                                                   A21 * rin23 + A22 * (rin23 ** 2) + A23 * (rin23 ** 3))]
                                                  ])
-                        aTemp = rInMatrixInv33.dot(rOutColumn31)
-                        testMatrixDF.loc[rayOutElement, keynameA2]       = aTemp[0]
-                        testMatrixDF.loc[rayOutElement, keynameA2inv]    = aTemp[0]
-                        testMatrixDF.loc[rayOutElement, keynameA31]      = aTemp[1]
-                        testMatrixDF.loc[rayOutElement, keynameA31inv11] = aTemp[1]
-                        testMatrixDF.loc[rayOutElement, keynameA31inv12] = aTemp[1]
-                        testMatrixDF.loc[rayOutElement, keynameA32]      = aTemp[2]
-                        testMatrixDF.loc[rayOutElement, keynameA32inv12] = aTemp[2]
-                        testMatrixDF.loc[rayOutElement, keynameA32inv11] = aTemp[2]
+
+                        # aTemp = rInMatrixInv33.dot(rOutColumn31)
+                        aTemp1 = c11 * rOutColumn31[0] + c12 * rOutColumn31[1] + c13 * rOutColumn31[2]
+                        aTemp2 = c21 * rOutColumn31[0] + c22 * rOutColumn31[1] + c23 * rOutColumn31[2]
+                        aTemp3 = c31 * rOutColumn31[0] + c32 * rOutColumn31[1] + c33 * rOutColumn31[2]
+
+                        testMatrixDF.loc[rayOutElement, keynameA2]       = aTemp1
+                        testMatrixDF.loc[rayOutElement, keynameA2inv]    = 0
+                        testMatrixDF.loc[rayOutElement, keynameA31]      = aTemp2
+                        testMatrixDF.loc[rayOutElement, keynameA31inv11] = 0
+                        testMatrixDF.loc[rayOutElement, keynameA31inv12] = 0
+                        testMatrixDF.loc[rayOutElement, keynameA32]      = aTemp3
+                        testMatrixDF.loc[rayOutElement, keynameA32inv12] = 0
+                        testMatrixDF.loc[rayOutElement, keynameA32inv11] = 0
         testMatrixFName = 'testMatrix_' + str(startMirror) + '_' + str(countMirror)
         testMatrixDF.to_excel('/home/konstantin/PycharmProjects/RayTracer/result/' + str(testMatrixFName) + '.xls',
                               na_rep='nan')
@@ -289,8 +314,35 @@ class TestMatrix:
                 rOutColumn31 = np.array([[rOutArray[index]],
                                          [rOutArray[index + 1]],
                                          [rOutArray[indexMax]]])
-                rInMatrixInv33 = inv(rInMatrix33)
-                aTemp = rInMatrixInv33.dot(rOutColumn31)
+                print('rInMatrix33 = ')
+                print(rInMatrix33)
+                detrInMatrix33 = a11*a22*a33 + a31*a12*a23 + a21*a32*a13 - a31*a22*a13 - a11*a32*a23 - a21*a12*a33
+                print('detrInMatrix33')
+                print(detrInMatrix33)
+                if detrInMatrix33 == 0:
+                    print('Matrix is not Inverted')
+                    rInMatrixInv33 = rInMatrix33
+                else:
+                    rInMatrixInv33 = inv(rInMatrix33)
+                # aTemp = rInMatrixInv33.dot(rOutColumn31)
+                c11 = rInMatrixInv33[0,0]
+                c12 = rInMatrixInv33[0,1]
+                c13 = rInMatrixInv33[0,2]
+                c21 = rInMatrixInv33[1,0]
+                c22 = rInMatrixInv33[1,1]
+                c23 = rInMatrixInv33[1,2]
+                c31 = rInMatrixInv33[2,0]
+                c32 = rInMatrixInv33[2,1]
+                c33 = rInMatrixInv33[2,2]
+
+                rout1 = rOutColumn31[0]
+                rout2 = rOutColumn31[1]
+                rout3 = rOutColumn31[2]
+
+                aTemp1 =  c11*rout1 + c12*rout2 + c13*rout3
+                aTemp2 =  c21*rout1 + c22*rout2 + c23*rout3
+                aTemp3 =  c31*rout1 + c32*rout2 + c33*rout3
+
                 # print('A_TEMP[0] =                       ********************************<<<<<<<<<<')
                 # print(aTemp)
                 # print('testMatrixDF.koc[rayOutElement, keynameA1] = ')
@@ -300,17 +352,17 @@ class TestMatrix:
                 # print('testMatrixDF.koc[rayOutElement, keynameA3] = ')
                 # print(testMatrixDF.loc[rayOutElement, keynameA3])
 
-                testMatrixDF.loc[rayOutElement, keynameA1] = aTemp[0]
-                testMatrixDF.loc[rayOutElement, keynameA2] = aTemp[1]
-                testMatrixDF.loc[rayOutElement, keynameA3] = aTemp[2]
+                testMatrixDF.loc[rayOutElement, keynameA1] = aTemp1
+                testMatrixDF.loc[rayOutElement, keynameA2] = aTemp2
+                testMatrixDF.loc[rayOutElement, keynameA3] = aTemp3
 
                 print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
-                # print('testMatrixDF.koc[rayOutElement, keynameA1] =     ')
-                # print(testMatrixDF.loc[rayOutElement, keynameA1])
-                # print('testMatrixDF.koc[rayOutElement, keynameA2] = ')
-                # print(testMatrixDF.loc[rayOutElement, keynameA2])
-                # print('testMatrixDF.koc[rayOutElement, keynameA3] = ')
-                # print(testMatrixDF.loc[rayOutElement, keynameA3])
+                print('testMatrixDF.loc[rayOutElement, keynameA1] =     ')
+                print(testMatrixDF.loc[rayOutElement, keynameA1])
+                print('testMatrixDF.loc[rayOutElement, keynameA2] = ')
+                print(testMatrixDF.loc[rayOutElement, keynameA2])
+                print('testMatrixDF.loc[rayOutElement, keynameA3] = ')
+                print(testMatrixDF.loc[rayOutElement, keynameA3])
         testMatrixFName = 'testMatrix_' + str(startMirror) + '_' + str(countMirror)
         # writer = pd.ExcelWriter('/home/konstantin/PycharmProjects/RayTracer/result/' + str(testMatrixFName) + '.xls')
         # print('testMatrixDF.loc[rayOutElement, keynameA1] =     ')
