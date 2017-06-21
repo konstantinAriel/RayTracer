@@ -44,6 +44,7 @@ class Ploting:
         xRayNormalData = []
         yRayNormalData = []
         zRayNormalData = []
+
         #Construct List of pairs of Rays
         for  rIndex in RaysInObject.dataSheet.index:
             # print(rIndex)

@@ -12,8 +12,8 @@ from scr.Ploting import Ploting
 from scr.Rays import Rays
 from scr.getRaysFromMatrix import RaysFromMatrix
 
-
 def pathName():
+
     global mainPath, fExtend, sysParamFname, raysInFname, ray4test3pointFname, mainPathForMatrix, mainPathToCompare
     mainPath = "/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/"
     fExtend = '.xls'
@@ -54,7 +54,7 @@ def mirrorLoop(mirrorDictMain):
 
             Mirror = sys.getParam(sys.paramFile, mirrorList)  ## mirror List - The name of Sheets in Exel file
             path2testMatrix = mainPathForMatrix + 'testMatrix_0_' + str(countMirror) + fExtend
-            matrixtestObject = Parametrs(path=path2testMatrix, sheetName='Sheet1')
+            matrixtestObject = Parametrs(path = path2testMatrix, sheetName = 'Sheet1')
             matrixtestDF = matrixtestObject.dataSheet
 
             # print(RaysObject.dataSheet)
@@ -64,27 +64,72 @@ def mirrorLoop(mirrorDictMain):
             print(' RaysInShetNameList = ')
             print(RaysInSheetNameList)
             for rayType in typeOfRays:
+                xRayInData = []
+                yRay1MXOutData  = []
+                yRay1MKxOutData = []
+                yRay1MZOutData  = []
+                yRay1MKzOutData = []
+
+                yRay2MXOutData  = []
+                yRay2MKxOutData = []
+                yRay2MZOutData  = []
+                yRay2MKzOutData = []
+
+                yRay3MXOutData  = []
+                yRay3MKxOutData = []
+                yRay3MZOutData  = []
+                yRay3MKzOutData = []
+
+
+                yRayTotalXMOutData  = []
+                yRayTotalKxMOutData = []
+                yRayTotalZMOutData  = []
+                yRayTotalKzOutData  = []
+
+                yRayTotalXRTOutData = []
+                yRayTotalKxRTOutData = []
+                yRayTotalZRTOutData = []
+                yRayTotalKzRTOutData = []
+
                 raysFName = [rayType + '_' + (str(countMirror - 1)) + '_' + str(countMirror),
                              rayType + '_' + str(countMirror) + '_' + str(countMirror + 1),
                              'normal' + rayType + str(countMirror) + '_' + str(countMirror)]
                 print('raysFName = ')
                 print(raysFName)
-                
-                path = [mainPathToCompare, raysFName, fExtend]
-                RaysObject = Parametrs(mainPathToCompare + raysFName[0] + fExtend, 'Sheet1')
-                rayObject.calcReflectedRays(path, Mirror, RaysObject.dataSheet)
-                print(' rayType = ')
+
+                path = [mainPathToCompare + mirrorList + '/', raysFName, fExtend]
+                RaysInObject = Parametrs(mainPath + raysInFname + fExtend, rayType)  # For each mirror
+                RaysDF = RaysInObject.dataSheet
+                rayObject.calcReflectedRays(path, Mirror, RaysDF)
+                print('rayType = ')
                 print(rayType)
-                RaysDF = RaysObject.dataSheet
+
+                pathToRin = mainPathToCompare  + rayType + '_0_1' + fExtend
+                RaysOutObjectFromRayTraycer = Parametrs(mainPathToCompare + mirrorList + '/' + raysFName[1] + fExtend,
+                                                        'Sheet1')  # For each mirror
+                RayFromRTDF = RaysOutObjectFromRayTraycer.dataSheet
+                print('RyaFromRTDF = ')
+                print(RayFromRTDF)
 
                 for indexRays in RaysDF.index:
-                    # print('indexRays = ')
-                    # print(indexRays)
+                    print('indexRays = ')
+                    print(indexRays)
                     rOutIndexList = matrixtestDF.index
-                    rOutObject = RaysFromMatrix(matrixtestDF, rOutIndexList)
-                    Rout1 = rOutObject.getFirsOderRay(indexRays)
-                    Rout2 = rOutObject.getSecondOderRay(indexRays)
-                    Rout3 = rOutObject.getThirdOderRay(indexRays)
+
+                    rOutFromMatrixObject = RaysFromMatrix(pathToRin, matrixtestDF, rOutIndexList)
+
+                    Rout1 = rOutFromMatrixObject.getFirsOderRay(indexRays)
+                    Rout2 = rOutFromMatrixObject.getSecondOderRay(indexRays)
+                    Rout3 = rOutFromMatrixObject.getThirdOderRay(indexRays)
+
+                    RayFromRTDFindexX = RayFromRTDF.loc[indexRays, 'Xin']
+                    RayFromRTDFindexKx = RayFromRTDF.loc[indexRays, 'Kxin']
+                    RayFromRTDFindexZ = RayFromRTDF.loc[indexRays, 'Zin']
+                    RayFromRTDFindexKz = RayFromRTDF.loc[indexRays, 'Kzin']
+
+                    print('RayFromRTDFindex = ')
+                    print(RayFromRTDFindex)
+
                     # RoutTotal = Rout1 + Rout2 + Rout3
                     # print('Rout1 =')
                     # print(Rout1)
@@ -92,9 +137,9 @@ def mirrorLoop(mirrorDictMain):
                     # print(Rout2)
                     # print('Rout3 =')
                     # print(Rout3)
-                    RoutTotalX = Rout1[0] + Rout2[0] + Rout3[0]
+                    RoutTotalX  = Rout1[0] + Rout2[0] + Rout3[0]
                     RoutTotalKx = Rout1[1] + Rout2[1] + Rout3[1]
-                    RoutTotalZ = Rout1[2] + Rout2[2] + Rout3[2]
+                    RoutTotalZ  = Rout1[2] + Rout2[2] + Rout3[2]
                     RoutTotalKz = Rout1[3] + Rout2[3] + Rout3[3]
                     # print('RoutTotal =')
                     # print(RoutTotal)
@@ -107,10 +152,20 @@ def mirrorLoop(mirrorDictMain):
                     print('RoutTotal  Kz = ')
                     print(RoutTotalKz)
 
-            countMirror+=1
-            print('********************^^^^^^^^^^^^^^^^^^^^^^   END LOOP ^^^^^^^^^^^^^^^ ********************')
-            # print('====================================================== ++++++++++++++++++++++++++++++++++++++++++++++++++++++   END      Mirror Loop         ',  mirrorList)
 
+
+
+
+        rayInDict = dict(
+            go.Scatter(x=xRayInData, y=yRayInData,
+                         mode='lines',
+                         name='rayIn',
+                         line=dict(width=1, color='blue')
+                         ))
+
+
+            countMirror+=1
+            print('********************^^^^^^^^^^^^^^^^^^^^^^  END LOOP  ^^^^^^^^^^^^^^^ ********************')
 
 def plotLoop(mirrorDictMain):
     data = []
@@ -155,7 +210,6 @@ def plotLoop(mirrorDictMain):
     fig = dict(data=data, layout=layout)
     py.offline.plot(fig, filename='/home/konstantin/PycharmProjects/RayTracer/result/htmlFiles/rayToCompare.html')
 
-
 pathName()
 typeOfRays = [
                 'Xin',
@@ -198,20 +252,6 @@ sysObject = Parametrs(mainPath + sysParamFname + fExtend, "SysParam")
 py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
 
 plotLoop(mirrorDictMain)
-##########################################
-# for i in range(1, 2):
-#
-#     print('i = ')
-#     print(i)
-#     print('path2testMatrix = ')
-#     print(path2testMatrix)
-#     #
-#     print('matrixtestDF = ')
-#     print(matrixtestDF)
-
-    # raysFName = ['Ray_' + (str(i - 1)) + '_' + str(i),
-    #              'Ray_' + str(i) + '_' + str(i + 1),
-    #              'normalRay_' + str(i) + '_' + str(i)]
 
 
 

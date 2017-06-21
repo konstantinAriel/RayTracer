@@ -107,7 +107,7 @@ rInObject.saveRays2Execel(mainPathToCompare + 'Ray'+'_' +
                            str(int(sys.dataSheet.Rin[0]-1)) + '_' +
                            str(int(sys.dataSheet.Rin[0]))
                            + fExtend,
-                           raysDataFrame, 'Sheet1')
+                           raysDataFrame)
 mirrorDictMain = sys.getMirrorList(sys.dataSheet)
 
 mirrorLoop(mirrorDictMain)
@@ -146,7 +146,8 @@ for i in range(1,2):
             # print('indexRays = ')
             # print(indexRays)
             rOutIndexList = matrixtestDF.index
-            rOutObject = RaysFromMatrix(matrixtestDF, rOutIndexList)
+            pathToRin = '/home/konstantin/PycharmProjects/RayTracer/result/toCompare/Ray_0_1.xls'
+            rOutObject = RaysFromMatrix(pathToRin, matrixtestDF, rOutIndexList)
             Rout1 = rOutObject.getFirsOderRay(indexRays)
             Rout2 = rOutObject.getSecondOderRay(indexRays)
             Rout3 = rOutObject.getThirdOderRay(indexRays)

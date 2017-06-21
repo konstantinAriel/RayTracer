@@ -163,7 +163,7 @@ def testMatrixLoop(mirrorDictMain):
 
            testMatrixObject.getSeconStepMatrix(RayReflectedDF, countMirror, mainRinDF, rInList, rOutList, startMirror, testMatrixDF)
 
- ## Calculate Matrix for X_Kx_Z
+## Calculate Matrix for X_Kx_Z
            testMatrixObject.getThirdStepMatrix(RayReflectedDF, countMirror, mainRinDF, rInList, rOutList, startMirror, testMatrixDF)
            # print(testMatrixObject.pathTotestMatrix)
            path2testMatrix.append(testMatrixObject.pathTotestMatrix)
@@ -203,7 +203,7 @@ rInObject.saveRays2Execel(mainPathForMatrix + 'Ray'+'_' +
                            str(int(sys.dataSheet.Rin[0]-1)) + '_' +
                            str(int(sys.dataSheet.Rin[0]))
                            + fExtend,
-                           raysDataFrame, 'Sheet1')
+                           raysDataFrame)
 
 #==============  Get List of Section for calculation ========================#
 mirrorDictMain = sys.getMirrorList(sys.dataSheet)
