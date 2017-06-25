@@ -43,9 +43,9 @@ def mirrorLoop(mirrorDictMain):
                              'Ray_' + str(countMirror) + '_' + str(countMirror + 1),
                              'normalRay_' + str(countMirror) + '_' + str(countMirror)]
             RaysObject = Parametrs(mainPathForMatrix + raysFName[0] + fExtend, 'Sheet1')
-            print(RaysObject.dataSheet)
+            # print(RaysObject.dataSheet)
             path = [mainPathForMatrix, raysFName, fExtend]
-            print('path = ', path )
+            # print('path = ', path )
             rInObject.calcReflectedRays(path, Mirror, RaysObject.dataSheet)
             countMirror += 1
     # print('====================================================== ++++++++++++++++++++++++++++++++++++++++++++++++++++++   END      Mirror Loop         ',  mirrorList)

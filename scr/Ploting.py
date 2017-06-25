@@ -3,7 +3,6 @@ import plotly as py
 import numpy as np
 import pandas as pd
 import plotly.tools as tls
-
 import plotly.graph_objs  as go
 
 from scr.MainParam import Parametrs

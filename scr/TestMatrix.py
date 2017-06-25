@@ -217,10 +217,10 @@ class TestMatrix:
                     ])
 
                     detrInMatrix33 = a11 * a22 * a33 + a31 * a12 * a23 + a21 * a32 * a13 - a31 * a22 * a13 - a11 * a32 * a23 - a21 * a12 * a33
-                    print('detrInMatrix33')
-                    print(detrInMatrix33)
+                    # print('detrInMatrix33')
+                    # print(detrInMatrix33)
                     if detrInMatrix33 == 0:
-                        print('Matrix is not Inverted')
+                        # print('Matrix is not Inverted')
                         rInMatrixInv33 = rInMatrix33
                     else:
                         rInMatrixInv33 = inv(rInMatrix33)
@@ -244,8 +244,8 @@ class TestMatrix:
                         A23 = testMatrixDF.loc[rayOutElement, keynameA23pS]
 
                         rOutArray = RayReflectedDF.loc[index:indexMax, rayOutElement]
-                        print('rOutArray = ')
-                        print(rOutArray)
+                        # print('rOutArray = ')
+                        # print(rOutArray)
                         rout1 = rOutArray[index]
                         rout2 = rOutArray[index+1]
                         rout3 = rOutArray[indexMax]
@@ -314,13 +314,13 @@ class TestMatrix:
                 rOutColumn31 = np.array([[rOutArray[index]],
                                          [rOutArray[index + 1]],
                                          [rOutArray[indexMax]]])
-                print('rInMatrix33 = ')
-                print(rInMatrix33)
+                # print('rInMatrix33 = ')
+                # print(rInMatrix33)
                 detrInMatrix33 = a11*a22*a33 + a31*a12*a23 + a21*a32*a13 - a31*a22*a13 - a11*a32*a23 - a21*a12*a33
-                print('detrInMatrix33')
-                print(detrInMatrix33)
+                # print('detrInMatrix33')
+                # print(detrInMatrix33)
                 if detrInMatrix33 == 0:
-                    print('Matrix is not Inverted')
+                    # print('Matrix is not Inverted')
                     rInMatrixInv33 = rInMatrix33
                 else:
                     rInMatrixInv33 = inv(rInMatrix33)
@@ -356,13 +356,13 @@ class TestMatrix:
                 testMatrixDF.loc[rayOutElement, keynameA2] = aTemp2
                 testMatrixDF.loc[rayOutElement, keynameA3] = aTemp3
 
-                print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
-                print('testMatrixDF.loc[rayOutElement, keynameA1] =     ')
-                print(testMatrixDF.loc[rayOutElement, keynameA1])
-                print('testMatrixDF.loc[rayOutElement, keynameA2] = ')
-                print(testMatrixDF.loc[rayOutElement, keynameA2])
-                print('testMatrixDF.loc[rayOutElement, keynameA3] = ')
-                print(testMatrixDF.loc[rayOutElement, keynameA3])
+                # print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
+                # print('testMatrixDF.loc[rayOutElement, keynameA1] =     ')
+                # print(testMatrixDF.loc[rayOutElement, keynameA1])
+                # print('testMatrixDF.loc[rayOutElement, keynameA2] = ')
+                # print(testMatrixDF.loc[rayOutElement, keynameA2])
+                # print('testMatrixDF.loc[rayOutElement, keynameA3] = ')
+                # print(testMatrixDF.loc[rayOutElement, keynameA3])
         testMatrixFName = 'testMatrix_' + str(startMirror) + '_' + str(countMirror)
         # writer = pd.ExcelWriter('/home/konstantin/PycharmProjects/RayTracer/result/' + str(testMatrixFName) + '.xls')
         # print('testMatrixDF.loc[rayOutElement, keynameA1] =     ')
