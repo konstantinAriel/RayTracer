@@ -63,219 +63,223 @@ def mirrorLoop(mirrorDictMain):
             RaysInSheetNameList = mainRin.sheetsNames
             # print(' RaysInShetNameList = ')
             # print(RaysInSheetNameList)
+            data2 = []
             for rayType in typeOfRays:
-                rIn1, rIn2, rIn3 = getRayIntype(rayType)
+                # if rayType == 'Xin':
+                    rIn1, rIn2, rIn3 = getRayIntype(rayType)
+                    print('rayType =                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
+                    print(rayType)
+                    # xRayInDataX =  []
+                    # xRayInDataKx = []
+                    # xRayInDataZ =  []
+                    # xRayInDataKz = []
 
-                # xRayInDataX = []
-                # xRayInDataKx = []
-                # xRayInDataZ = []
-                # xRayInDataKz = []
+                    xRayInData =      []
+                    yRay1MXOutData  = []
+                    yRay1MKxOutData = []
+                    yRay1MZOutData  = []
+                    yRay1MKzOutData = []
 
-                xRayInData = []
-                yRay1MXOutData  = []
-                yRay1MKxOutData = []
-                yRay1MZOutData  = []
-                yRay1MKzOutData = []
+                    yRay2MXOutData  = []
+                    yRay2MKxOutData = []
+                    yRay2MZOutData  = []
+                    yRay2MKzOutData = []
 
-                yRay2MXOutData  = []
-                yRay2MKxOutData = []
-                yRay2MZOutData  = []
-                yRay2MKzOutData = []
-
-                yRay3MXOutData  = []
-                yRay3MKxOutData = []
-                yRay3MZOutData  = []
-                yRay3MKzOutData = []
-
-
-                yRayTotalXMOutData  = []
-                yRayTotalKxMOutData = []
-                yRayTotalZMOutData  = []
-                yRayTotalKzMOutData = []
-
-                yRayTotalXRTOutData =  [] #
-                yRayTotalKxRTOutData = []#
-                yRayTotalZRTOutData =  [] #
-                yRayTotalKzRTOutData = []#
-
-                raysFName = [rayType + '_' + (str(countMirror - 1)) + '_' + str(countMirror),
-                                         rayType + '_' + str(countMirror) + '_' + str(countMirror + 1),
-                             'normal' + rayType + str(countMirror) + '_' + str(countMirror)]
-                # print('raysFName = ')
-                # print(raysFName)
+                    yRay3MXOutData  = []
+                    yRay3MKxOutData = []
+                    yRay3MZOutData  = []
+                    yRay3MKzOutData = []
 
 
+                    yRayTotalXMOutData  = []
+                    yRayTotalKxMOutData = []
+                    yRayTotalZMOutData  = []
+                    yRayTotalKzMOutData = []
 
-                path = [mainPathToCompare + mirrorList + '/', raysFName, fExtend]
-                if  mirrorList == 'Mirror1':
-                    RaysInObject = Parametrs(mainPath + raysInFname + fExtend, rayType)  # For first mirror
-                    RaysInDF = RaysInObject.dataSheet
-                else:
-                    RaysInObject = Parametrs(mainPathToCompare + 'Mirror' + str(countMirror -1) + '/' + raysFName[0] + fExtend, 'Sheet1')  # For 2-4 mirror
-                    RaysInDF = RaysInObject.dataSheet
+                    yRayTotalXRTOutData =  [] #
+                    yRayTotalKxRTOutData = [] #
+                    yRayTotalZRTOutData =  [] #
+                    yRayTotalKzRTOutData = [] #
 
-                rayObject.calcReflectedRays(path, Mirror, RaysInDF)
-                # print('rayType = ')
-                # print(rayType)
+                    raysFName = [rayType + '_' + (str(countMirror - 1)) + '_' + str(countMirror),
+                                             rayType + '_' + str(countMirror) + '_' + str(countMirror + 1),
+                                 'normal' + rayType + str(countMirror) + '_' + str(countMirror)]
+                    # print('raysFName = ')
+                    # print(raysFName)
 
-                pathToRin = mainPathToCompare  + rayType + '_0_1' + fExtend
-                RaysOutObjectFromRayTraycer = Parametrs(mainPathToCompare + mirrorList + '/' + raysFName[1] + fExtend,
-                                                        'Sheet1')  # For each mirror
-                RayFromRTDF = RaysOutObjectFromRayTraycer.dataSheet
-                # print('RyaFromRTDF = ')
-                # print(RayFromRTDF)
+                    path = [mainPathToCompare + mirrorList + '/', raysFName, fExtend]
 
-                rIn2value = RaysInDF.loc[0, rIn2]
-                rIn3value = RaysInDF.loc[0, rIn3]
+                    if  mirrorList == 'Mirror1':
+                        RaysInObject = Parametrs(mainPath + raysInFname + fExtend, rayType)  # For first mirror
+                        RaysInDF = RaysInObject.dataSheet
+                    else:
+                        RaysInObject = Parametrs(mainPathToCompare + 'Mirror' + str(countMirror -1) + '/' + raysFName[0] + fExtend, 'Sheet1')  # For 2-4 mirror
+                        RaysInDF = RaysInObject.dataSheet
 
-                for indexRays in RaysInDF.index:
-                    # print('indexRays = ')
-                    # print(indexRays)
+                    rayObject.calcReflectedRays(path, Mirror, RaysInDF)
+                    # print('rayType = ')
+                    # print(rayType)
 
-                    xRayInData.append(RaysInDF.loc[indexRays, rIn1])
+                    pathToRin = mainPathToCompare  + rayType + '_0_1' + fExtend
+                    RaysOutObjectFromRayTraycer = Parametrs(mainPathToCompare + mirrorList + '/' + raysFName[1] + fExtend,
+                                                            'Sheet1')  # For each mirror
+                    RayFromRTDF = RaysOutObjectFromRayTraycer.dataSheet
+                    # print('RyaFromRTDF = ')
+                    # print(RayFromRTDF)
 
-                    # xRayInDataKx.append(RaysInDF.Kxin[indexRays])
-                    # xRayInDataZ.append(RaysInDF.Zin[indexRays])
-                    # xRayInDataKz.append(RaysInDF.Kzin[indexRays])
+                    RaysInObjectForPlot = Parametrs(mainPath + raysInFname + fExtend, rayType)  # For first mirror
+                    RaysInDForPlot = RaysInObjectForPlot.dataSheet
+
+                    rIn2value = RaysInDForPlot.loc[0, rIn2]
+                    rIn3value = RaysInDForPlot.loc[0, rIn3]
+
+                    for indexRays in RaysInDF.index:
+                        # print('indexRays = ')
+                        # print(indexRays)
+
+                        xRayInData.append(RaysInDForPlot.loc[indexRays, rIn1])
+
+                        # xRayInDataKx.append(RaysInDF.Kxin[indexRays])
+                        # xRayInDataZ.append(RaysInDF.Zin[indexRays])
+                        # xRayInDataKz.append(RaysInDF.Kzin[indexRays])
+
+                        if countMirror == 1:
+                            rOutList = ['Xin', 'Kxin', 'Yin', 'Kyin']
+                        elif countMirror == 2:
+                            rOutList = ['Xin', 'Kxin', 'Zin', 'Kzin']
+                        elif countMirror == 3:
+                            rOutList = ['Yin', 'Kyin', 'Zin', 'Kzin']
+                        elif countMirror == 4:
+                            rOutList = ['Xin', 'Kxin', 'Yin', 'Kyin']
+
+                        yRayTotalXRTOutData. append(RayFromRTDF.loc[indexRays,  rOutList[0]])
+                        yRayTotalKxRTOutData.append(RayFromRTDF.loc[indexRays,  rOutList[1]])
+                        yRayTotalZRTOutData. append(RayFromRTDF.loc[indexRays,  rOutList[2]])
+                        yRayTotalKzRTOutData.append(RayFromRTDF.loc[indexRays,  rOutList[3]])
+
+                        # rOutIndexList = matrixtestDF.index
+
+                        rOutFromMatrixObject = RaysFromMatrix(pathToRin, matrixtestDF)
+
+                        Rout1 = rOutFromMatrixObject.getFirsOderRay(indexRays)
+
+                        # print('Rout1 = ')
+                        # print(Rout1[:,0])
+
+                        yRay1MXOutData. append(Rout1[0, 0])
+                        yRay1MKxOutData.append(Rout1[1, 0])
+                        yRay1MZOutData. append(Rout1[2, 0])
+                        yRay1MKzOutData.append(Rout1[3, 0])
+
+                        Rout2 = rOutFromMatrixObject.getSecondOderRay(indexRays, rIn1)
+
+                        yRay2MXOutData .append(Rout2[0,0])
+                        yRay2MKxOutData.append(Rout2[1,0])
+                        yRay2MZOutData .append(Rout2[2,0])
+                        yRay2MKzOutData.append(Rout2[3,0])
+
+                        Rout3 = rOutFromMatrixObject.getThirdOderRay(indexRays, rIn1, rIn2)
+
+                        yRay3MXOutData .append(Rout3[0,0])
+                        yRay3MKxOutData.append(Rout3[1,0])
+                        yRay3MZOutData .append(Rout3[2,0])
+                        yRay3MKzOutData.append(Rout3[3,0])
+
+                        # RoutTotal = Rout1 + Rout2 + Rout3
+                        # print('Rout1 =')
+                        # print(Rout1)
+                        # print('Rout2 =')
+                        # print(Rout2)
+                        # print('Rout3 =')
+                        # print(Rout3)
+
+                        RoutTotalX  = Rout1[0,0] + Rout2[0,0] + Rout3[0,0]
+                        RoutTotalKx = Rout1[1,0] + Rout2[1,0] + Rout3[1,0]
+                        RoutTotalZ  = Rout1[2,0] + Rout2[2,0] + Rout3[2,0]
+                        RoutTotalKz = Rout1[3,0] + Rout2[3,0] + Rout3[3,0]
+
+                        yRayTotalXMOutData .append(RoutTotalX)
+                        yRayTotalKxMOutData.append(RoutTotalKx)
+                        yRayTotalZMOutData .append(RoutTotalZ)
+                        yRayTotalKzMOutData.append(RoutTotalKz)
+
+                        # print('RoutTotal =')
+                        # print(RoutTotal)
+                        # print('RoutTotal X = ')
+                        # print(RoutTotalX)
+                        # print('RoutTotal  Kx = ')
+                        # print(RoutTotalKx)
+                        # print('RoutTotal  Z = ')
+                        # print(RoutTotalZ)
+                        # print('RoutTotal  Kz = ')
+                        # print(RoutTotalKz)
+
+                    trace111 =  go.Scatter(x=xRayInData, y=yRay1MXOutData,       xaxis='x1',   yaxis='y1',  mode = 'lines',  name = rIn2 + str(rIn2value) +  '_' + rIn3 + str(rIn3value) +'X_M1')      # Xin - XoutM1
+                    trace112 =  go.Scatter(x=xRayInData, y=yRay2MXOutData,       xaxis='x1',   yaxis='y1',  mode = 'lines',  name = 'X_M2')      # Xin - XoutM2
+                    trace113 =  go.Scatter(x=xRayInData, y=yRay3MXOutData,       xaxis='x1',   yaxis='y1',  mode = 'lines',  name = 'X_M3')      # Xin - XoutM3
+
+                    trace121 =  go.Scatter(x=xRayInData, y=yRay1MKxOutData,      xaxis='x2',   yaxis='y2',  mode = 'lines',  name = 'Kx_M1')     # Xin - KxOutM1
+                    trace122 =  go.Scatter(x=xRayInData, y=yRay2MKxOutData,      xaxis='x2',   yaxis='y2',  mode = 'lines',  name = 'Kx_M2')     # Xin - KxOutM2
+                    trace123 =  go.Scatter(x=xRayInData, y=yRay3MKxOutData,      xaxis='x2',   yaxis='y2',  mode = 'lines',  name = 'Kx_M3')     # Xin - KxOutM3
+
+                    trace131 = go.Scatter(x=xRayInData,  y=yRay1MZOutData,       xaxis='x3',   yaxis='y3',  mode = 'lines',  name = 'Z_M1')      # Xin - ZOutM1
+                    trace132 = go.Scatter(x=xRayInData,  y=yRay2MZOutData,       xaxis='x3',   yaxis='y3',  mode = 'lines',  name = 'Z_M2')      # Xin - ZOutM2
+                    trace133 = go.Scatter(x=xRayInData,  y=yRay3MZOutData,       xaxis='x3',   yaxis='y3',  mode = 'lines',  name = 'Z_M3')      # Xin - ZOutM3
+
+                    trace141 = go.Scatter(x=xRayInData,  y=yRay1MKzOutData,      xaxis='x4',   yaxis='y4',  mode = 'lines',  name = 'KZ_M1')    # Xin - KZOutM1
+                    trace142 = go.Scatter(x=xRayInData,  y=yRay2MKzOutData,      xaxis='x4',   yaxis='y4',  mode = 'lines',  name = 'KZ_M2')    # Xin - KZOutM2
+                    trace143 = go.Scatter(x=xRayInData,  y=yRay3MKzOutData,      xaxis='x4',   yaxis='y4',  mode = 'lines',  name = 'KZ_M3')    # Xin - KZOutM3
+
+                    trace211 = go.Scatter(x=xRayInData,  y=yRayTotalXMOutData,   xaxis='x5',   yaxis='y5',  mode = 'lines',  name = 'Total_X_M ')
+                    trace212 = go.Scatter(x=xRayInData,  y=yRayTotalXRTOutData,  xaxis='x5',   yaxis='y5',  mode = 'lines',  name = 'Total_X_RT')
+
+                    trace221 = go.Scatter(x=xRayInData,  y=yRayTotalKxMOutData,  xaxis='x6',   yaxis='y6',  mode = 'lines',  name = 'Total_Kx_M')
+                    trace222 = go.Scatter(x=xRayInData,  y=yRayTotalKxRTOutData, xaxis='x6',   yaxis='y6',  mode = 'lines',  name = 'Total_Kx_RT')
+
+                    trace231 = go.Scatter(x=xRayInData,  y=yRayTotalZMOutData,   xaxis='x7',   yaxis='y7',  mode = 'lines',  name = 'Total_Z_M')
+                    trace232 = go.Scatter(x=xRayInData,  y=yRayTotalZRTOutData,  xaxis='x7',   yaxis='y7',  mode = 'lines',  name = 'Total_Z_RT')
+
+                    trace241 = go.Scatter(x=xRayInData,  y=yRayTotalKzMOutData,  xaxis='x8',   yaxis='y8',  mode = 'lines',  name = 'Total_Kz_M')
+                    trace242 = go.Scatter(x=xRayInData,  y=yRayTotalKzRTOutData, xaxis='x8',   yaxis='y8',  mode = 'lines',  name = 'Total_Kz_RT')
 
 
-                    if countMirror == 1:
-                        rOutList = ['Xin', 'Kxin', 'Yin', 'Kyin']
-                    elif countMirror == 2:
-                        rOutList = ['Xin', 'Kxin', 'Zin', 'Kzin']
-                    elif countMirror == 3:
-                        rOutList = ['Yin', 'Kyin', 'Zin', 'Kzin']
-                    elif countMirror == 4:
-                        rOutList = ['Xin', 'Kxin', 'Yin', 'Kyin']
+                    data1 = [trace111, trace112, trace113,
+                            trace121, trace122, trace123,
+                            trace131, trace132, trace133,
+                            trace141, trace142, trace143,
+                            trace211, trace212,
+                            trace221, trace222,
+                            trace231, trace232,
+                            trace241, trace242]
+                    # data = [trace111, trace112, trace113]
 
-                    yRayTotalXRTOutData. append(RayFromRTDF.loc[indexRays,  rOutList[0]])
-                    yRayTotalKxRTOutData.append(RayFromRTDF.loc[indexRays,  rOutList[1]])
-                    yRayTotalZRTOutData. append(RayFromRTDF.loc[indexRays,  rOutList[2]])
-                    yRayTotalKzRTOutData.append(RayFromRTDF.loc[indexRays,  rOutList[3]])
+                    # data11 = [trace111, trace112, trace113]
+                    # data12 = [trace121, trace122, trace123]
+                    # data13 = [trace131, trace132, trace133]
+                    # data14 = [trace141, trace142, trace143]
+                    #
+                    # data21 = [trace211, trace212]
+                    # data22 = [trace221, trace222]
+                    # data23 = [trace231, trace232]
+                    # data24 = [trace241, trace242]
 
-                    rOutIndexList = matrixtestDF.index
+                    # fig = pl.tools.make_subplots(rows=2, cols=4)
+                    #
+                    # fig.append_trace(data11, 1, 1)
+                    # fig.append_trace(data12, 1, 2)
+                    # fig.append_trace(data13, 1, 3)
+                    # fig.append_trace(data14, 1, 4)
+                    #
+                    # fig.append_trace(data21, 2, 1)
+                    # fig.append_trace(data22, 2, 2)
+                    # fig.append_trace(data23, 2, 3)
+                    # fig.append_trace(data24, 2, 4)
 
-                    rOutFromMatrixObject = RaysFromMatrix(pathToRin, matrixtestDF, rOutIndexList)
+                    layout1 = setLayout()
 
-                    Rout1 = rOutFromMatrixObject.getFirsOderRay(indexRays)
+                    fig1 = go.Figure(data=data1, layout=layout1)
+                    pl.offline.plot(fig1, filename='/home/konstantin/PycharmProjects/RayTracer/result/htmlFiles/' + mirrorList + '_' + rayType + '.html' )
 
-                    print('Rout1 = ')
-                    print(Rout1[:,0])
-
-                    yRay1MXOutData. append(Rout1[0, 0])
-                    yRay1MKxOutData.append(Rout1[1, 0])
-                    yRay1MZOutData. append(Rout1[2, 0])
-                    yRay1MKzOutData.append(Rout1[3, 0])
-
-
-                    Rout2 = rOutFromMatrixObject.getSecondOderRay(indexRays)
-
-                    yRay2MXOutData .append(Rout2[0,0])
-                    yRay2MKxOutData.append(Rout2[1,0])
-                    yRay2MZOutData .append(Rout2[2,0])
-                    yRay2MKzOutData.append(Rout2[3,0])
-
-                    Rout3 = rOutFromMatrixObject.getThirdOderRay(indexRays)
-
-                    yRay3MXOutData .append(Rout3[0,0])
-                    yRay3MKxOutData.append(Rout3[1,0])
-                    yRay3MZOutData .append(Rout3[2,0])
-                    yRay3MKzOutData.append(Rout3[3,0])
-
-                    # RoutTotal = Rout1 + Rout2 + Rout3
-                    # print('Rout1 =')
-                    # print(Rout1)
-                    # print('Rout2 =')
-                    # print(Rout2)
-                    # print('Rout3 =')
-                    # print(Rout3)
-
-                    RoutTotalX  = Rout1[0,0] + Rout2[0,0] + Rout3[0,0]
-                    RoutTotalKx = Rout1[1,0] + Rout2[1,0] + Rout3[1,0]
-                    RoutTotalZ  = Rout1[2,0] + Rout2[2,0] + Rout3[2,0]
-                    RoutTotalKz = Rout1[3,0] + Rout2[3,0] + Rout3[3,0]
-
-                    yRayTotalXMOutData .append(RoutTotalX)
-                    yRayTotalKxMOutData.append(RoutTotalKx)
-                    yRayTotalZMOutData .append(RoutTotalZ)
-                    yRayTotalKzMOutData.append(RoutTotalKz)
-
-                    # print('RoutTotal =')
-                    # print(RoutTotal)
-                    # print('RoutTotal X = ')
-                    # print(RoutTotalX)
-                    # print('RoutTotal  Kx = ')
-                    # print(RoutTotalKx)
-                    # print('RoutTotal  Z = ')
-                    # print(RoutTotalZ)
-                    # print('RoutTotal  Kz = ')
-                    # print(RoutTotalKz)
-
-                trace111 =  go.Scatter(x=xRayInData, y=yRay1MXOutData,       xaxis='x1',   yaxis='y1',  mode = 'lines',  name = rIn2 + str(rIn2value) +  '_' + rIn3 + str(rIn3value) +'X_M1')      # Xin - XoutM1
-                trace112 =  go.Scatter(x=xRayInData, y=yRay2MXOutData,       xaxis='x1',   yaxis='y1',  mode = 'lines',  name = 'X_M2')      # Xin - XoutM2
-                trace113 =  go.Scatter(x=xRayInData, y=yRay3MXOutData,       xaxis='x1',   yaxis='y1',  mode = 'lines',  name = 'X_M3')      # Xin - XoutM3
-
-                trace121 =  go.Scatter(x=xRayInData, y=yRay1MKxOutData,      xaxis='x2',   yaxis='y2',  mode = 'lines',  name = 'Kx_M1')     # Xin - KxOutM1
-                trace122 =  go.Scatter(x=xRayInData, y=yRay2MKxOutData,      xaxis='x2',   yaxis='y2',  mode = 'lines',  name = 'Kx_M2')     # Xin - KxOutM2
-                trace123 =  go.Scatter(x=xRayInData, y=yRay3MKxOutData,      xaxis='x2',   yaxis='y2',  mode = 'lines',  name = 'Kx_M3')     # Xin - KxOutM3
-
-                trace131 = go.Scatter(x=xRayInData,  y=yRay1MZOutData,       xaxis='x3',   yaxis='y3',  mode = 'lines',  name = 'Z_M1')      # Xin - ZOutM1
-                trace132 = go.Scatter(x=xRayInData,  y=yRay2MZOutData,       xaxis='x3',   yaxis='y3',  mode = 'lines',  name = 'Z_M2')      # Xin - ZOutM2
-                trace133 = go.Scatter(x=xRayInData,  y=yRay3MZOutData,       xaxis='x3',   yaxis='y3',  mode = 'lines',  name = 'Z_M3')      # Xin - ZOutM3
-
-                trace141 = go.Scatter(x=xRayInData,  y=yRay1MKzOutData,      xaxis='x4',   yaxis='y4',  mode = 'lines',  name = 'KZ_M1')    # Xin - KZOutM1
-                trace142 = go.Scatter(x=xRayInData,  y=yRay2MKzOutData,      xaxis='x4',   yaxis='y4',  mode = 'lines',  name = 'KZ_M2')    # Xin - KZOutM2
-                trace143 = go.Scatter(x=xRayInData,  y=yRay3MKzOutData,      xaxis='x4',   yaxis='y4',  mode = 'lines',  name = 'KZ_M3')    # Xin - KZOutM3
-
-                trace211 = go.Scatter(x=xRayInData,  y=yRayTotalXMOutData,   xaxis='x5',   yaxis='y5',  mode = 'lines',  name = 'Total_X_M ')
-                trace212 = go.Scatter(x=xRayInData,  y=yRayTotalXRTOutData,  xaxis='x5',   yaxis='y5',  mode = 'lines',  name = 'Total_X_RT')
-
-                trace221 = go.Scatter(x=xRayInData,  y=yRayTotalKxMOutData,  xaxis='x6',   yaxis='y6',  mode = 'lines',  name = 'Total_Kx_M')
-                trace222 = go.Scatter(x=xRayInData,  y=yRayTotalKxRTOutData, xaxis='x6',   yaxis='y6',  mode = 'lines',  name = 'Total_Kx_RT')
-
-                trace231 = go.Scatter(x=xRayInData,  y=yRayTotalZMOutData,   xaxis='x7',   yaxis='y7',  mode = 'lines',  name = 'Total_Z_M')
-                trace232 = go.Scatter(x=xRayInData,  y=yRayTotalZRTOutData,  xaxis='x7',   yaxis='y7',  mode = 'lines',  name = 'Total_Z_RT')
-
-                trace241 = go.Scatter(x=xRayInData,  y=yRayTotalKzMOutData,  xaxis='x8',   yaxis='y8',  mode = 'lines',  name = 'Total_Kz_M')
-                trace242 = go.Scatter(x=xRayInData,  y=yRayTotalKzRTOutData, xaxis='x8',   yaxis='y8',  mode = 'lines',  name = 'Total_Kz_RT')
-
-
-                data = [trace111, trace112, trace113,
-                        trace121, trace122, trace123,
-                        trace131, trace132, trace133,
-                        trace141, trace142, trace143,
-                        trace211, trace212,
-                        trace221, trace222,
-                        trace231, trace232,
-                        trace241, trace242]
-                # data = [trace111, trace112, trace113]
-
-                # data11 = [trace111, trace112, trace113]
-                # data12 = [trace121, trace122, trace123]
-                # data13 = [trace131, trace132, trace133]
-                # data14 = [trace141, trace142, trace143]
-                #
-                # data21 = [trace211, trace212]
-                # data22 = [trace221, trace222]
-                # data23 = [trace231, trace232]
-                # data24 = [trace241, trace242]
-
-                # fig = pl.tools.make_subplots(rows=2, cols=4)
-                #
-                # fig.append_trace(data11, 1, 1)
-                # fig.append_trace(data12, 1, 2)
-                # fig.append_trace(data13, 1, 3)
-                # fig.append_trace(data14, 1, 4)
-                #
-                # fig.append_trace(data21, 2, 1)
-                # fig.append_trace(data22, 2, 2)
-                # fig.append_trace(data23, 2, 3)
-                # fig.append_trace(data24, 2, 4)
-
-                layout = setLayout()
-
-                fig = go.Figure(data=data, layout=layout)
-                pl.offline.plot(fig, filename='/home/konstantin/PycharmProjects/RayTracer/result/htmlFiles/' + mirrorList + '_' + rayType + '.html' )
             countMirror+=1
             print('********************^^^^^^^^^^^^^^^^^^^^^^  END LOOP  ^^^^^^^^^^^^^^^ ********************')
 

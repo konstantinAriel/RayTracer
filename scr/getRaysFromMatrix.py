@@ -4,7 +4,7 @@ from scr.MainParam import Parametrs
 from numpy import dot
 
 class RaysFromMatrix:
-    def __init__(self,pathToRin, testMatrixDF, rOutIndexList):
+    def __init__(self,pathToRin, testMatrixDF):
         self.testMatrixDF = testMatrixDF
         self.nanArray1 = np.array([[nan, nan, nan, nan],
                                    [nan, nan, nan, nan],
@@ -17,7 +17,8 @@ class RaysFromMatrix:
         self.RinDF = self.RinObject.dataSheet
         # print('self.RinDF = ')
         # print(self.RinDF)
-        self.rOutIndexList = rOutIndexList
+        #self.rOutIndexList = rOutIndexList
+        self.rOutIndexList = testMatrixDF.index
 
         self.testMatrixArray1 = self.getTestMatrixArray1()
 
@@ -36,7 +37,7 @@ class RaysFromMatrix:
         # print(rOut1)
         return rOut1
 
-    def getSecondOderRay(self, indexRay):
+    def getSecondOderRay(self, indexRay, rIn1):
         rOut2 = np.zeros((4,1))
         r1 = self.RinDF.Xin[indexRay]
         r2 = self.RinDF.Kxin[indexRay]
@@ -44,16 +45,38 @@ class RaysFromMatrix:
         r4 = self.RinDF.Kzin[indexRay]
         RinArray = np.array([[r1], [r2], [r3], [r4]])
 
-        for rInElement in self.rInList:
-            testMatrixArray2 = self.getTestMatrixArray2(rInElement)
-            # print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%  getThirdOderRay %%%%%%%%%%%%%%%%%%%%%%%%%%  ' + str(rInElement))
-            RinDFelement = self.RinDF.loc[0, rInElement]
-            rInPowerof2 = (RinArray)*RinDFelement
-            rOut2 += testMatrixArray2.dot(rInPowerof2)
+        # for rInElement in self.rInList:
+        #     testMatrixArray2 = self.getTestMatrixArray2(rInElement)
+        #     # print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%  getThirdOderRay %%%%%%%%%%%%%%%%%%%%%%%%%%  ' + str(rInElement))
+        #     RinDFelement = self.RinDF.loc[0, rInElement]
+        #     rInPowerof2 = (RinArray)*RinDFelement
+        #     rOut2 += testMatrixArray2.dot(rInPowerof2)
+
+
+
+        testMatrixArray2 = self.getTestMatrixArray2(rIn1)
+        # print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%  getThirdOderRay %%%%%%%%%%%%%%%%%%%%%%%%%%  ' + str(rInElement))
+        RinDFelement = self.RinDF.loc[indexRay, rIn1]
+        rInPowerof2 = (RinArray)*RinDFelement
+        rOut2 = testMatrixArray2.dot(rInPowerof2)
+        if rIn1 == 'Kxin':
+            print('==========================')
+            print('rInElement = ')
+            print(rIn1)
+            print('testMatrixArray2 = ')
+            print(testMatrixArray2)
+            print('RinDFelement = ')
+            print(RinDFelement)
+            print('RinArray = ')
+            print(RinArray)
+            print('rInPowerof2 = ')
+            print(rInPowerof2)
+            print('rOut2 = ')
+            print(rOut2)
         return rOut2
 
-    def getThirdOderRay(self, indexRay):
-        print('=============================  getThirdOderRay ========================  IndexRays'  + str(indexRay))
+    def getThirdOderRay(self, indexRay, rIn1, rIn2):
+        # print('=============================  getThirdOderRay ========================  IndexRays'  + str(indexRay))
         rOut3 = np.zeros((4, 1))
         r1 = self.RinDF.Xin[indexRay]
         r2 = self.RinDF.Kxin[indexRay]
@@ -61,20 +84,33 @@ class RaysFromMatrix:
         r4 = self.RinDF.Kzin[indexRay]
         RinArray3 = np.array([[r1], [r2], [r3], [r4]])
 
-        for i in range(4):
-            rInElement1 = self.rInList[i]
-            for j in range(i,4):
-                rInElement2 = self.rInList[j]
-                testMatrixArray3 = self.getTestMatrixArray3(rInElement1, rInElement2)
-                # print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%  getThirdOderRay %%%%%%%%%%%%%%%%%%%%%%%%%%  ' + str(rInElement2) + '_' + str(rInElement1))
+        # for i in range(4):
+        #     rInElement1 = self.rInList[i]
+        #     for j in range(i,4):
+        #         rInElement2 = self.rInList[j]
+        #         testMatrixArray3 = self.getTestMatrixArray3(rInElement1, rInElement2)
+        #         # print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%  getThirdOderRay %%%%%%%%%%%%%%%%%%%%%%%%%%  ' + str(rInElement2) + '_' + str(rInElement1))
+        #
+        #         RinDFelement1 = self.RinDF.loc[0, rInElement1]
+        #         RinDFelement2 = self.RinDF.loc[0, rInElement1]
+        #         rInPowerof3 = (RinArray3)*RinDFelement1*RinDFelement2
+        #
+        #         rOut3 += testMatrixArray3.dot(rInPowerof3)
+        #
+        #         # print('************************   END IN LOOP  ***************************')
+        # # print('Rout3 = ')
+        # # print(rOut3)
 
-                RinDFelement1 = self.RinDF.loc[0, rInElement1]
-                RinDFelement2 = self.RinDF.loc[0, rInElement1]
-                rInPowerof3 = (RinArray3)*RinDFelement1*RinDFelement2
+        testMatrixArray3 = self.getTestMatrixArray3(rIn1, rIn2)
+        # print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%  getThirdOderRay %%%%%%%%%%%%%%%%%%%%%%%%%%  ' + str(rInElement2) + '_' + str(rInElement1))
 
-                rOut3 += testMatrixArray3.dot(rInPowerof3)
+        RinDFelement1 = self.RinDF.loc[indexRay, rIn1]
+        RinDFelement2 = self.RinDF.loc[indexRay, rIn2]
+        rInPowerof3 = (RinArray3)*RinDFelement1*RinDFelement2
 
-                # print('************************   END IN LOOP  ***************************')
+        rOut3 = testMatrixArray3.dot(rInPowerof3)
+
+        # print('************************   END IN LOOP  ***************************')
         # print('Rout3 = ')
         # print(rOut3)
         return rOut3
@@ -154,3 +190,5 @@ class RaysFromMatrix:
                                      [a41, a42, a43, a44]
                                      ])
         return testMatrixArray3
+
+

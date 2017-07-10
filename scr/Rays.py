@@ -350,13 +350,19 @@ class Rays:
 
         # Differentional of MirrorSurf
             #self.pprintSymbol(N1sym, N2sym, N3sym, N1, N2,N3, mainExpr, mainExprCollctedSym, mainExprSubs, nArray, nNormalArray, xNormal)
-            N1sym = sp.diff(mainExpr, x1)
-            N2sym = sp.diff(mainExpr, x2)
-            N3sym = sp.diff(mainExpr, x3)
+            N1symdiff = sp.diff(mainExpr, x1)
+            N2symdiff = sp.diff(mainExpr, x2)
+            N3symdiff = sp.diff(mainExpr, x3)
 
-            nArray = np.array([N1sym.subs(x1, xRayCrossArray[0]),
-                               N2sym.subs(x2, xRayCrossArray[1]),
-                               N3sym.subs(x3, xRayCrossArray[2])
+            N1sym = N1symdiff.subs(x1, xRayCrossArray[0])
+            N2symx2 = N2symdiff.subs(x2, xRayCrossArray[1])
+            N2symx3 = N2symx2.subs(x3, xRayCrossArray[2])
+            N3symx2 = N3symdiff.subs(x2, xRayCrossArray[1])
+            N3symx3 = N3symx2.subs(x3, xRayCrossArray[2])
+
+            nArray = np.array([N1sym,
+                               N2symx3,
+                               N3symx3
                                ])
 
             nNormalArray = self.normalVector(nArray)
