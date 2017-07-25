@@ -77,7 +77,11 @@ class Rays:
         if len(tList)>1:
             tRoot = min(tList)
         else:
-            tRoot = tList[0]
+            try:
+                tRoot = tList[0]
+            except:
+                tRoot=0
+                print('ERROR')
         # print('TSolver = ', tSolver)
         # print('tRoot = ', (tRoot))
         return  np.array([x0RayAraay[0] + kinArray[0]*tRoot,

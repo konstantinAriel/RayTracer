@@ -29,7 +29,6 @@ def mirrorLoop(mirrorDictMain):
             Mirror = sys.getParam(sys.paramFile, mirrorList)  ## mirror List - The name of Sheets in Exel file
             # print('Mirror = ')
             # print(Mirror)
-
             ################################################################
             raysFName = ['Ray_' + (str(countMirror - 1)) + '_' + str(countMirror),
                              'Ray_' + str(countMirror) + '_' + str(countMirror + 1),
@@ -98,7 +97,8 @@ pathName()
 #=============   Read  Excel file with Rays Data in =========================
 tLine = Parametrs(mainPath+sysParamFname + fExtend, "LineParam")
 sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
-Rin = Parametrs(mainPath + raysInFname + fExtend, "Rin")
+# Rin = Parametrs(mainPath + raysInFname + fExtend, "Rin")
+Rin = Parametrs('/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/ray4test3Point_sysParam_1.xls', "Sheet1")
 raysSheetName0 = 'Ray_' + str(int(sys.dataSheet.Rin[0] - 1)) + '_' + str(int(sys.dataSheet.Rin[0]))
 rInObject = Rays()  # Create object of Rays
 

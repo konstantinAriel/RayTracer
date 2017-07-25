@@ -158,7 +158,7 @@ def testMatrixLoop(mirrorDictMain):
 # Calculate Matrix for X, X**2, X**3
 
            testMatrixObject.getFirsttStepMatrix(RayReflectedDF, countMirror, mainRinDF, rInList, rOutList, startMirror, testMatrixDF)
-
+#
 ## Calculate Matrix for X_Kx, X*Kx**2, X**2*Kx
 
            testMatrixObject.getSeconStepMatrix(RayReflectedDF, countMirror, mainRinDF, rInList, rOutList, startMirror, testMatrixDF)
