@@ -7,6 +7,8 @@ from scr.MainParam import Parametrs
 from scr.Ploting import Ploting
 from scr.Rays import Rays
 from scr.MainParam import Parametrs
+from scr.calcPolarization import calcPolarization
+
 
 def pathName():
     global mainPath, fExtend, sysParamFname, raysInFname, ray4test3pointFname
@@ -23,21 +25,33 @@ def mirrorLoop(mirrorDictMain):
         countMirror = int(sys.dataSheet.Rin[0])
         for mirrorList in mirrorDictMain.get(mirrorDictSub):
             print('====================================================== ++++++++++++++++++++++++++++++++++++++++++++++++++++++        Mirror Loop         ',  mirrorList)
-            # print("Count = ", countMirror)
-            # print("Current Mirror = ", mirrorList)
 
             Mirror = sys.getParam(sys.paramFile, mirrorList)  ## mirror List - The name of Sheets in Exel file
-            # print('Mirror = ')
-            # print(Mirror)
-            ################################################################
             raysFName = ['Ray_' + (str(countMirror - 1)) + '_' + str(countMirror),
                              'Ray_' + str(countMirror) + '_' + str(countMirror + 1),
                              'normalRay_' + str(countMirror) + '_' + str(countMirror)]
-            RaysObject = Parametrs(mainPath + raysFName[0] + fExtend, 'Sheet1')
-            print(RaysObject.dataSheet)
-            path = [mainPath, raysFName, fExtend]
-            # print('path = ', path )
-            rInObject.calcReflectedRays(path, Mirror, RaysObject.dataSheet)
+            print(raysFName)
+            RaysInDF = Parametrs(mainPath + raysFName[0] + fExtend, 'Sheet1').dataSheet
+            RaysNormalDF = Parametrs(mainPath + raysFName[2] + fExtend, 'Sheet1').dataSheet
+
+            print('RaysInDF = ')
+            print(RaysInDF)
+            print('RaysNormalDF = ')
+            print(RaysNormalDF)
+
+            for index in RaysInDF.index:
+                print('_____________________________________________' ,index )
+                print('RaysInDF[index] = ')
+                print(RaysInDF.loc[index, :])
+                print('RaysNormalDF[index] = ',)
+                print(RaysNormalDF.loc[index, :])
+                print('____________________________________________')
+                # rayIn = RaysInDF[index,:]
+                # normalray = RaysNormalDF[index,:]
+                pObject = calcPolarization(RaysInDF.loc[index, :], RaysNormalDF.loc[index,:])
+                kRef = pObject.getReflectedPolarRay(pObject.kArray, pObject.nArray)
+                print('kRef = ')
+                print(kRef)
             countMirror += 1
     print('====================================================== ++++++++++++++++++++++++++++++++++++++++++++++++++++++   END   Mirror Loop         ',  mirrorList)
 
@@ -93,7 +107,7 @@ def plotLoop(mirrorDictMain):
 
 pathName()
 
- ####################################################################################  for Standard RUN ################
+ ################################################################ for Standard RUN ################
 #=============   Read  Excel file with Rays Data in =========================
 tLine = Parametrs(mainPath+sysParamFname + fExtend, "LineParam")
 sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
@@ -120,7 +134,7 @@ mirrorDictMain = sys.getMirrorList(sys.dataSheet)
 mirrorLoop(mirrorDictMain)
 
 #=============== Plotting ====================================================
-sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
-py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
-plotLoop(mirrorDictMain)
+# sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
+# py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
+# plotLoop(mirrorDictMain)
 
