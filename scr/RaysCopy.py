@@ -29,14 +29,12 @@ class Rays:
                                               rInDataFrame.Yin[RinIndex],
                                               rInDataFrame.Zin[RinIndex]
                                               ])
-            Eyin = -(rInDataFrame.Exin[RinIndex]*rInDataFrame.Kxin[RinIndex] + rInDataFrame.Ezin[RinIndex]*rInDataFrame.Kzin[RinIndex] )/ rInDataFrame.Kyin[RinIndex]
-
             EinArray2D[RinIndex, :] = np.array([rInDataFrame.Exin[RinIndex],
-                                                Eyin,
+                                              rInDataFrame.Eyin[RinIndex],
                                               rInDataFrame.Ezin[RinIndex],
-                                              rInDataFrame.Ex[RinIndex],
-                                              rInDataFrame.Ey[RinIndex],
-                                              rInDataFrame.Ez[RinIndex],
+                                              rInDataFrame.Xe[RinIndex],
+                                              rInDataFrame.Ye[RinIndex],
+                                              rInDataFrame.Ze[RinIndex],
                                               rInDataFrame.Ain[RinIndex],
                                               ])
             RayCount += 1
@@ -65,7 +63,8 @@ class Rays:
                                'Xe':   EinArray[:, 3],
                                'Ye':   EinArray[:, 4],
                                'Ze':   EinArray[:, 5],
-                               'Ain':  EinArray[:, 6],
+                               'Ain':   EinArray[:, 6],
+
                                })
         return raysDF
 
@@ -266,18 +265,18 @@ class Rays:
         Mr = self.getRotateMatrix(xDegree, yDegree, zDegree)
         xRayCrossArray2D = np.zeros((len(raysDataFrame.index), 3))
         nNormallArray2D = np.zeros((len(raysDataFrame.index), 3))
-        eCrossArray2D = np.zeros((len(raysDataFrame.index), 7))
+        eCrossArray2D = np.zeros((len(raysDataFrame.index), 6))
 
         xDetectorlArray2D = np.zeros((len(raysDataFrame.index), 3))
         kReflectedArray2D = np.zeros((len(raysDataFrame.index), 3))
-        eDetectorArray2D = np.zeros((len(raysDataFrame.index), 7))
+        eDetectorArray2D = np.zeros((len(raysDataFrame.index), 6))
 
         # Loop for all Rays
         for RinIndex in raysDataFrame.index:
             print('===========********************   Ray Loop  ***************************** ==============', RinIndex )
         #  RayIn parmetrs
 
-            x0RayAray = np.array([raysDataFrame.Xin[RinIndex]  + Mirror.Source[0],
+            x0RayAray = np.array([raysDataFrame.Xin[RinIndex] + Mirror.Source[0],
                                    raysDataFrame.Yin[RinIndex] + Mirror.Source[1],
                                    raysDataFrame.Zin[RinIndex] + Mirror.Source[2]
                                    ])
@@ -396,7 +395,7 @@ class Rays:
             Exin = raysDataFrame.Exin[RinIndex]
             Ezin = raysDataFrame.Ezin[RinIndex]
             Eyin = raysDataFrame.Eyin[RinIndex]
-            Ampl = raysDataFrame.Ain[RinIndex]
+            # Ampl = raysDataFrame.Ain[RinIndex]
 
             ##############################
             eRef = np.zeros((1, 3))
@@ -406,13 +405,13 @@ class Rays:
             N1 = (eInArray.dot(nNormalArray.T)) * nNormalArray
             Er1 = self.rotor(nNormalArray, eInArray)
             Er2 = self.rotor(Er1, nNormalArray)
-            absN = ((nNormalArray.dot(nNormalArray.T)) ** 0.5)
-            eRef = (N1 - Er2)/absN
+            absN = self.normalVector(N1)
+            eRef = (N1 - Er2)
             #kRef = np.array([N1 -r2])
             ErefNormalArraay = self.normalVector(eRef)
             ErefNormalArraayAbs = abs(ErefNormalArraay)
             eRefMaxIndex = ErefNormalArraayAbs.argmax(0)
-            Ain = 100
+
             if eRefMaxIndex == 0:
                 xERef = raysDataFrame.Xe[RinIndex]
                 tRef = (xERef - xRayCrossArray[0]) / ErefNormalArraay[0]
@@ -432,7 +431,7 @@ class Rays:
                 zERef = 0
                 yERef = 0
                 xERef = 0
-            eXRefArray = np.array([ErefNormalArraay[0], ErefNormalArraay[1], ErefNormalArraay[2], xERef, yERef, zERef, Ain])
+            eXRefArray = np.array([ErefNormalArraay[0], ErefNormalArraay[1], ErefNormalArraay[2], xERef, yERef, zERef])
 
             # xRayCrossArray2D = np.zeros((len(raysDataFrame.index), 3))
             # nNormallArray2D = np.zeros((len(raysDataFrame.index), 3))

@@ -191,7 +191,7 @@ rInObject = Rays()  # Create object of Rays
 tLine = Parametrs(mainPath+sysParamFname + fExtend, "LineParam")
 sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
 # mainRin = Parametrs(mainPath +  raysInFname +  fExtend, "Rin")
-mainRin = Parametrs(ray4test3pointFname, "Sheet1")
+mainRin = Parametrs('/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/RaysIn.xls', "Rin")
 raysSheetName0 = 'Ray_' + str(int(sys.dataSheet.Rin[0] - 1)) + '_' + str(int(sys.dataSheet.Rin[0]))
 
 #=============  Normilise Rin for Mirror  ===================================

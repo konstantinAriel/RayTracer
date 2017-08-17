@@ -26,7 +26,9 @@ class Ploting:
         RaysInObject = Parametrs(pathInRay, 'Sheet1')
         RayReflectedObject = Parametrs(pathReflctedRay, 'Sheet1')
         RaysNormalObject = Parametrs(pathNormalRay, 'Sheet1')
-
+        ##RayPolarIn = Parametrs(pathInRay, 'Sheet1')
+        ##RayPolarNormal = Parametrs(pathNormalRay, 'Sheet1')
+        ##RayPolarDetector = Parametrs(pathReflctedRay, 'Sheet1')
         # print(RaysInObject.dataSheet)
         # print(RayReflectedObject.dataSheet)
         # print(RaysNormalObject.dataSheet)
@@ -36,40 +38,93 @@ class Ploting:
         yRayInData = []
         zRayInData = []
 
+        xRayInData2d = []
+        yRayInData2d = []
+        zRayInData2d = []
+
+        xPolarInData = []
+        yPolarInData = []
+        zPolarInData = []
+
         xRayReflectedData = []
         yRayReflectedData = []
         zRayReflectedData = []
 
+        xRayReflectedData2d = []
+        yRayReflectedData2d = []
+        zRayReflectedData2d = []
+
+        xPolarReflectedData = []
+        yPolarReflectedData = []
+        zPolarReflectedData = []
+
         xRayNormalData = []
         yRayNormalData = []
         zRayNormalData = []
-
+        xpolarNormalData = []
+        ypolarNormalData = []
+        zpolarNormalData = []
+        rayInData2dDict = []
+        rayReflectedDict2d = []
         #Construct List of pairs of Rays
         for  rIndex in RaysInObject.dataSheet.index:
             # print(rIndex)
+            #  In DATA
             xRayInData.append(RaysInObject.dataSheet.Xin[rIndex] + mirrorDataSheet.Source[0])
             xRayInData.append(RaysNormalObject.dataSheet.Xin[rIndex])
             xRayInData.append(np.nan)
+
+            xRayInData2d.append(RaysInObject.dataSheet.Xin[rIndex] + mirrorDataSheet.Source[0])
+            yRayInData2d.append(RaysInObject.dataSheet.Yin[rIndex] + mirrorDataSheet.Source[1])
+            zRayInData2d.append(RaysInObject.dataSheet.Zin[rIndex] + mirrorDataSheet.Source[2])
+
+            xPolarInData.append(RaysInObject.dataSheet.Xin[rIndex] + mirrorDataSheet.Source[0])
+            xPolarInData.append(RaysInObject.dataSheet.Xe[rIndex] + mirrorDataSheet.Source[0] )
+            xPolarInData.append(np.nan)
 
             yRayInData.append(RaysInObject.dataSheet.Yin[rIndex] + mirrorDataSheet.Source[1])
             yRayInData.append(RaysNormalObject.dataSheet.Yin[rIndex])
             yRayInData.append(np.nan)
 
+            yPolarInData.append(RaysInObject.dataSheet.Yin[rIndex] + mirrorDataSheet.Source[1])
+            yPolarInData.append(RaysInObject.dataSheet.Ye[rIndex] + mirrorDataSheet.Source[1])
+            yPolarInData.append(np.nan)
+
             zRayInData.append(RaysInObject.dataSheet.Zin[rIndex] + mirrorDataSheet.Source[2])
             zRayInData.append(RaysNormalObject.dataSheet.Zin[rIndex])
             zRayInData.append(np.nan)
-            ##########################
+
+            zPolarInData.append(RaysInObject.dataSheet.Zin[rIndex] + mirrorDataSheet.Source[2])
+            zPolarInData.append(RaysInObject.dataSheet.Ze[rIndex] + mirrorDataSheet.Source[2])
+            zPolarInData.append(np.nan)
+            #  Reflected Data
             xRayReflectedData.append(RaysNormalObject.dataSheet.Xin[rIndex])
             xRayReflectedData.append(RayReflectedObject.dataSheet.Xin[rIndex] + mirrorDataSheet.Detector[0])
             xRayReflectedData.append(np.nan)
+
+            xRayReflectedData2d.append(RayReflectedObject.dataSheet.Xin[rIndex] + mirrorDataSheet.Detector[0])
+            yRayReflectedData2d.append(RayReflectedObject.dataSheet.Yin[rIndex] + mirrorDataSheet.Detector[1])
+            zRayReflectedData2d.append(RayReflectedObject.dataSheet.Zin[rIndex] + mirrorDataSheet.Detector[2])
+
+            xPolarReflectedData.append(RaysNormalObject.dataSheet.Xin[rIndex])
+            xPolarReflectedData.append(RayReflectedObject.dataSheet.Xe[rIndex] )
+            xPolarReflectedData.append(np.nan)
 
             yRayReflectedData.append(RaysNormalObject.dataSheet.Yin[rIndex])
             yRayReflectedData.append(RayReflectedObject.dataSheet.Yin[rIndex] + mirrorDataSheet.Detector[1])
             yRayReflectedData.append(np.nan)
 
+            yPolarReflectedData.append(RaysNormalObject.dataSheet.Yin[rIndex])
+            yPolarReflectedData.append(RayReflectedObject.dataSheet.Ye[rIndex])
+            yPolarReflectedData.append(np.nan)
+
             zRayReflectedData.append(RaysNormalObject.dataSheet.Zin[rIndex])
             zRayReflectedData.append(RayReflectedObject.dataSheet.Zin[rIndex] + mirrorDataSheet.Detector[2])
             zRayReflectedData.append(np.nan)
+
+            zPolarReflectedData.append(RaysNormalObject.dataSheet.Zin[rIndex])
+            zPolarReflectedData.append(RayReflectedObject.dataSheet.Ze[rIndex])
+            zPolarReflectedData.append(np.nan)
             #########################
 
         rayInDict = dict(
@@ -84,6 +139,42 @@ class Ploting:
                          name = 'rayReflected' + self.mirrorList,
                          line = dict(width=2, color='red')
                          ))
+
+        # PolarInDict = dict(
+        #     go.Scatter3d(x=xPolarInData, y=yPolarInData, z=zPolarInData,
+        #                  mode='lines',
+        #                  name='PolarIn' + self.mirrorList,
+        #                  line=dict(width=2, color='blue')
+        #                  ))
+        # PolarReflectedDict = dict(
+        #     go.Scatter3d(x=xPolarReflectedData, y=yPolarReflectedData, z=zPolarReflectedData,
+        #                  mode='lines',
+        #                  name='PolarReflected' + self.mirrorList,
+        #                  line=dict(width=2, color='blue')
+        #                  ))
+        # if self.mirrorList== 'Mirror1':
+        #     rayInData2dDict =  dict(
+        #                     go.Scatter(x=xRayInData2d, y=zRayInData2d,
+        #                     mode='markers',
+        #                     name='RayIn' + self.mirrorList,
+        #                     ))
+        #     rayReflectedDict2d =  dict(
+        #                     go.Scatter(x=xRayReflectedData2d, y=yRayReflectedData2d,
+        #                     mode='markers',
+        #                     name='RayRef' + self.mirrorList,
+        #                     ))
+        #
+        # elif self.mirrorList== 'Mirror2':
+        #     rayInData2dDict = dict(
+        #         go.Scatter(x=xRayInData2d, y=yRayInData2d,
+        #                      mode='markers',
+        #                      name='RayIn' + self.mirrorList,
+        #                      ))
+        #     rayReflectedDict2d = dict(
+        #         go.Scatter(x=xRayReflectedData2d, y=zRayReflectedData2d,
+        #                    mode='markers',
+        #                    name='RayRef' + self.mirrorList,
+        #                    ))
 
         return rayInDict, rayReflectedDict
 

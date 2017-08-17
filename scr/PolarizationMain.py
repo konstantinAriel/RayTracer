@@ -49,9 +49,9 @@ def mirrorLoop(mirrorDictMain):
                 # rayIn = RaysInDF[index,:]
                 # normalray = RaysNormalDF[index,:]
                 pObject = calcPolarization(RaysInDF.loc[index, :], RaysNormalDF.loc[index,:])
-                kRef = pObject.getReflectedPolarRay(pObject.kArray, pObject.nArray)
-                print('kRef = ')
-                print(kRef)
+                kRef, xRefArray = pObject.getReflectedPolarRay(pObject.kArray, pObject.nArray)
+
+                print(xRefArray)
             countMirror += 1
     print('====================================================== ++++++++++++++++++++++++++++++++++++++++++++++++++++++   END   Mirror Loop         ',  mirrorList)
 
@@ -134,7 +134,7 @@ mirrorDictMain = sys.getMirrorList(sys.dataSheet)
 mirrorLoop(mirrorDictMain)
 
 #=============== Plotting ====================================================
-# sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
-# py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
-# plotLoop(mirrorDictMain)
+sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
+py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
+plotLoop(mirrorDictMain)
 

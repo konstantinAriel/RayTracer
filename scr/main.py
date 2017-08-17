@@ -35,6 +35,8 @@ def mirrorLoop(mirrorDictMain):
                              'normalRay_' + str(countMirror) + '_' + str(countMirror)]
             RaysObject = Parametrs(mainPath + raysFName[0] + fExtend, 'Sheet1')
             print(RaysObject.dataSheet)
+            rayInData2dDict = []
+            rayReflectedDict2d = []
             path = [mainPath, raysFName, fExtend]
             # print('path = ', path )
             rInObject.calcReflectedRays(path, Mirror, RaysObject.dataSheet)
@@ -51,14 +53,16 @@ def printFromExel():
     print('==============================')
 
 def plotLoop(mirrorDictMain):
-    data = []
+    dataRays = []
     for mirrorDictSub in mirrorDictMain.keys():
         # print(sys.dataSheet)
         countMirror = int(sys.dataSheet.Rin[0])
         # print('CountMirror', countMirror)
         # print('****************************************************************** Mirror Loop',countMirror)
         # print('====================================================== ++++++++++++++++++++++++++++++++++++++++++++++++++++++        Mirror Loop         ',countMirror)
-        data = []
+        dataRays = []
+        dataIn2d = []
+        dataRef2d = []
         layout = []
         for mirrorList in mirrorDictMain.get(mirrorDictSub):
             # print("Count = ", countMirror)
@@ -78,18 +82,34 @@ def plotLoop(mirrorDictMain):
             surfR = plotObject.setMirrorSurf(mirrorObject.dataSheet)
 
             #print('plotObject.data = ',plotObject.data)
-            data.append(plotObject.rayInDict)
-            data.append(plotObject.rayReflectedDict)
-            data.append(surfR)
+            dataRays.append(plotObject.rayInDict)
+            dataRays.append(plotObject.rayReflectedDict)
+            # dataRays.append(plotObject.PolarInDict)
+            # dataRays.append(plotObject.PolarReflectedDict)
+            dataRays.append(surfR)
+            # dataIn2d.append(plotObject.rayInData2dDict)
+            # dataRef2d.append(plotObject.rayReflectedDict2d)
+            # layout = plotObject.layout
+            # fig2 = dict(data=dataIn2d, layout=layout)
+            # py.offline.plot(fig2, filename='DataIn_' + str(mirrorList) + '.html')
+            #
+            # fig3 = dict(data=dataRef2d, layout=layout)
+            # py.offline.plot(fig3, filename='DataRef'  + str(mirrorList) +'.html')
 
             # print('===========================================================================  End Mirror Loop')
             countMirror += 1
-        data.append(plotObject.Tline1)
-        data.append(plotObject.Tline2)
+        dataRays.append(plotObject.Tline1)
+        dataRays.append(plotObject.Tline2)
         layout = plotObject.layout
     #print(data)
-    fig = dict(data=data, layout=layout)
-    py.offline.plot(fig, filename='42RaysforTest MAtrix.html')
+    fig1 = dict(data=dataRays, layout=layout)
+    py.offline.plot(fig1, filename='RayTracing.html')
+
+    # fig2 = dict(data=dataIn2d, layout=layout)
+    # py.offline.plot(fig2, filename='DataIn.html')
+    #
+    # fig3 = dict(data=dataRef2d, layout=layout)
+    # py.offline.plot(fig3, filename='RayTracing.html')
 
 pathName()
 
@@ -98,7 +118,9 @@ pathName()
 tLine = Parametrs(mainPath+sysParamFname + fExtend, "LineParam")
 sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
 # Rin = Parametrs(mainPath + raysInFname + fExtend, "Rin")
-Rin = Parametrs('/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/RaysIn.xls', "Xin")
+#Rin = Parametrs('/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/RaysIn.xls', "Xin")
+# Rin = Parametrs('/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/RaysIn.xls', 'circul')
+Rin = Parametrs('/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/RaysIn.xls', 'circlParalel')
 raysSheetName0 = 'Ray_' + str(int(sys.dataSheet.Rin[0] - 1)) + '_' + str(int(sys.dataSheet.Rin[0]))
 rInObject = Rays()  # Create object of Rays
 
