@@ -12,10 +12,10 @@ from scr.MainParam import Parametrs
 from scr.TestMatrix import TestMatrix  as tm, TestMatrix
 from scr.getRaysFromMatrix import RaysFromMatrix
 
-global mainPath, fExtend, sysParamFname, raysInFname, ray4test3pointFname, mainPathForMatrix
+global mainPath, fExtend, sysParamFname, raysInFname, ray4TestMatrix3PointFname, mainPathForMatrix
 
 def pathName():
-    global mainPath, fExtend, sysParamFname, raysInFname, ray4test3pointFname, mainPathForMatrix, raysToCompareFName
+    global mainPath, fExtend, sysParamFname, raysInFname, ray4TestMatrix3PointFname, mainPathForMatrix, raysToCompareFName
     mainPath = "/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/"
     fExtend = '.xls'
     sysParamFname = 'sysParam_1'
@@ -222,7 +222,7 @@ rInObject = Rays()  # Create object of Rays
 tLine = Parametrs(mainPath+sysParamFname + fExtend, "LineParam")
 sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
 # mainRin = Parametrs(mainPath +  raysInFname +  fExtend, "Rin")
-mainRin = Parametrs(ray4test3pointFname, "Sheet1")
+mainRin = Parametrs(ray4TestMatrix3PointFname, "Sheet1")
 # raysSheetName0 = 'Ray_' + str(int(sys.dataSheet.Rin[0] - 1)) + '_' + str(int(sys.dataSheet.Rin[0]))
 
 #=============  Normilise Rin for Mirror  ===================================

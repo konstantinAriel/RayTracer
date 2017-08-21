@@ -3,8 +3,7 @@ import pandas as pd
 import plotly.graph_objs  as go
 import plotly as py
 
-from scr.MainParam import Parametrs
-from scr.Ploting import Ploting
+#from scr.Ploting import Ploting
 from scr.Rays import Rays
 from scr.MainParam import Parametrs
 
@@ -120,7 +119,8 @@ sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
 # Rin = Parametrs(mainPath + raysInFname + fExtend, "Rin")
 #Rin = Parametrs('/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/RaysIn.xls', "Xin")
 # Rin = Parametrs('/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/RaysIn.xls', 'circul')
-Rin = Parametrs('/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/RaysIn.xls', 'circlParalel')
+# Rin = Parametrs('/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/RaysIn.xls', 'circlParalel')
+Rin = Parametrs('/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/RaysIn.xls', 'KonusFrom1Point')
 raysSheetName0 = 'Ray_' + str(int(sys.dataSheet.Rin[0] - 1)) + '_' + str(int(sys.dataSheet.Rin[0]))
 rInObject = Rays()  # Create object of Rays
 
@@ -142,7 +142,7 @@ mirrorDictMain = sys.getMirrorList(sys.dataSheet)
 mirrorLoop(mirrorDictMain)
 
 #=============== Plotting ====================================================
-sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
-py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
-plotLoop(mirrorDictMain)
+# sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
+# py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
+# plotLoop(mirrorDictMain)
 

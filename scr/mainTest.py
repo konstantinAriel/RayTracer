@@ -12,10 +12,10 @@ from scr.MainParam import Parametrs
 from scr.TestMatrix import TestMatrix  as tm, TestMatrix
 from scr.getRaysFromMatrix import RaysFromMatrix
 
-global mainPath, fExtend, sysParamFname, raysInFname, ray4test3pointFname, mainPathForMatrix
+global mainPath, fExtend, sysParamFname, raysInFname, ray4TestMatrix3PointFname, mainPathForMatrix
 
 def pathName():
-    global mainPath, fExtend, sysParamFname, raysInFname, ray4test3pointFname, mainPathForMatrix
+    global mainPath, fExtend, sysParamFname, raysInFname, ray4TestMatrix3PointFname, mainPathForMatrix
     mainPath = "/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/"
     fExtend = '.xls'
     sysParamFname = 'sysParam_1'

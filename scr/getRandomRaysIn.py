@@ -117,7 +117,7 @@ x1, x2, k1, k2 = rInObj.getRandomVectorX()
 # np.zeros((3400, 1))
 # np.ones((3400, 1))
 rInDF = rInObj.setRaysDataFrame(x1, x2, k1,k2)
-fileName =  '/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/ray4test3Point_sysParam_1.xls'
+fileName =  '/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/ray4TestMatrix3Points.xls'
 rInObj.saveRays2Execel(fileName, rInDF)
 
 # data = [trace]
