@@ -110,9 +110,9 @@ def setRaysDataFrame(XinArray,  KinArray, EinArray):
                            'EyIm': EinArray[:, 3],
                            'EzRe': EinArray[:, 4],
                            'EzIm': EinArray[:, 5],
-                           'eX': EinArray[:, 6],
-                           'eY': EinArray[:, 7],
-                           'ez': EinArray[:, 8],
+                           'Xe': EinArray[:, 6],
+                           'Ye': EinArray[:, 7],
+                           'Ze': EinArray[:, 8],
                            'Wx': EinArray[:, 9],
                            'Wz': EinArray[:, 10]
                            })

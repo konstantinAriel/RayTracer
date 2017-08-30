@@ -126,7 +126,6 @@ for i in range(40, 59):
 
     y3RayInData.append(Yin[i])
     y3RayInData.append(Yin1[i])
-    y3RayInData.append(Yin1[i])
     y3RayInData.append(np.nan)
 
     z3RayInData.append(Zin[i])

@@ -8,7 +8,7 @@ import plotly.graph_objs  as go
 import plotly as py
 
 from scr.MainParam import Parametrs
-from scr.Ploting import Ploting
+from scr.Ploting import PlotingRayTracing
 from scr.Rays import Rays
 from scr.getRaysFromMatrix import RaysFromMatrix
 
@@ -74,9 +74,9 @@ def plotLoop(mirrorDictMain):
                          'normalRay_' + str(countMirror) + '_' + str(countMirror)]
             path = [mainPathToCompare, raysFName, fExtend]
             # print('path = ', path )
-            plotObject = Ploting(path, mirrorObject.dataSheet, mirrorList)
+            plotObject = PlotingRayTracing(path, mirrorObject.dataSheet, mirrorList)
 
-            surfR = plotObject.setMirrorSurf(mirrorObject.dataSheet)
+            surfR = plotObject.setMirrorSurf
 
             #print('plotObject.data = ',plotObject.data)
             data.append(plotObject.rayInDict)

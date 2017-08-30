@@ -78,7 +78,7 @@ def plotLoop(mirrorDictMain):
             # print('path = ', path )
             plotObject = Ploting(path, mirrorObject.dataSheet, mirrorList)
 
-            surfR = plotObject.setMirrorSurf(mirrorObject.dataSheet)
+            surfR = plotObject.setMirrorSurf
 
             #print('plotObject.data = ',plotObject.data)
             dataRays.append(plotObject.rayInDict)

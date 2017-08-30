@@ -7,7 +7,7 @@ import plotly as py
 from numpy.linalg import inv
 from numpy import nan
 from scr.MainParam import Parametrs
-from scr.Ploting import Ploting
+from scr.Ploting import PlotingRayTracing
 from scr.Rays import Rays
 from scr.MainParam import Parametrs
 from scr.TestMatrix import TestMatrix
@@ -142,9 +142,9 @@ def plotLoop(mirrorDictMain):
                          'normalRay_' + str(countMirror) + '_' + str(countMirror)]
             path = [mainPath, raysFName, fExtend]
             # print('path = ', path )
-            plotObject = Ploting(path, mirrorObject.dataSheet, mirrorList)
+            plotObject = PlotingRayTracing(path, mirrorObject.dataSheet, mirrorList)
 
-            surfR = plotObject.setMirrorSurf(mirrorObject.dataSheet)
+            surfR = plotObject.setMirrorSurf
 
             # print('plotObject.data = ',plotObject.data)
             data.append(plotObject.rayInDict)

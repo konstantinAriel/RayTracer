@@ -17,22 +17,7 @@ class Ploting:
         self.layout = self.setLayout()
         self.Tline1, self.Tline2 = self.getTlineDict()
 
-    def setRays4Plot(self, path, mirrorDataSheet):
-        fName = path[1]
-        pathInRay = path[0] + fName[0] + path[2]
-        pathReflctedRay = path[0] + fName[1] + path[2]
-        pathNormalRay = path[0] + fName[2] + path[2]
-
-        RaysInObject = Parametrs(pathInRay, 'Sheet1')
-        RayReflectedObject = Parametrs(pathReflctedRay, 'Sheet1')
-        RaysNormalObject = Parametrs(pathNormalRay, 'Sheet1')
-        ##RayPolarIn = Parametrs(pathInRay, 'Sheet1')
-        ##RayPolarNormal = Parametrs(pathNormalRay, 'Sheet1')
-        ##RayPolarDetector = Parametrs(pathReflctedRay, 'Sheet1')
-        # print(RaysInObject.dataSheet)
-        # print(RayReflectedObject.dataSheet)
-        # print(RaysNormalObject.dataSheet)
-        #print(mirrorDataSheet)
+    def setRays4Plot(self, mirrorDataSheet):
 
         xRayInData = []
         yRayInData = []
