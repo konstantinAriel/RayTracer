@@ -6,7 +6,7 @@ import plotly as py
 #from scr.Ploting import Ploting
 from scr.Rays import Rays
 from scr.MainParam import Parametrs
-
+from scr import Ploting
 def pathName():
     global mainPath, fExtend, sysParamFname, raysInFname, ray4test3pointFname
     mainPath = "/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/"
@@ -76,7 +76,10 @@ def plotLoop(mirrorDictMain):
                          'normalRay_' + str(countMirror) + '_' + str(countMirror)]
             path = [mainPath, raysFName, fExtend]
             # print('path = ', path )
-            plotObject = Ploting(path, mirrorObject.dataSheet, mirrorList)
+            RaysInObject =
+            RaysNormalObject
+            RayReflectedObject
+            plotObject = Ploting(path, mirrorObject.dataSheet, mirrorList, RaysInObject, RaysNormalObject, RayReflectedObject)
 
             surfR = plotObject.setMirrorSurf
 
@@ -142,7 +145,7 @@ mirrorDictMain = sys.getMirrorList(sys.dataSheet)
 mirrorLoop(mirrorDictMain)
 
 #=============== Plotting ====================================================
-# sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
-# py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
-# plotLoop(mirrorDictMain)
+sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
+py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
+plotLoop(mirrorDictMain)
 

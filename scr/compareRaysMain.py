@@ -138,7 +138,7 @@ for i in range(1,2):
     print(' RaysInShetNameList = ')
     print(RaysInSheetNameList)
     for rayInSheetName in RaysInSheetNameList:
-        print(' rayInSheetName = ')
+        print('rayInSheetName = ')
         print(rayInSheetName)
         RaysDF = RaysObject.dataSheet
         countOfRays = RaysDF.index

@@ -11,9 +11,13 @@ from scr.Rays import Rays
 py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
 
 class Ploting:
-    def __init__(self, path, mirrorDataSheet, mirrorList):
+    def __init__(self, path, mirrorDataSheet, mirrorList, RaysInObject, RaysNormalObject, RayReflectedObject):
+        self.mirrorDataSheet = mirrorDataSheet
+        self.RaysInObject = RaysInObject
+        self.RayReflectedObject = RayReflectedObject
+        self.RaysNormalObject = RaysNormalObject
         self.mirrorList = mirrorList
-        self.rayInDict, self.rayReflectedDict = self.setRays4Plot(path, mirrorDataSheet)
+        self.rayInDict, self.rayReflectedDict = self.setRays4Plot(self.mirrorDataSheet)
         self.layout = self.setLayout()
         self.Tline1, self.Tline2 = self.getTlineDict()
 
@@ -52,63 +56,63 @@ class Ploting:
         rayInData2dDict = []
         rayReflectedDict2d = []
         #Construct List of pairs of Rays
-        for  rIndex in RaysInObject.dataSheet.index:
+        for  rIndex in self.RaysInObject.dataSheet.index:
             # print(rIndex)
             #  In DATA
-            xRayInData.append(RaysInObject.dataSheet.Xin[rIndex] + mirrorDataSheet.Source[0])
-            xRayInData.append(RaysNormalObject.dataSheet.Xin[rIndex])
+            xRayInData.append(self.RaysInObject.dataSheet.Xin[rIndex] + mirrorDataSheet.Source[0])
+            xRayInData.append(self.RaysNormalObject.dataSheet.Xin[rIndex])
             xRayInData.append(np.nan)
 
-            xRayInData2d.append(RaysInObject.dataSheet.Xin[rIndex] + mirrorDataSheet.Source[0])
-            yRayInData2d.append(RaysInObject.dataSheet.Yin[rIndex] + mirrorDataSheet.Source[1])
-            zRayInData2d.append(RaysInObject.dataSheet.Zin[rIndex] + mirrorDataSheet.Source[2])
+            xRayInData2d.append(self.RaysInObject.dataSheet.Xin[rIndex] + mirrorDataSheet.Source[0])
+            yRayInData2d.append(self.RaysInObject.dataSheet.Yin[rIndex] + mirrorDataSheet.Source[1])
+            zRayInData2d.append(self.RaysInObject.dataSheet.Zin[rIndex] + mirrorDataSheet.Source[2])
 
-            xPolarInData.append(RaysInObject.dataSheet.Xin[rIndex] + mirrorDataSheet.Source[0])
-            xPolarInData.append(RaysInObject.dataSheet.Xe[rIndex] + mirrorDataSheet.Source[0] )
+            xPolarInData.append(self.RaysInObject.dataSheet.Xin[rIndex] + mirrorDataSheet.Source[0])
+            xPolarInData.append(self.RaysInObject.dataSheet.Xe[rIndex] + mirrorDataSheet.Source[0] )
             xPolarInData.append(np.nan)
 
-            yRayInData.append(RaysInObject.dataSheet.Yin[rIndex] + mirrorDataSheet.Source[1])
-            yRayInData.append(RaysNormalObject.dataSheet.Yin[rIndex])
+            yRayInData.append(self.RaysInObject.dataSheet.Yin[rIndex] + mirrorDataSheet.Source[1])
+            yRayInData.append(self.RaysNormalObject.dataSheet.Yin[rIndex])
             yRayInData.append(np.nan)
 
-            yPolarInData.append(RaysInObject.dataSheet.Yin[rIndex] + mirrorDataSheet.Source[1])
-            yPolarInData.append(RaysInObject.dataSheet.Ye[rIndex] + mirrorDataSheet.Source[1])
+            yPolarInData.append(self.RaysInObject.dataSheet.Yin[rIndex] + mirrorDataSheet.Source[1])
+            yPolarInData.append(self.RaysInObject.dataSheet.Ye[rIndex] + mirrorDataSheet.Source[1])
             yPolarInData.append(np.nan)
 
-            zRayInData.append(RaysInObject.dataSheet.Zin[rIndex] + mirrorDataSheet.Source[2])
-            zRayInData.append(RaysNormalObject.dataSheet.Zin[rIndex])
+            zRayInData.append(self.RaysInObject.dataSheet.Zin[rIndex] + mirrorDataSheet.Source[2])
+            zRayInData.append(self.RaysNormalObject.dataSheet.Zin[rIndex])
             zRayInData.append(np.nan)
 
-            zPolarInData.append(RaysInObject.dataSheet.Zin[rIndex] + mirrorDataSheet.Source[2])
-            zPolarInData.append(RaysInObject.dataSheet.Ze[rIndex] + mirrorDataSheet.Source[2])
+            zPolarInData.append(self.RaysInObject.dataSheet.Zin[rIndex] + mirrorDataSheet.Source[2])
+            zPolarInData.append(self.RaysInObject.dataSheet.Ze[rIndex] + mirrorDataSheet.Source[2])
             zPolarInData.append(np.nan)
             #  Reflected Data
-            xRayReflectedData.append(RaysNormalObject.dataSheet.Xin[rIndex])
-            xRayReflectedData.append(RayReflectedObject.dataSheet.Xin[rIndex] + mirrorDataSheet.Detector[0])
+            xRayReflectedData.append(self.RaysNormalObject.dataSheet.Xin[rIndex])
+            xRayReflectedData.append(self.RayReflectedObject.dataSheet.Xin[rIndex] + mirrorDataSheet.Detector[0])
             xRayReflectedData.append(np.nan)
 
-            xRayReflectedData2d.append(RayReflectedObject.dataSheet.Xin[rIndex] + mirrorDataSheet.Detector[0])
-            yRayReflectedData2d.append(RayReflectedObject.dataSheet.Yin[rIndex] + mirrorDataSheet.Detector[1])
-            zRayReflectedData2d.append(RayReflectedObject.dataSheet.Zin[rIndex] + mirrorDataSheet.Detector[2])
+            xRayReflectedData2d.append(self.RayReflectedObject.dataSheet.Xin[rIndex] + mirrorDataSheet.Detector[0])
+            yRayReflectedData2d.append(self.RayReflectedObject.dataSheet.Yin[rIndex] + mirrorDataSheet.Detector[1])
+            zRayReflectedData2d.append(self.RayReflectedObject.dataSheet.Zin[rIndex] + mirrorDataSheet.Detector[2])
 
-            xPolarReflectedData.append(RaysNormalObject.dataSheet.Xin[rIndex])
-            xPolarReflectedData.append(RayReflectedObject.dataSheet.Xe[rIndex] )
+            xPolarReflectedData.append(self.RaysNormalObject.dataSheet.Xin[rIndex])
+            xPolarReflectedData.append(self.RayReflectedObject.dataSheet.Xe[rIndex] )
             xPolarReflectedData.append(np.nan)
 
-            yRayReflectedData.append(RaysNormalObject.dataSheet.Yin[rIndex])
-            yRayReflectedData.append(RayReflectedObject.dataSheet.Yin[rIndex] + mirrorDataSheet.Detector[1])
+            yRayReflectedData.append(self.RaysNormalObject.dataSheet.Yin[rIndex])
+            yRayReflectedData.append(self.RayReflectedObject.dataSheet.Yin[rIndex] + mirrorDataSheet.Detector[1])
             yRayReflectedData.append(np.nan)
 
-            yPolarReflectedData.append(RaysNormalObject.dataSheet.Yin[rIndex])
-            yPolarReflectedData.append(RayReflectedObject.dataSheet.Ye[rIndex])
+            yPolarReflectedData.append(self.RaysNormalObject.dataSheet.Yin[rIndex])
+            yPolarReflectedData.append(self.RayReflectedObject.dataSheet.Ye[rIndex])
             yPolarReflectedData.append(np.nan)
 
-            zRayReflectedData.append(RaysNormalObject.dataSheet.Zin[rIndex])
-            zRayReflectedData.append(RayReflectedObject.dataSheet.Zin[rIndex] + mirrorDataSheet.Detector[2])
+            zRayReflectedData.append(self.RaysNormalObject.dataSheet.Zin[rIndex])
+            zRayReflectedData.append(self.RayReflectedObject.dataSheet.Zin[rIndex] + mirrorDataSheet.Detector[2])
             zRayReflectedData.append(np.nan)
 
-            zPolarReflectedData.append(RaysNormalObject.dataSheet.Zin[rIndex])
-            zPolarReflectedData.append(RayReflectedObject.dataSheet.Ze[rIndex])
+            zPolarReflectedData.append(self.RaysNormalObject.dataSheet.Zin[rIndex])
+            zPolarReflectedData.append(self.RayReflectedObject.dataSheet.Ze[rIndex])
             zPolarReflectedData.append(np.nan)
             #########################
 

@@ -9,7 +9,7 @@ import plotly as py
 
 tLine = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.systemSettingsDir + mp.sysParamFilename + mp.fExtend, "LineParam")
 sysParam = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.systemSettingsDir + mp.sysParamFilename + mp.fExtend, "SysParam")
-Rin = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.rInDir +  mp.raysInFname + mp.fExtend, 'circlParalel')
+Rin = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.rInDir +  mp.raysInFname + mp.fExtend, 'KonusFrom1Point')
 
 mirrorSheetName = 'Mirror' + str(int(sysParam.DataSheet.Rin[0]))
 raysSheetName = 'Ray_' + str(int(sysParam.DataSheet.Rin[0] - 1)) + '_' + str(int(sysParam.DataSheet.Rin[0]))
@@ -156,9 +156,12 @@ mirrorLoop(mirrorList)
 R1 = mp.Parametrs('/home/konstantin/PycharmProjects/RayTracer/files/XLS/Rout/Ray_0_1.xls', 'Sheet1')
 R2 = mp.Parametrs('/home/konstantin/PycharmProjects/RayTracer/files/XLS/Rout/Ray_1_2.xls', 'Sheet1')
 R3 = mp.Parametrs('/home/konstantin/PycharmProjects/RayTracer/files/XLS/Rout/Ray_2_3.xls', 'Sheet1')
+R4 = mp.Parametrs('/home/konstantin/PycharmProjects/RayTracer/files/XLS/Rout/Ray_3_4.xls', 'Sheet1')
+R5 = mp.Parametrs('/home/konstantin/PycharmProjects/RayTracer/files/XLS/Rout/Ray_4_5.xls', 'Sheet1')
 mirrorIndex = 'Aperture-morror2'
 plotFileName2 = '/home/konstantin/PycharmProjects/RayTracer/result/htmlFiles/newDir/Rin_vs_Rout_Section_In_Out_0_1' + str( mirrorIndex) + '.html'
 plotFileName3 = '/home/konstantin/PycharmProjects/RayTracer/result/htmlFiles/newDir/Rin_vs_Rout_Section_In_Out_0_2' + str( mirrorIndex) + '.html'
+plotFileName4 = '/home/konstantin/PycharmProjects/RayTracer/result/htmlFiles/newDir/Rin_vs_Rout_Section_In_Out_AA' + str( mirrorIndex) + '.html'
 
 
 Mirror = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.systemSettingsDir + mp.sysParamFilename + mp.fExtend, 'Mirror1')  ## mirror List - The name of Sheets in Exel file
@@ -181,15 +184,23 @@ plotObject = Plotpolarization(Mirror.DataSheet, R1.DataSheet, R2.DataSheet, R3.D
 # PrayInDict03, PrayOutDict03 = plotObject.setPolRays4Plot_R1_R3_Section_0_2(R1.DataSheet,  R3.DataSheet, 0, 20,)
 # PrayInOutDict03 = plotObject.setPolRays4Plot_R1_R3_Section_direction_0_2(R1.DataSheet, R3.DataSheet, 0, 20,)
 
-r1m1, r2m1, r3m1 = plotObject.setRays4plot_R1_R2_R3_Section_markers(R1.DataSheet, R2.DataSheet, R3.DataSheet,  0, 20, 'green')
-rl1 = plotObject.setRays4plot_R1_R2_R3_Section_Lines(R1.DataSheet,  R2.DataSheet, R3.DataSheet, 0, 20, 'blue')
-p01, p11, p21= plotObject.setPolRays4Plot_R1_R2_R3_Section_0_3(R1.DataSheet,  R2.DataSheet, R3.DataSheet, 0, 20,)
+#r1m1, r2m1, r3m1 = plotObject.setRays4plot_R1_R2_R3_Section_markers(R1.DataSheet, R2.DataSheet, R3.DataSheet,  0, 20, 'green')
+r1m1, r2m1, r3m1, r4m1, r5m1 = plotObject.setRays4plot_R1_R2_R3_R4_R5_Section_markers(R1.DataSheet, R2.DataSheet, R3.DataSheet, R4.DataSheet,R5.DataSheet, 0, 20, 'green')
+rl1 = plotObject.setRays4plot_R1_R2_R3_R4_R5_Section_Lines(R1.DataSheet, R2.DataSheet, R3.DataSheet, R4.DataSheet,R5.DataSheet, 0, 20, 'blue')
+
+# rl1 = plotObject.setRays4plot_R1_R2_Section_Lines(R1.DataSheet, R2.DataSheet, 0, 20, 0, 400,'blue')
+# rl2 = plotObject.setRays4plot_R1_R2_Section_Lines(R2.DataSheet, R3.DataSheet, 0, 20, 400, 800,'blue')
+# rl3 = plotObject.setRays4plot_R1_R2_Section_Lines(R3.DataSheet, R4.DataSheet, 0, 20, 800, 1250,'blue')
+# rl4 = plotObject.setRays4plot_R1_R2_Section_Lines(R4.DataSheet, R5.DataSheet, 0, 20, L1, L2,'blue')
+p01, p11, p21, pAA = plotObject.setPolRays4Plot_R1_R2_R3_Section_0_3(R1.DataSheet,  R2.DataSheet, R3.DataSheet, 0, 20,)
 pDirection1 = plotObject.setPolRays4Plot_R1_R2_R3_Section_direction_0_3(R1.DataSheet, R2.DataSheet, R3.DataSheet, 0, 20,)
 
 layout = plotObject.layout
 
 data4Plot=[]
 data4Plot1=[]
+data4Plot2=[]
+data1 = []
 
 # data4Plot.append(rayInDict_markers1)
 # data4Plot.append(rayOutDict_markers1)
@@ -198,7 +209,7 @@ data4Plot1=[]
 # data4Plot.append(rayInDict_markers2)
 # data4Plot.append(rayOutDict_markers2)
 # data4Plot.append(rayInDict_line2)
-
+#
 # data4Plot.append(rayInDict_markers3)
 # data4Plot.append(rayOutDict_markers3)
 # data4Plot.append(rayInDict_line3)
@@ -216,13 +227,22 @@ data4Plot1=[]
 data4Plot1.append(r1m1)
 data4Plot1.append(r2m1)
 data4Plot1.append(r3m1)
-data4Plot1.append(rl1)
-data4Plot1.append(p01)
-data4Plot1.append(p11)
-data4Plot1.append(p21)
-data4Plot1.append(pDirection1)
+data4Plot1.append(r4m1)
+data4Plot1.append(r5m1)
+data4Plot2.append(rl1)
+# data4Plot2.append(rl2)
+# data4Plot2.append(rl3)
+# data4Plot2.append(rl4)
 
-# plotObject.plotIs(data4Plot, layout, plotFileName2 )
+#data4Plot1.append(p01)
+#data4Plot1.append(p11)
+#data4Plot1.append(p21)
+#data4Plot1.append(pDirection1)
+data1.append(pAA)
+
+#plotObject.plotIs(data4Plot, layout, plotFileName2)
 plotObject.plotIs(data4Plot1, layout,plotFileName3)
+plotObject.plotIs(data4Plot2, layout,plotFileName4)
+#plotObject.plotIs(pAA, layout, plotFileName4)
 plotLoop(mirrorList)
-# plotLoopPolar(mirrorList)
+#plotLoopPolar(mirrorList)

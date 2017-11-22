@@ -591,14 +591,17 @@ class Plotpolarization:
         Ey1data = []
         Ez1data = []
 
-        Ex2data = []
-        Ey2data = []
-        Ez2data = []
+        # Ex2data = []
+        # Ey2data = []
+        # Ez2data = []
 
+        pRay3Data = []
         Ain = 15
         for i in range(iS, iF):
         # Polarizaation App
-
+            Ex2data = []
+            Ey2data = []
+            Ez2data = []
             Ex0data.append(R1.Xin[i])
             Ex0data.append(R1.Xin[i] + Ain*R1.Exin[i])
             Ex0data.append(np.nan)
@@ -639,6 +642,18 @@ class Plotpolarization:
             Ez2data.append(R3.Ze[i])
             Ez2data.append(np.nan)
 
+            Pray3 = dict(
+                        go.Scatter3d(x=Ex2data,
+                            y=Ey2data,
+                            z=Ez2data,
+                            mode='Lines',
+                            name='each Ray_' + str(i),
+                            line=dict(width=2, color='red')
+                            ))
+
+            pRay3Data.append(Pray3)
+
+
         Pray0Dict = dict(
             go.Scatter3d(x=Ex0data,
                          y=Ey0data,
@@ -666,7 +681,7 @@ class Plotpolarization:
                          line=dict(width=2, color='red')
                          ))
 
-        return Pray0Dict, Pray1Dict, Pray2Dict
+        return Pray0Dict, Pray1Dict, Pray2Dict, pRay3Data
 
     def setPolRays4Plot_R1_R2_R3_Section_direction_0_3(self, R1, R2, R3, iS, iF):
 
@@ -685,7 +700,7 @@ class Plotpolarization:
 
             EyInOutdata.append(Ain * R1.Eyin[i])
             EyInOutdata.append(self.L + R2.Ze[i])
-            EyInOutdata.append(2 * self.L + R3.Ze[i])
+            EyInOutdata.append(2 * self.L + R3.Ye[i])
             EyInOutdata.append(np.nan)
 
             EzInOutdata.append(R1.Zin[i] + Ain * R1.Ezin[i])
@@ -796,3 +811,160 @@ class Plotpolarization:
         #print('Data = ', data)
         fig = dict(data=data, layout=layout)
         py.offline.plot(fig, filename=filename)
+
+    def setRays4plot_R1_R2_R3_R4_R5_Section_markers(self, R1, R2, R3, R4, R5, iS, iF, color):
+
+        #  Plot markers of rays in Ap, Screen1, Screen2
+
+        x0data = []
+        y0data = []
+        z0data = []
+
+        x1data = []
+        y1data = []
+        z1data = []
+
+        x2data = []
+        y2data = []
+        z2data = []
+
+        x3data = []
+        y3data = []
+        z3data = []
+
+        x4data = []
+        y4data = []
+        z4data = []
+
+        for i in range(iS, iF):
+            x0data.append(R1.Xin[i])
+            y0data.append(0)
+            z0data.append(R1.Zin[i])
+
+            x1data.append(R2.Xin[i])
+            y1data.append(self.L)
+            z1data.append(R2.Yin[i])
+
+            x2data.append(R3.Xin[i])
+            y2data.append(2 * self.L)
+            z2data.append(R3.Zin[i])
+
+            x3data.append(R4.Yin[i])
+            y3data.append(3 * self.L)
+            z3data.append(R4.Zin[i])
+
+            x4data.append(R5.Yin[i])
+            y4data.append(4 * self.L)
+            z4data.append(R5.Xin[i])
+
+        ray0Dict = dict(
+            go.Scatter3d(x=x0data,
+                         y=y0data,
+                         z=z0data,
+                         mode='markers',
+                         name='R0_' + str(self.mirrorIndex) + '_' + str(iS) + '_' + str(iF),
+                         line=dict(width=2, color=color)
+                         ))
+
+        ray1Dict = dict(
+            go.Scatter3d(x=x1data,
+                         y=y1data,
+                         z=z1data,
+                         mode='markers',
+                         name='R1_' + str(self.mirrorIndex) + '_' + str(iS) + '_' + str(iF),
+                         line=dict(width=2, color=color)
+                         ))
+
+        ray2Dict = dict(
+            go.Scatter3d(x=x2data,
+                         y=y2data,
+                         z=z2data,
+                         mode='markers',
+                         name='R2_' + str(self.mirrorIndex) + '_' + str(iS) + '_' + str(iF),
+                         line=dict(width=2, color=color)
+                         ))
+        ray3Dict = dict(
+            go.Scatter3d(x=x3data,
+                         y=y3data,
+                         z=z3data,
+                         mode='markers',
+                         name='R3_' + str(self.mirrorIndex) + '_' + str(iS) + '_' + str(iF),
+                         line=dict(width=2, color=color)
+                         ))
+        ray4Dict = dict(
+            go.Scatter3d(x=x4data,
+                         y=y4data,
+                         z=z4data,
+                         mode='markers',
+                         name='R4_' + str(self.mirrorIndex) + '_' + str(iS) + '_' + str(iF),
+                         line=dict(width=2, color=color)
+                         ))
+        return ray0Dict, ray1Dict, ray2Dict, ray3Dict, ray4Dict
+
+    def setRays4plot_R1_R2_R3_R4_R5_Section_Lines(self, R1, R2, R3, R4, R5, iS, iF, color):
+
+        xInOutdata = []
+        yInOutdata = []
+        zInOutdata = []
+
+        for i in range(iS, iF):
+            xInOutdata.append(R1.Xin[i])
+            xInOutdata.append(R2.Xin[i])
+            xInOutdata.append(R3.Xin[i])
+            xInOutdata.append(R4.Yin[i])
+            xInOutdata.append(R5.Yin[i])
+            xInOutdata.append(np.nan)
+
+            yInOutdata.append(0)
+            yInOutdata.append(self.L)
+            yInOutdata.append(self.L * 2)
+            yInOutdata.append(self.L * 3)
+            yInOutdata.append(self.L * 4)
+            yInOutdata.append(np.nan)
+
+            zInOutdata.append(R1.Zin[i])
+            zInOutdata.append(R2.Yin[i])
+            zInOutdata.append(R3.Zin[i])
+            zInOutdata.append(R4.Zin[i])
+            zInOutdata.append(R5.Xin[i])
+            zInOutdata.append(np.nan)
+
+        rayInOutDict = dict(
+            go.Scatter3d(x=xInOutdata,
+                         y=yInOutdata,
+                         z=zInOutdata,
+                         mode='Lines',
+                         name='rayIn_Out' + str(self.mirrorIndex) + '_' + str(iS) + '_' + str(iF),
+                         line=dict(width=1, color=color)
+                         ))
+        return rayInOutDict
+
+
+def setRays4plot_R1_R2_Section_Lines(self, R1, R2, iS, iF, color):
+    xInOutdata = []
+    yInOutdata = []
+    zInOutdata = []
+
+
+    for i in range(iS, iF):
+        xInOutdata.append(R1.Xin[i])
+        xInOutdata.append(R2.Xin[i])
+        xInOutdata.append(np.nan)
+
+        yInOutdata.append(0)
+        yInOutdata.append(self.L)
+        yInOutdata.append(np.nan)
+
+        zInOutdata.append(R1.Zin[i])
+        zInOutdata.append(R2.Yin[i])
+        zInOutdata.append(np.nan)
+
+    rayInOutDict = dict(
+        go.Scatter3d(x=xInOutdata,
+                     y=yInOutdata,
+                     z=zInOutdata,
+                     mode='Lines',
+                     name='rayIn_Out' + str(self.mirrorIndex) + '_' + str(iS) + '_' + str(iF),
+                     line=dict(width=1, color=color)
+                     ))
+    return rayInOutDict
