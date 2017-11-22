@@ -118,7 +118,6 @@ py.tools.set_credentials_file(username ='DemoAccount', api_key='lr1c37zw81')
 plotLoop(mirrorDictMain)
 
 for i in range(1,2):
-
     path2testMatrix = mainPathForMatrix + 'testMatrix_0_' + str(i) + fExtend
     # print('i = ')
     # print(i)

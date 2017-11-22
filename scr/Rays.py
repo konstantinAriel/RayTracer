@@ -94,7 +94,7 @@ class Rays:
                           x0RayAraay[1] + kinArray[1]*tRoot,
                           x0RayAraay[2] + kinArray[2]*tRoot
                           ])
-
+    ##  def pprintSymbol   NO U s a g e !!!
     def pprintSymbol(self, N1sym, N2sym, N3sym, N1,N2, N3, mainExpr, mainExprCollcted, mainExprSubs, nArray, nNormal, xNormal):
         print('mainExpr = ')
         pprint(mainExpr)
@@ -274,7 +274,7 @@ class Rays:
 
         # Loop for all Rays
         for RinIndex in raysDataFrame.index:
-            print('===========********************   Ray Loop  ***************************** ==============', RinIndex )
+            #print('===========******Calcilation Reflected Rays ***************************** ==============', RinIndex )
         #  RayIn parmetrs
 
             x0RayAray = np.array([raysDataFrame.Xin[RinIndex]  + Mirror.Source[0],
@@ -453,7 +453,7 @@ class Rays:
         # print('xRayCrossArray = ', xRayCrossArray2D)
         # print('nNormallArray2D', nNormallArray2D)
         #print('eCrossArray2D', eCrossArray2D)
-        print('***********************************************************************        End Ray Loop' , RinIndex)
+        print('********************* Calcilation Reflected Rays *************************** TOTAL RAYS is  ' , RinIndex)
         NormalRaysDataFrame = self.setRaysDataFrame(xRayCrossArray2D,
                                                     nNormallArray2D,
                                                     eCrossArray2D)
@@ -464,5 +464,10 @@ class Rays:
                              NormalRaysDataFrame)
         self.saveRays2Execel(pathReflctedRay,
                              ReflectedRaysDataFrame)
+        print('pathNormalRay = ', pathNormalRay)
+        print('pathReflctedRay = ', pathReflctedRay)
+
+
+
 
 

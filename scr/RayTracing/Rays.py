@@ -18,7 +18,7 @@ class Rays:
                 self.RaysDFnormal =  self.rInNormalise()
 
     def rInNormalise(self):
-        RaysHeads = self.rayInDF.columns
+        #RaysHeads = self.rayInDF.columns
         RayCount = 0
         numberOfRays = len(self.rayInDF.Kxin)
         KinNormalArray2D, XinArray2D, EinArray2D = self.initArrasy2D(numberOfRays)

@@ -14,9 +14,8 @@ Rin = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.rInDir +  mp.raysInFname + mp.fE
 mirrorSheetName = 'Mirror' + str(int(sysParam.DataSheet.Rin[0]))
 raysSheetName = 'Ray_' + str(int(sysParam.DataSheet.Rin[0] - 1)) + '_' + str(int(sysParam.DataSheet.Rin[0]))
 
-
 mirrorObj = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.systemSettingsDir + mp.sysParamFilename + mp.fExtend, 'Mirror1')
-rInObj = rmain.Rays(mirrorObj.DataSheet, Rin.DataSheet,getRefRay=0)  # Create object of Rays
+rInObj = rmain.Rays(mirrorObj.DataSheet, Rin.DataSheet, getRefRay=0)  # Create object of Rays
 
 raysInDFn = rInObj.RaysDFnormal
 # save to Excel
