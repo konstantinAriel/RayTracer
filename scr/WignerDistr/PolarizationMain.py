@@ -5,7 +5,7 @@ import plotly as py
 
 from scr.MainParam import Parametrs
 from scr.Ploting import PlotingRayTracing
-from scr.Rays import Rays
+from scr.RayTracing.Rays import  Rays
 from scr.MainParam import Parametrs
 from scr.calcPolarization import calcPolarization
 
@@ -28,8 +28,8 @@ def mirrorLoop(mirrorDictMain):
 
             Mirror = sys.getParam(sys.paramFile, mirrorList)  ## mirror List - The name of Sheets in Exel file
             raysFName = ['Ray_' + (str(countMirror - 1)) + '_' + str(countMirror),
-                             'Ray_' + str(countMirror) + '_' + str(countMirror + 1),
-                             'normalRay_' + str(countMirror) + '_' + str(countMirror)]
+                         'Ray_' + str(countMirror) + '_' + str(countMirror + 1),
+                          'normalRay_' + str(countMirror) + '_' + str(countMirror)]
             print(raysFName)
             RaysInDF = Parametrs(mainPath + raysFName[0] + fExtend, 'Sheet1').dataSheet
             RaysNormalDF = Parametrs(mainPath + raysFName[2] + fExtend, 'Sheet1').dataSheet
@@ -113,19 +113,23 @@ tLine = Parametrs(mainPath+sysParamFname + fExtend, "LineParam")
 sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
 # Rin = Parametrs(mainPath + raysInFname + fExtend, "Rin")
 Rin = Parametrs('/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/RaysIn.xls', "Xin")
+RinDF = Rin.dataSheet
 raysSheetName0 = 'Ray_' + str(int(sys.dataSheet.Rin[0] - 1)) + '_' + str(int(sys.dataSheet.Rin[0]))
-rInObject = Rays()  # Create object of Rays
+  # Create object of Rays
 
 #=============  Normilise Rin for Mirror  ===================================
 mirror1SheetName = 'Mirror' + str(int(sys.dataSheet.Rin[0]))
 mirrorObject = Parametrs(mainPath+sysParamFname + fExtend, 'Mirror1')
-raysDataFrame = rInObject.rInNormalise(mirrorObject.dataSheet, Rin.dataSheet)
+mirrorDF = mirrorObject.dataSheet
 # save to Excel
+
+rInObject = Rays(mirrorDF, RinDF, 0)
+RinNormalize = rInObject.RaysDFnormal
 rInObject.saveRays2Execel(mainPath + 'Ray'+'_' +
                           str(int(sys.dataSheet.Rin[0]-1)) + '_' +
                           str(int(sys.dataSheet.Rin[0]))
                           + fExtend,
-                          raysDataFrame)
+                          RinNormalize)
 
 #==============  Get List of Section for calculation ========================#
 mirrorDictMain = sys.getMirrorList(sys.dataSheet)

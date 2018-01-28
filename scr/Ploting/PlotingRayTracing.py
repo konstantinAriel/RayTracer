@@ -1,11 +1,12 @@
 import plotly as py
 import numpy as np
+from numpy import sin, cos, pi
 import pandas as pd
 import plotly.tools as tls
 import plotly.graph_objs  as go
 import scr.RayTracing.Rays as rt
 from scr.MainParam import Parametrs
-from scr.Rays import Rays
+from scr.RayTracing.Rays import Rays
 
 py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
 
@@ -85,6 +86,8 @@ class PlotingRayTracing:
     def plotIs(self, data, layout):
         #print('Data = ', data)
         fig = dict(data = data, layout = layout)
+        print('plotFileName = ')
+        print(self.plotFileName)
         py.offline.plot(fig, self.plotFileName)
 
     def getTlineDict(self):
@@ -112,7 +115,8 @@ class PlotingRayTracing:
 
 
     def setMirrorSurf(self):
-        rayObject = Rays()
+        rayDFtemp = []
+        #rayObject = Rays(self.MirrorDF, rayDFtemp, 0)
 
         v1 = self.MirrorDF.Vertex.x
         v2 = self.MirrorDF.Vertex.y
@@ -136,8 +140,8 @@ class PlotingRayTracing:
         a22 = 1 / (4 * self.MirrorDF.Focus[2])
         a3 = 1
 
-        MrNegativ = rayObject.getRotateMatrix(xDegree, yDegree, zDegree)
-        M2Positive = rayObject.getRotateMatrix(-xDegree, -yDegree, -zDegree)
+        MrNegativ = self.getRotateMatrix(xDegree, yDegree, zDegree)
+        M2Positive = self.getRotateMatrix(-xDegree, -yDegree, -zDegree)
 
         # x3R = (xLim1 - v1) * Mr[2, 0] + (yLim1 - v2) * Mr[2, 1] + (zLim1 - v3) * Mr[2, 2]
 
@@ -181,3 +185,49 @@ class PlotingRayTracing:
                             type = 'surface',
                             surfacecolor = 'blue',
                             name = str(self.mirrorIndex)))
+
+    def getRotateMatrix(self, xDegree, yDegree, zDegree):
+        csX = self.cs(xDegree)
+        csY = self.cs(yDegree)
+        csZ = self.cs(zDegree)
+
+        snX = self.sn(xDegree)
+        snY = self.sn(yDegree)
+        snZ = self.sn(zDegree)
+
+        Rx = np.array([
+            [1, 0, 0],
+            [0, csX, -snX],
+            [0, snX, csX]
+        ])
+        Ry = np.array([
+            [csY, 0, -snY],
+            [0, 1, 0],
+            [snY, 0, csY]
+        ])
+        Rz = np.array([
+            [csZ, -snZ, 0],
+            [snZ, csZ, 0],
+            [0, 0, 1]
+        ])
+        Mr = (Rx.dot(Ry)).dot(Rz)
+        return Mr
+
+    def cs(self, alphaDegree):
+        alphaRadian = self.degree2Radian(alphaDegree)
+        if np.abs(cos(alphaRadian)) < 1e-4:
+            csAlpha = 0
+        else:
+            csAlpha = cos(alphaRadian)
+        return csAlpha
+
+    def sn(self, alphaDegree):
+        alphaRadian = self.degree2Radian(alphaDegree)
+        if np.abs(sin(alphaRadian)) < 1e-4:
+            snAlpha = 0
+        else:
+            snAlpha = sin(alphaRadian)
+        return snAlpha
+
+    def degree2Radian(self, alphaDegree):
+        return (alphaDegree * pi) / 180

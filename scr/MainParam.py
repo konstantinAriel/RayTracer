@@ -23,7 +23,6 @@ class Parametrs:
         self.ray4test3pointFname = self.getRay4test3pointFname()
         self.mainPathForMatrix = self.getmMainPathForMatrix()
 
-
     def getParam(self, paramDataFile, sheetName):
         self.dataSheet = paramDataFile.parse(sheetname=sheetName)
         return self.dataSheet

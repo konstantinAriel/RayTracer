@@ -4,7 +4,7 @@ import  numpy as np
 
 global mainPath, xlsDir, fExtend, rInDir, rOutDir, systemSettingsDir, sysParamFilename, raysInFname, raysNormalisedFname, ray4TestMatrix3PointFname
 
-mainPath = "/home/konstantin/PycharmProjects/RayTracer/files/"
+mainPath = "/home/konstantin/rt/RayTracer/files/"
 xlsDir  =  'XLS/'
 fExtend = '.xls'
 rInDir = 'Rin/'

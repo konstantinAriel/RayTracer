@@ -10,6 +10,8 @@ class Rays:
     def __init__(self, mirrorDF, rayinDF, getRefRay):
             self.mirrorDF = self.getMirrorDF(mirrorDF)
             self.rayInDF = self.getRaysInDF(rayinDF)
+            # print('rayinDF =  IN RAYS CLASS')
+            # print(rayinDF)
             self.EinHeaders = 7
             self.L =100
             if getRefRay == 1:
@@ -65,9 +67,9 @@ class Rays:
         return np.array([self.rayInDF.Exin[RinIndex],
                          Eyin,
                          self.rayInDF.Ezin[RinIndex],
-                         self.rayInDF.Xe[RinIndex],
-                         self.rayInDF.Ye[RinIndex],
-                         self.rayInDF.Ze[RinIndex],
+                         self.rayInDF.Ex[RinIndex],
+                         self.rayInDF.Ey[RinIndex],
+                         self.rayInDF.Ez[RinIndex],
                          self.rayInDF.Ain[RinIndex],
                          ])
 
@@ -97,7 +99,7 @@ class Rays:
         EinArray2D = np.zeros((numberOfRays, self.EinHeaders))
         return KinNormalArray2D, XinArray2D, EinArray2D
 
-    def getReflectedRays(self ):
+    def getReflectedRays(self):
 
         x1, x2, x3, a11, a22, a3, x01Ray, x02Ray, x03Ray, k1, k2, k3, v1, v2, v3, t = sp.symbols(
             'x1 x2 x3 a11 a22 a3 x01Ray x02Ray x03Ray k1 k2 k3 v1 v2 v3 t')
@@ -113,8 +115,9 @@ class Rays:
                                                                 a11, a22, a3, v1, v2, v3)
         #***********************************************
         # Loop for all Rays
+        print('===========********************   Ray Loop  ***************************** ==============')
         for RinIndex in self.rayInDF.index:
-            print('===========********************   Ray Loop  ***************************** ==============', RinIndex)
+            #print('===========********************   Ray Loop  ***************************** ==============', RinIndex)
             #  RayIn parmetrs
 
             eInArray, kinArray, x0RayAray = self.getInArray(RinIndex)
@@ -218,7 +221,7 @@ class Rays:
             # ErefNormalArraayAbs = abs(ErefNormalArraay)
             # eRefMaxIndex = ErefNormalArraayAbs.argmax(0)
             # eRefMaxIndex = ErefNormalArraayAbs.argmax(0)
-            eRefMaxIndex = ErefNormalArraay .argmax(0)
+            #eRefMaxIndex = ErefNormalArraay.argmax(0)
             Ain = 50
 
             XeCross =  (xRayCrossArray[0]  +  ErefNormalArraay[0] *Ain)
@@ -448,3 +451,6 @@ class Rays:
         xDetArray[2] = xDetArray[2] - self.mirrorDF.Detector[2]
         #print('xDetArray', xDetArray)
         return xDetArray
+
+    def saveRays2Execel(self, fileName, raysDataFrame):
+        raysDataFrame.to_excel(fileName)

@@ -110,7 +110,11 @@ class Plotpolarization:
 
         Ain=50
         for i in range(iS, iF):
+            print('is = ', iS)
+            print('if = ', iF)
+            print('i = ', i)
             if self.mirrorIndex == 'Mirror1':
+               print('self.rayInDF.Xin[i] = ', self.rayInDF.Xin[i])
                xIndata1.append(self.rayInDF.Xin[i])
                yIndata1.append(0)
                zIndata1.append(self.rayInDF.Zin[i])
@@ -222,15 +226,15 @@ class Plotpolarization:
                                      ))
 
         PeInDict = dict(
-                            go.Scatter3d(x=ExInData,
-                            y=EyInData,
-                             z=EzInData,
-                            mode='line-markers',
-                            name='P_In_' + str(self.mirrorIndex) + '_' + str(iS) + '_' + str(iF),
-                            line=dict(width=2, color = 'green')
+                        go.Scatter3d(x=ExInData,
+                        y=EyInData,
+                        z=EzInData,
+                        mode='line-markers',
+                        name='P_In_' + str(self.mirrorIndex) + '_' + str(iS) + '_' + str(iF),
+                        line=dict(width=2, color = 'green')
                              ))
         PeOutDict = dict(
-            go.Scatter3d(x=ExOutData,
+                        go.Scatter3d(x=ExOutData,
                          y=EyOutData,
                          z=EzOutData,
                          mode='line-markers',
