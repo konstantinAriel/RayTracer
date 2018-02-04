@@ -9,7 +9,7 @@ import plotly as py
 
 tLine = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.systemSettingsDir + mp.sysParamFilename + mp.fExtend, "LineParam")
 sysParam = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.systemSettingsDir + mp.sysParamFilename + mp.fExtend, "SysParam")
-Rin = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.rInDir +  mp.raysInFname + mp.fExtend, 'circul')
+Rin = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.rInDir +  mp.raysInFname + mp.fExtend, 'circul10')
 
 mirrorSheetName = 'Mirror' + str(int(sysParam.DataSheet.Rin[0]))
 raysSheetName = 'Ray_' + str(int(sysParam.DataSheet.Rin[0] - 1)) + '_' + str(int(sysParam.DataSheet.Rin[0]))
@@ -28,7 +28,7 @@ rOutFname = 'Ray'+'_' + \
 mirrorList = sysParam.getMirrorList(sysParam.DataSheet)
 raysInDFn.to_excel(mp.mainPath + mp.xlsDir + mp.rOutDir  + rOutFname + mp.fExtend)
 
-#==============  Get List of Section for calculation ========================#
+#     ==============  Get List of Section for calculation ========================#
 
 def mirrorLoop(mirrorList):
         countMirror = int(sysParam.DataSheet.Rin[0])
@@ -71,6 +71,7 @@ def plotLoop(mirrorList):
         RayReflectedObject = mp.Parametrs(pathReflctedRay, 'Sheet1')
         RaysNormalObject = mp.Parametrs(pathNormalRay, 'Sheet1')
         plotFileName = mp.mainPath + 'result/htmlFiles/test.html'
+
         plotObject = PlotingRayTracing(Mirror.DataSheet, RaysInObject.DataSheet, RayReflectedObject.DataSheet, RaysNormalObject.DataSheet, mirrorList, plotFileName)
 
         surfR = plotObject.setMirrorSurf()
@@ -107,14 +108,15 @@ def plotLoopPolar(mirrorList):
         RaysNormalObject = mp.Parametrs(pathNormalRay, 'Sheet1')
 
         plotFileName = mp.mainPath +'result/htmlFiles/Rin_vs_Rout' + str(mirrorIndex) + '.html'
-        plotFileName1 = mp.mainPath +'result/htmlFiles/Rin_vs_Rout_Section_In_Out' + str( mirrorIndex) + '.html'
-        plotFileName2 = mp.mainPath + 'result/htmlFiles/Rin_vs_Rout_Section_In_Out' + str( mirrorIndex) + '.html'
+        plotFileName1 = mp.mainPath +'result/htmlFiles/Rin_vs_Rout_Section_DataIN_' + str( mirrorIndex) + '.html'
+        plotFileName2 = mp.mainPath + 'result/htmlFiles/Rin_vs_Rout_Section_DataInOut_' + str( mirrorIndex) + '.html'
 
         plotObject = Plotpolarization(Mirror.DataSheet, RaysInObject.DataSheet, RayReflectedObject.DataSheet,
                                       RaysNormalObject.DataSheet, mirrorIndex, plotFileName)
         dataRays.append(plotObject.setRays4Plot_All)
 
-        DataIn1, DataOut1, DataInOut1, PinData1, POutData1 = plotObject.setRays4plotSection(0,20, 'blue')
+        DataIn1, DataOut1, DataInOut1, PinData1, POutData1 = plotObject.setRays4plotSection(0,20, 'blue') #from 0 t0 19
+
         data1.append(DataIn1)
         data1.append(DataOut1)
         data1.append(PinData1)
@@ -124,31 +126,40 @@ def plotLoopPolar(mirrorList):
         dataInOut.append(PinData1)
         dataInOut.append(POutData1)
 
-        DataIn2, DataOut2, DataInOut2, PinData2, POutData2 = plotObject.setRays4plotSection(21, 41, 'green' )
-        data1.append(DataIn2)
-        data1.append(DataOut2)
-        data1.append(PinData2)
-        data1.append(POutData2)
+        # DataIn2, DataOut2, DataInOut2, PinData2, POutData2 = plotObject.setRays4plotSection(20, 40, 'green' )
+        #
+        # data1.append(DataIn2)
+        # data1.append(DataOut2)
+        # data1.append(PinData2)
+        # data1.append(POutData2)
+        #
+        # dataInOut.append(DataInOut2)
+        # dataInOut.append(PinData2)
+        # dataInOut.append(POutData2)
+        #
+        # DataIn3, DataOut3, DataInOut3, PinData3, POutData3 = plotObject.setRays4plotSection(40, 60,'red')
+        #
+        # data1.append(DataIn3)
+        # data1.append(DataOut3)
+        # data1.append(PinData3)
+        # data1.append(POutData3)
+        #
+        # dataInOut.append(DataInOut3)
+        # dataInOut.append(PinData3)
+        # dataInOut.append(POutData3)
 
-        dataInOut.append(DataInOut2)
-        dataInOut.append(PinData2)
-        dataInOut.append(POutData2)
-
-        DataIn3, DataOut3, DataInOut3, PinData3, POutData3 = plotObject.setRays4plotSection(42, 59,'red')
-        data1.append(DataIn3)
-        data1.append(DataOut3)
-        data1.append(PinData3)
-        data1.append(POutData3)
-
-        dataInOut.append(DataInOut3)
-        dataInOut.append(PinData3)
-        dataInOut.append(POutData3)
+        # print('DataIn1 = ')
+        # print(DataIn1)
+        # print('DataIn2 = ')
+        # print(DataIn2)
+        # print('DataIn3 = ')
+        # print(DataIn3)
 
         countMirror += 1
         #dataRays.append(plotObject.rayReflectedDict)
 
         layout = plotObject.layout
-        #plotObject.plotIs(dataRays, layout, plotFileName)
+        # plotObject.plotIs(dataRays, layout, plotFileName)
         plotObject.plotIs(data1, layout, plotFileName1)
         plotObject.plotIs(dataInOut, layout, plotFileName2)
         dataRays = []

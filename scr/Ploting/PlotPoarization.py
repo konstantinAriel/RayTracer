@@ -110,11 +110,11 @@ class Plotpolarization:
 
         Ain=50
         for i in range(iS, iF):
-            print('is = ', iS)
-            print('if = ', iF)
-            print('i = ', i)
+            # print('is = ', iS)
+            # print('if = ', iF)
+            # print('i = ', i)
             if self.mirrorIndex == 'Mirror1':
-               print('self.rayInDF.Xin[i] = ', self.rayInDF.Xin[i])
+               # print('self.rayInDF.Xin[i] = ', self.rayInDF.Xin[i])
                xIndata1.append(self.rayInDF.Xin[i])
                yIndata1.append(0)
                zIndata1.append(self.rayInDF.Zin[i])
