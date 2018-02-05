@@ -1,13 +1,9 @@
-import  numpy as np
-import pandas as pd
-import plotly.graph_objs  as go
 import plotly as py
 import scr.mainParamPakage as mp
-from scr.MainParam import Parametrs
 from scr.Ploting import PlotingRayTracing
 from scr.RayTracing.Rays import  Rays
 from scr.MainParam import Parametrs
-from scr.calcPolarization import calcPolarization
+from scr.Polarization.calcPolarization import calcPolarization
 import scr.RayTracing.Rays as rmain
 
 def pathName():

@@ -2,10 +2,9 @@ from scr.Ploting.PlotingRayTracing import PlotingRayTracing
 from scr.Ploting.PlotPoarization import Plotpolarization
 import scr.mainParamPakage as mp
 import scr.RayTracing.Rays as rmain
-import plotly.graph_objs  as go
-import plotly as py
 
 # import numpy as np
+#                                            I n i t
 
 tLine = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.systemSettingsDir + mp.sysParamFilename + mp.fExtend, "LineParam")
 sysParam = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.systemSettingsDir + mp.sysParamFilename + mp.fExtend, "SysParam")
@@ -45,7 +44,7 @@ def mirrorLoop(mirrorList):
             refRayObj.NormalRayDF.to_excel(mp.mainPath + mp.xlsDir + mp.rOutDir + raysFName[2] + mp.fExtend, 'Sheet1')
             refRayObj.ReflectedRayDF.to_excel(mp.mainPath + mp.xlsDir + mp.rOutDir + raysFName[1] + mp.fExtend, 'Sheet1')
             countMirror += 1
-        print('============== ++++++++++++++++++++++++++++++++++++++++++++++++++++++   END   Mirror Loop         ',  mirrorIndex)
+        print('============== ++++++++++++++++++++++++++++++++++++++++++++++++++++++   END   Mirror Loop',  mirrorIndex)
 
 def plotLoop(mirrorList):
 
@@ -116,8 +115,8 @@ def plotLoopPolar(mirrorList):
         RaysNormalObject = mp.Parametrs(pathNormalRay, 'Sheet1')
 
         plotFileName = mp.mainPath +'result/htmlFiles/Rin_vs_Rout' + str(mirrorIndex) + '.html'
-        plotFileName1 = mp.mainPath +'result/htmlFiles/Rin_vs_Rout_Section_DataIN_' + str( mirrorIndex) + '.html'
-        plotFileName2 = mp.mainPath + 'result/htmlFiles/Rin_vs_Rout_Section_DataInOut_' + str( mirrorIndex) + '.html'
+        plotFileName1 = mp.mainPath +'result/htmlFiles/DataIN_' + str( mirrorIndex) + '.html'
+        plotFileName2 = mp.mainPath + 'result/htmlFiles/DataInOut_' + str( mirrorIndex) + '.html'
 
         plotObject = Plotpolarization(Mirror.DataSheet, RaysInObject.DataSheet, RayReflectedObject.DataSheet,
                                       RaysNormalObject.DataSheet, mirrorIndex, plotFileName)

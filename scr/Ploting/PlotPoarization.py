@@ -18,7 +18,7 @@ class Plotpolarization:
         self.rayNormal = rNormal
         self.L = 400
         # self.Rays4Plot_All = self.setRays4Plot_All()
-
+        self.Ain = self.rayInDF.Ain
         self.layout = self.setLayout()
 
     def setRays4Plot_All(self):
@@ -85,7 +85,6 @@ class Plotpolarization:
         xMIndata = []
         yMIndata = []
         zMIndata = []
-        mDataIn1 = []
 
         xInOutData = []
         yInOutData = []
@@ -94,7 +93,6 @@ class Plotpolarization:
         xMInOutData = []
         yMInOutData = []
         zMInOutData = []
-
 
         ExInData = []
         EyInData = []
@@ -116,8 +114,6 @@ class Plotpolarization:
         EzInOutData = []
         eInDOutata = []
 
-
-        Ain=50
         LsX = Mdf.Source[0]
         LsY = Mdf.Source[1]
         LsZ = Mdf.Source[2]
@@ -154,22 +150,24 @@ class Plotpolarization:
                yInOutData.append(LdZ)
                yInOutData.append(np.nan)
 
-
                zInOutData.append(self.rayInDF.Zin[i])
                zInOutData.append(self.rayNormal.Zin[i])
                zInOutData.append(self.rayReflected.Yin[i])
                zInOutData.append(np.nan)
 
+               a = self.rayInDF.Exin[i]
+               b = self.Ain[i]
+
                ExInData.append(self.rayInDF.Xin[i] )
-               ExInData.append(self.rayInDF.Xin[i]  + Ain * self.rayInDF.Exin[i])
+               ExInData.append(self.Ain[i]*self.rayInDF.Exin[i])
                ExInData.append(np.nan)
 
-               EyInData.append(0)
-               EyInData.append(Ain * self.rayInDF.Eyin[i])
+               EyInData.append(LsY)
+               EyInData.append(LsY + self.Ain[i] * self.rayInDF.Eyin[i])
                EyInData.append(np.nan)
 
                EzInData.append(self.rayInDF.Zin[i])
-               EzInData.append(self.rayInDF.Zin[i] + Ain * self.rayInDF.Ezin[i])
+               EzInData.append(self.rayInDF.Zin[i] + self.Ain[i]*self.rayInDF.Ezin[i])
                EzInData.append(np.nan)
 
             elif  self.mirrorIndex == 'Mirror2':
@@ -204,16 +202,16 @@ class Plotpolarization:
                 zInOutData.append(self.rayReflected.Zin[i])
                 zInOutData.append(np.nan)
 
-                ExOutData.append(self.rayReflected.Xin[i])
-                ExOutData.append(self.rayReflected.Xe[i])
+                ExOutData.append(self.rayInDF.Xin[i])
+                ExOutData.append(self.rayInDF.Xe[i])
                 ExOutData.append(np.nan)
 
-                EyOutData.append(2*self.L)
-                EyOutData.append(2*self.L +self.rayReflected.Ye[i])
+                EyOutData.append(LsZ)
+                EyOutData.append(LsZ + self.rayInDF.Ze[i])
                 EyOutData.append(np.nan)
 
-                EzOutData.append(self.rayReflected.Yin[i])
-                EzOutData.append(self.rayReflected.Ze[i])
+                EzOutData.append(self.rayInDF.Yin[i])
+                EzOutData.append(self.rayInDF.Ye[i])
                 EzOutData.append(np.nan)
 
         dataIn1.append(xIndata1)

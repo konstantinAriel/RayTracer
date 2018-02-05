@@ -1,9 +1,7 @@
 import sympy as sp
 from numpy import sin, cos, pi
-from sympy import init_printing, pprint
 import numpy as np
 import pandas as pd
-import scipy as sy
 
 
 class Rays:
@@ -201,10 +199,11 @@ class Rays:
 
             xRayDetectorArray = self.getXDetector(kReflectedNormalArray,
                                                   xRayCrossArray)
+
             eInNormalArray = self.normalVector(eInArray)
-            Exin = self.rayInDF.Exin[RinIndex]
-            Ezin = self.rayInDF.Ezin[RinIndex]
-            Eyin = self.rayInDF.Eyin[RinIndex]
+
+##          P o l a r i z a t i o n
+
             Ampl = self.rayInDF.Ain[RinIndex]
 
 
@@ -221,11 +220,12 @@ class Rays:
             # eRefMaxIndex = ErefNormalArraayAbs.argmax(0)
             #eRefMaxIndex = ErefNormalArray.argmax(0)
 
-
-            XeCross =  (xRayCrossArray[0]  +  ErefNormalArray[0] *Ampl)
-            YeCross =  (xRayCrossArray[1]  +  ErefNormalArray[1] *Ampl)
-            ZeCross =  (xRayCrossArray[2]  +  ErefNormalArray[2] *Ampl)
-
+##   The point of vector polarization from the  mirror surf
+            #  X = X0 + t*Ampl
+            XeCross =  (xRayCrossArray[0]  +  ErefNormalArray[0] * Ampl)
+            YeCross =  (xRayCrossArray[1]  +  ErefNormalArray[1] * Ampl)
+            ZeCross =  (xRayCrossArray[2]  +  ErefNormalArray[2] * Ampl)
+##   The point of vector polarization the  detector  surf
             XeDetector =  xRayDetectorArray[0]  +  ErefNormalArray[0] * Ampl
             YeDetector =  xRayDetectorArray[1]  +  ErefNormalArray[1] * Ampl
             ZeDetector =  xRayDetectorArray[2]  +  ErefNormalArray[2] * Ampl
@@ -297,7 +297,7 @@ class Rays:
         #                      ReflectedRaysDataFrame)
 
     def getInArray(self, RinIndex):
-        x0RayAray = np.array([self.rayInDF.Xin[RinIndex] + self.mirrorDF.Source[0],
+        x0RayArray = np.array([self.rayInDF.Xin[RinIndex] + self.mirrorDF.Source[0],
                               self.rayInDF.Yin[RinIndex] + self.mirrorDF.Source[1],
                               self.rayInDF.Zin[RinIndex] + self.mirrorDF.Source[2]
                               ])
@@ -305,11 +305,16 @@ class Rays:
                              self.rayInDF.Kyin[RinIndex],
                              self.rayInDF.Kzin[RinIndex]
                              ])
-        eInArray = np.array([self.rayInDF.Exin[RinIndex],
-                             self.rayInDF.Eyin[RinIndex],
-                             self.rayInDF.Ezin[RinIndex]]
+
+        Ex = self.rayInDF.Exin[RinIndex]
+        Ez = self.rayInDF.Ezin[RinIndex]
+        Ey = -(self.rayInDF.Kxin[RinIndex]*Ex + self.rayInDF.Kzin[RinIndex]*Ez)/self.rayInDF.Kyin[RinIndex]
+
+        eInArray = np.array([Ex,
+                             Ey,
+                             Ez]
                             )
-        return eInArray, kinArray, x0RayAray
+        return eInArray, kinArray, x0RayArray
 
     def setInitValue(self, a11, a22, a3, v1, v2, v3):
         xDegree = self.mirrorDF.Direction[0]
