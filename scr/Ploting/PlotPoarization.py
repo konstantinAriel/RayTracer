@@ -75,17 +75,26 @@ class Plotpolarization:
                       )
         return layout
 
-    def setRays4plotSection(self,  iS, iF, color):
+    def setRays4plotSection(self,  iS, iF, Mdf, color):
 
         xIndata1 = []
         yIndata1 = []
         zIndata1 = []
         dataIn1 = []
 
+        xMIndata = []
+        yMIndata = []
+        zMIndata = []
+        mDataIn1 = []
+
         xInOutData = []
         yInOutData = []
         zInOutData = []
-        inOutData = []
+
+        xMInOutData = []
+        yMInOutData = []
+        zMInOutData = []
+
 
         ExInData = []
         EyInData = []
@@ -109,6 +118,14 @@ class Plotpolarization:
 
 
         Ain=50
+        LsX = Mdf.Source[0]
+        LsY = Mdf.Source[1]
+        LsZ = Mdf.Source[2]
+
+        LdX = Mdf.Detector[0]
+        LdY = Mdf.Detector[1]
+        LdZ = Mdf.Detector[2]
+
         for i in range(iS, iF):
             # print('is = ', iS)
             # print('if = ', iF)
@@ -116,22 +133,30 @@ class Plotpolarization:
             if self.mirrorIndex == 'Mirror1':
                # print('self.rayInDF.Xin[i] = ', self.rayInDF.Xin[i])
                xIndata1.append(self.rayInDF.Xin[i])
-               yIndata1.append(0)
+               yIndata1.append(LsY)
                zIndata1.append(self.rayInDF.Zin[i])
 
+               xMIndata.append(self.rayNormal.Xin[i])
+               yMIndata.append(self.rayNormal.Yin[i])
+               zMIndata.append(self.rayNormal.Zin[i])
+
                xOutdata1.append(self.rayReflected.Xin[i])
-               yOutdata1.append(self.L)
+               yOutdata1.append(LdZ)
                zOutdata1.append(self.rayReflected.Yin[i])
 
                xInOutData.append(self.rayInDF.Xin[i])
+               xInOutData.append(self.rayNormal.Xin[i])
                xInOutData.append(self.rayReflected.Xin[i])
                xInOutData.append(np.nan)
 
-               yInOutData.append(0)
-               yInOutData.append(self.L)
+               yInOutData.append(LsY)
+               yInOutData.append(self.rayNormal.Yin[i])
+               yInOutData.append(LdZ)
                yInOutData.append(np.nan)
 
+
                zInOutData.append(self.rayInDF.Zin[i])
+               zInOutData.append(self.rayNormal.Zin[i])
                zInOutData.append(self.rayReflected.Yin[i])
                zInOutData.append(np.nan)
 
@@ -149,22 +174,33 @@ class Plotpolarization:
 
             elif  self.mirrorIndex == 'Mirror2':
                 xIndata1.append(self.rayInDF.Xin[i])
-                yIndata1.append(0)
+                yIndata1.append(LsZ)
                 zIndata1.append(self.rayInDF.Yin[i])
 
+                xMIndata.append(self.rayNormal.Xin[i])
+                yMIndata.append(self.rayNormal.Zin[i])
+                zMIndata.append(self.rayNormal.Yin[i])
+
                 xOutdata1.append(self.rayReflected.Xin[i])
-                yOutdata1.append(400)
+                yOutdata1.append(LdY+self.MirrorDF.Offset[2])
                 zOutdata1.append(self.rayReflected.Zin[i])
 
+                xMIndata.append(self.rayNormal.Xin[i])
+                yMIndata.append(self.rayNormal.Zin[i])
+                zMIndata.append(self.rayNormal.Yin[i])
+
                 xInOutData.append(self.rayInDF.Xin[i])
+                xInOutData.append(self.rayNormal.Xin[i])
                 xInOutData.append(self.rayReflected.Xin[i])
                 xInOutData.append(np.nan)
 
-                yInOutData.append(self.L)
-                yInOutData.append(2*self.L)
+                yInOutData.append(LsZ)
+                yInOutData.append(self.rayNormal.Zin[i])
+                yInOutData.append(LdY+self.MirrorDF.Offset[2])
                 yInOutData.append(np.nan)
 
                 zInOutData.append(self.rayInDF.Yin[i])
+                zInOutData.append(self.rayNormal.Yin[i])
                 zInOutData.append(self.rayReflected.Zin[i])
                 zInOutData.append(np.nan)
 
@@ -208,6 +244,16 @@ class Plotpolarization:
                                         name='rayIn_' + str(self.mirrorIndex)  +'_' +str(iS) +'_' + str(iF),
                                         line=dict(width=2, color=color)
                                     ))
+        rayMInDict = dict(
+            go.Scatter3d(x=xMIndata,
+                         y=yMIndata,
+                         z=zMIndata,
+                         mode='markers',
+                         name='rayIn_M_' + str(self.mirrorIndex) + '_' + str(iS) + '_' + str(iF),
+                         line=dict(width=2, color='red')
+                         ))
+
+
         rayOutDict = dict(
                         go.Scatter3d(   x=xOutdata1,
                                         y=yOutdata1,
@@ -241,7 +287,7 @@ class Plotpolarization:
                          name='P_Out_' + str(self.mirrorIndex) + '_' + str(iS) + '_' + str(iF),
                          line=dict(width=2, color = 'bue')
                          ))
-        return rayInDict, rayOutDict, rayInOutDict, PeInDict, PeOutDict
+        return rayInDict, rayOutDict, rayInOutDict, PeInDict, PeOutDict,rayMInDict
 
     ##                 R 1 - R 2
 

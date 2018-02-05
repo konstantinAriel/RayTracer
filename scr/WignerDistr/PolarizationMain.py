@@ -2,22 +2,40 @@ import  numpy as np
 import pandas as pd
 import plotly.graph_objs  as go
 import plotly as py
-
+import scr.mainParamPakage as mp
 from scr.MainParam import Parametrs
 from scr.Ploting import PlotingRayTracing
 from scr.RayTracing.Rays import  Rays
 from scr.MainParam import Parametrs
 from scr.calcPolarization import calcPolarization
-
+import scr.RayTracing.Rays as rmain
 
 def pathName():
     global mainPath, fExtend, sysParamFname, raysInFname, ray4test3pointFname
-    mainPath = "/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/"
-    fExtend = '.xls'
-    sysParamFname = 'sysParam_1'
-    raysInFname = 'RaysIn'
-    raysNormalisedFname = mainPath + 'raysNormalised_' + raysInFname + '_' + sysParamFname
+
+    tLine = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.systemSettingsDir + mp.sysParamFilename + mp.fExtend, "LineParam")
+    sysParam = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.systemSettingsDir + mp.sysParamFilename + mp.fExtend,"SysParam")
+    Rin = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.rInDir + mp.raysInFname + mp.fExtend, 'circul10')
+    # mainPath = "/home/konstantin/rt/RayTracer/files/XLS/systemSetting"
+    # fExtend = '.xls'
+    # sysParamFname = 'sysParam'
+    # raysInFname = 'RaysIn'
+    # raysNormalisedFname = '/home/konstantin/rt/RayTracer/files/XLS/Rin/RaysIn.xls' + raysInFname + '_' + sysParamFname
     ray4test3pointFname = mainPath + 'ray4test3Point_'  + sysParamFname + fExtend
+    mirrorSheetName = 'Mirror' + str(int(sysParam.DataSheet.Rin[0]))
+    raysSheetName = 'Ray_' + str(int(sysParam.DataSheet.Rin[0] - 1)) + '_' + str(int(sysParam.DataSheet.Rin[0]))
+    # print('Rin.DataSheet = IN mainRun')
+    # print(Rin.DataSheet)
+    mirrorObj = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.systemSettingsDir + mp.sysParamFilename + mp.fExtend, 'Mirror1')
+    rInObj = rmain.Rays(mirrorObj.DataSheet, Rin.DataSheet, getRefRay=0)  # Create object of Rays
+
+    # raysInDFn = rInObj.RaysDFnormal
+    raysInDFn = rInObj.RaysDFnormal
+    rOutFname = 'Ray' + '_' + \
+                str(int(sysParam.DataSheet.Rin[0] - 1)) + '_' + \
+                str(int(sysParam.DataSheet.Rin[0]))
+    mirrorList = sysParam.getMirrorList(sysParam.DataSheet)
+    raysInDFn.to_excel(mp.mainPath + mp.xlsDir + mp.rOutDir + rOutFname + mp.fExtend)
 
 def mirrorLoop(mirrorDictMain):
     for mirrorDictSub in mirrorDictMain.keys():
@@ -112,7 +130,7 @@ pathName()
 tLine = Parametrs(mainPath+sysParamFname + fExtend, "LineParam")
 sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
 # Rin = Parametrs(mainPath + raysInFname + fExtend, "Rin")
-Rin = Parametrs('/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/RaysIn.xls', "Xin")
+Rin = Parametrs('/home/konstantin/rt/RayTracer/files/XLS/Rin/RaysIn.xls', "Xin")
 RinDF = Rin.dataSheet
 raysSheetName0 = 'Ray_' + str(int(sys.dataSheet.Rin[0] - 1)) + '_' + str(int(sys.dataSheet.Rin[0]))
   # Create object of Rays

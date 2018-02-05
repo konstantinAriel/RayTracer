@@ -95,6 +95,14 @@ def plotLoopPolar(mirrorList):
     for mirrorIndex in mirrorList:
         Mirror = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.systemSettingsDir + mp.sysParamFilename + mp.fExtend,
                               mirrorIndex)  ## mirror List - The name of Sheets in Exel file
+        MdfSx = Mirror.DataSheet.Source[0]
+        MdfSy = Mirror.DataSheet.Source[1]
+        MdfSz = Mirror.DataSheet.Source[2]
+
+        MdfDx = Mirror.DataSheet.Detector[0]
+        MdfDy = Mirror.DataSheet.Detector[1]
+        MdfDz = Mirror.DataSheet.Detector[2]
+
         raysFName = ['Ray_' + (str(countMirror - 1)) + '_' + str(countMirror),
                      'Ray_' + str(countMirror) + '_' + str(countMirror + 1),
                      'normalRay_' + str(countMirror) + '_' + str(countMirror)]
@@ -115,12 +123,13 @@ def plotLoopPolar(mirrorList):
                                       RaysNormalObject.DataSheet, mirrorIndex, plotFileName)
         dataRays.append(plotObject.setRays4Plot_All)
 
-        DataIn1, DataOut1, DataInOut1, PinData1, POutData1 = plotObject.setRays4plotSection(0,20, 'blue') #from 0 t0 19
+        DataIn1, DataOut1, DataInOut1, PinData1, POutData1, rayMInDict = plotObject.setRays4plotSection(0,20, Mirror.DataSheet, 'blue') #from 0 t0 19
 
         data1.append(DataIn1)
         data1.append(DataOut1)
         data1.append(PinData1)
         data1.append(POutData1)
+        data1.append(rayMInDict)
 
         dataInOut.append(DataInOut1)
         dataInOut.append(PinData1)

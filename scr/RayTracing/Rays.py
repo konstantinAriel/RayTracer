@@ -72,7 +72,6 @@ class Rays:
                          self.rayInDF.Ez[RinIndex],
                          self.rayInDF.Ain[RinIndex],
                          ])
-
     def normalVector(self, inArray):
         return inArray / ((np.dot(inArray, inArray.T))) ** 0.5
 
@@ -200,65 +199,64 @@ class Rays:
 
             kReflectedNormalArray = self.getKreflected(kinArray, nNormalArray)
 
-            xRayDetectorArray = self.getXDetector(
-                                                  kReflectedNormalArray,
+            xRayDetectorArray = self.getXDetector(kReflectedNormalArray,
                                                   xRayCrossArray)
             eInNormalArray = self.normalVector(eInArray)
             Exin = self.rayInDF.Exin[RinIndex]
             Ezin = self.rayInDF.Ezin[RinIndex]
             Eyin = self.rayInDF.Eyin[RinIndex]
             Ampl = self.rayInDF.Ain[RinIndex]
-            eRef = np.zeros((1, 3))
+
 
             N1 = (eInNormalArray.dot(nNormalArray.T)) * nNormalArray
             Er1 = self.rotor(nNormalArray, eInNormalArray)
             Er2 = self.rotor(nNormalArray, Er1)
             absN = ((nNormalArray.dot(nNormalArray.T)) ** 0.5)
-            eRef = (N1 + Er2) / absN
-            ErefNormalArraay = eRef
+            ErefNormalArray = (N1 + Er2) / absN
+
             # kRef = np.array([N1 -r2])
-            # ErefNormalArraay = self.normalVector(eRef)
-            # ErefNormalArraayAbs = abs(ErefNormalArraay)
+            # ErefNormalArray = self.normalVector(eRef)
+            # ErefNormalArraayAbs = abs(ErefNormalArray)
             # eRefMaxIndex = ErefNormalArraayAbs.argmax(0)
             # eRefMaxIndex = ErefNormalArraayAbs.argmax(0)
-            #eRefMaxIndex = ErefNormalArraay.argmax(0)
-            Ain = 50
+            #eRefMaxIndex = ErefNormalArray.argmax(0)
 
-            XeCross =  (xRayCrossArray[0]  +  ErefNormalArraay[0] *Ain)
-            YeCross =  (xRayCrossArray[1]  +  ErefNormalArraay[1] *Ain)
-            ZeCross =  (xRayCrossArray[2]  +  ErefNormalArraay[2] *Ain)
 
-            XeDetector =  xRayDetectorArray[0]  +  ErefNormalArraay[0] * Ain
-            YeDetector =  xRayDetectorArray[1]  +  ErefNormalArraay[1] * Ain
-            ZeDetector =  xRayDetectorArray[2]  +  ErefNormalArraay[2] * Ain
+            XeCross =  (xRayCrossArray[0]  +  ErefNormalArray[0] *Ampl)
+            YeCross =  (xRayCrossArray[1]  +  ErefNormalArray[1] *Ampl)
+            ZeCross =  (xRayCrossArray[2]  +  ErefNormalArray[2] *Ampl)
+
+            XeDetector =  xRayDetectorArray[0]  +  ErefNormalArray[0] * Ampl
+            YeDetector =  xRayDetectorArray[1]  +  ErefNormalArray[1] * Ampl
+            ZeDetector =  xRayDetectorArray[2]  +  ErefNormalArray[2] * Ampl
 
             # if eRefMaxIndex == 0:
             #     XeCross= xRayCrossArray[0]
             #     XeDetector = xRayDetectorArray[0]
-            #     tRefCross = (XeCross - xRayCrossArray[0]) / ErefNormalArraay[0]
-            #     tRefDetector = (XeDetector - xRayCrossArray[0]) / ErefNormalArraay[0]
-            #     YeCros = (xRayCrossArray[1] + ErefNormalArraay[1] * tRef)
-            #     ZeCros = (xRayCrossArray[2] + ErefNormalArraay[2] * tRef)
+            #     tRefCross = (XeCross - xRayCrossArray[0]) / ErefNormalArray[0]
+            #     tRefDetector = (XeDetector - xRayCrossArray[0]) / ErefNormalArray[0]
+            #     YeCros = (xRayCrossArray[1] + ErefNormalArray[1] * tRef)
+            #     ZeCros = (xRayCrossArray[2] + ErefNormalArray[2] * tRef)
             #
-            #     YeDetector = (xRayDetectorArray[1] + ErefNormalArraay[1] * tRef)
-            #     ZeDetector = (xRayDetectorArray[2] + ErefNormalArraay[2] * tRef)
+            #     YeDetector = (xRayDetectorArray[1] + ErefNormalArray[1] * tRef)
+            #     ZeDetector = (xRayDetectorArray[2] + ErefNormalArray[2] * tRef)
             # elif eRefMaxIndex == 1:
             #     YeCros= self.rayInDF.Ye[RinIndex]
             #     YeDetector = self.rayInDF.Ye[RinIndex]
-            #     tRef = (Ye - xRayCrossArray[1]) / ErefNormalArraay[1]
-            #     XeCros = (xRayCrossArray[0] + ErefNormalArraay[0] * tRef) - self.mirrorDF.Offset[0]
-            #     ZeCros = (xRayCrossArray[2] + ErefNormalArraay[2] * tRef) - self.mirrorDF.Offset[2]
-            #     XeDetector= (xRayCrossArray[0] + ErefNormalArraay[0] * tRef) - self.mirrorDF.Offset[0]
-            #     ZeDetector = (xRayCrossArray[2] + ErefNormalArraay[2] * tRef) - self.mirrorDF.Offset[2]
+            #     tRef = (Ye - xRayCrossArray[1]) / ErefNormalArray[1]
+            #     XeCros = (xRayCrossArray[0] + ErefNormalArray[0] * tRef) - self.mirrorDF.Offset[0]
+            #     ZeCros = (xRayCrossArray[2] + ErefNormalArray[2] * tRef) - self.mirrorDF.Offset[2]
+            #     XeDetector= (xRayCrossArray[0] + ErefNormalArray[0] * tRef) - self.mirrorDF.Offset[0]
+            #     ZeDetector = (xRayCrossArray[2] + ErefNormalArray[2] * tRef) - self.mirrorDF.Offset[2]
             # elif eRefMaxIndex == 2:
             #     ZeCross = self.rayInDF.Ze[RinIndex]
             #     ZeDetector = xRayDetectorArray[2]
-            #     tRef = (Ze - xRayCrossArray[2]) / ErefNormalArraay[2]
-            #     YeCross = (xRayCrossArray[1] + ErefNormalArraay[1] * tRef) - self.mirrorDF.Offset[1]
-            #     XeCross = (xRayCrossArray[0] + ErefNormalArraay[0] * tRef) - self.mirrorDF.Offset[0]
+            #     tRef = (Ze - xRayCrossArray[2]) / ErefNormalArray[2]
+            #     YeCross = (xRayCrossArray[1] + ErefNormalArray[1] * tRef) - self.mirrorDF.Offset[1]
+            #     XeCross = (xRayCrossArray[0] + ErefNormalArray[0] * tRef) - self.mirrorDF.Offset[0]
             #
-            #     YeDetector = (xRayCrossArray[1] + ErefNormalArraay[1] * tRef) - self.mirrorDF.Offset[1]
-            #     XeDetector = (xRayCrossArray[0] + ErefNormalArraay[0] * tRef) - self.mirrorDF.Offset[0]
+            #     YeDetector = (xRayCrossArray[1] + ErefNormalArray[1] * tRef) - self.mirrorDF.Offset[1]
+            #     XeDetector = (xRayCrossArray[0] + ErefNormalArray[0] * tRef) - self.mirrorDF.Offset[0]
             # else:
             #     Xe = 0
             #     Ye = 0
@@ -266,16 +264,16 @@ class Rays:
             #
 
             eXRefCrossArray = np.array(
-                                 [ErefNormalArraay[0],
-                                  ErefNormalArraay[1],
-                                  ErefNormalArraay[2],
-                                  XeCross, YeCross, ZeCross, Ain])
+                                 [ErefNormalArray[0],
+                                  ErefNormalArray[1],
+                                  ErefNormalArray[2],
+                                  XeCross, YeCross, ZeCross, Ampl])
 
             eXRefDetectorArray = np.array(
-                                    [ErefNormalArraay[0],
-                                    ErefNormalArraay[1],
-                                    ErefNormalArraay[2],
-                                    XeDetector, YeDetector, ZeDetector, Ain])
+                                    [ErefNormalArray[0],
+                                    ErefNormalArray[1],
+                                    ErefNormalArray[2],
+                                    XeDetector, YeDetector, ZeDetector, Ampl])
 
             xRayCrossArray2D[RinIndex, :] = xRayCrossArray
             nNormallArray2D[RinIndex, :] = nNormalArray
