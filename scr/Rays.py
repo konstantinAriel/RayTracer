@@ -34,9 +34,9 @@ class Rays:
             EinArray2D[RinIndex, :] = np.array([rInDataFrame.Exin[RinIndex],
                                                 Eyin,
                                               rInDataFrame.Ezin[RinIndex],
-                                              rInDataFrame.Ex[RinIndex],
-                                              rInDataFrame.Ey[RinIndex],
-                                              rInDataFrame.Ez[RinIndex],
+                                              rInDataFrame.Exin[RinIndex],
+                                              rInDataFrame.Eyin[RinIndex],
+                                              rInDataFrame.Ezin[RinIndex],
                                               rInDataFrame.Ain[RinIndex],
                                               ])
             RayCount += 1
@@ -272,6 +272,7 @@ class Rays:
         kReflectedArray2D = np.zeros((len(raysDataFrame.index), 3))
         eDetectorArray2D = np.zeros((len(raysDataFrame.index), 7))
 
+
         # Loop for all Rays
         for RinIndex in raysDataFrame.index:
             #print('===========******Calcilation Reflected Rays ***************************** ==============', RinIndex )
@@ -413,6 +414,9 @@ class Rays:
             ErefNormalArraayAbs = abs(ErefNormalArraay)
             eRefMaxIndex = ErefNormalArraayAbs.argmax(0)
             Ain = 100
+            # zERef = 0
+            # yERef = 0
+            # xERef = 0
             if eRefMaxIndex == 0:
                 xERef = raysDataFrame.Xe[RinIndex]
                 tRef = (xERef - xRayCrossArray[0]) / ErefNormalArraay[0]

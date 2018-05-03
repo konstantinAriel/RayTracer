@@ -116,7 +116,7 @@ def mirrorLoop(mirrorDictMain):
                         RaysInObject = Parametrs(mainPathToCompare + 'Mirror' + str(countMirror -1) + '/' + raysFName[0] + fExtend, 'Sheet1')  # For 2-4 mirror
                         RaysInDF = RaysInObject.dataSheet
 
-                    rayObject.calcReflectedRays(path, Mirror, RaysInDF)
+                    # rayObject.calcReflectedRays(path, Mirror, RaysInDF)
                     # print('rayType = ')
                     # print(rayType)
 

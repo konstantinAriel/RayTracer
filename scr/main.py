@@ -155,12 +155,12 @@ raysInDFn.to_excel(mp.mainPath + mp.xlsDir + mp.rOutDir  + rOutFname + mp.fExten
 
 #==============  Get List of Section for calculation ========================#
 mirrorDictMain = sysParam.getMirrorList(sysParam.DataSheet)
-
+sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
 #=============== Ray Tracing =================================================#
 mirrorLoop(mirrorDictMain)
 
 #=============== Plotting ====================================================
-sys = Parametrs(mainPath+sysParamFname + fExtend, "SysParam")
+
 py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
-#plotLoop(mirrorDictMain)
+plotLoop(mirrorDictMain)
 

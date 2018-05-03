@@ -202,10 +202,9 @@ class Rays:
 
             eInNormalArray = self.normalVector(eInArray)
 
-##          P o l a r i z a t i o n
+                                                ##          P o l a r i z a t i o n
 
             Ampl = self.rayInDF.Ain[RinIndex]
-
 
             N1 = (eInNormalArray.dot(nNormalArray.T)) * nNormalArray
             Er1 = self.rotor(nNormalArray, eInNormalArray)

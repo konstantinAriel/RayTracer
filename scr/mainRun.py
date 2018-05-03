@@ -8,7 +8,7 @@ import scr.RayTracing.Rays as rmain
 
 tLine = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.systemSettingsDir + mp.sysParamFilename + mp.fExtend, "LineParam")
 sysParam = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.systemSettingsDir + mp.sysParamFilename + mp.fExtend, "SysParam")
-Rin = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.rInDir +  mp.raysInFname + mp.fExtend, 'circul10')
+Rin = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.rInDir +  mp.raysInFname + mp.fExtend, 'circul20')
 
 mirrorSheetName = 'Mirror' + str(int(sysParam.DataSheet.Rin[0]))
 raysSheetName = 'Ray_' + str(int(sysParam.DataSheet.Rin[0] - 1)) + '_' + str(int(sysParam.DataSheet.Rin[0]))
@@ -52,7 +52,9 @@ def plotLoop(mirrorList):
 
     print('******************************************************************  PlotLoop',countMirror)
     dataRays = []
+    data2D= []
     for mirrorIndex in mirrorList:
+        print('mirrorIndex = ', mirrorIndex)
         Mirror = mp.Parametrs(mp.mainPath + mp.xlsDir + mp.systemSettingsDir + mp.sysParamFilename + mp.fExtend, mirrorIndex)  ## mirror List - The name of Sheets in Exel file
         raysFName = ['Ray_' + (str(countMirror - 1)) + '_' + str(countMirror),
                      'Ray_' + str(countMirror) + '_' + str(countMirror + 1),
@@ -62,21 +64,35 @@ def plotLoop(mirrorList):
         pathReflctedRay = mp.mainPath + mp.xlsDir + mp.rOutDir + raysFName[1] + mp.fExtend
         pathNormalRay = mp.mainPath + mp.xlsDir + mp.rOutDir + raysFName[2] + mp.fExtend
 
-        print('pathInRay = ', pathInRay)
-        print('pathReflctedRay = ', pathReflctedRay)
-        print('pathNormalRay = ', pathNormalRay)
+        # print('pathInRay = ', pathInRay)
+        # print('pathReflctedRay = ', pathReflctedRay)
+        # print('pathNormalRay = ', pathNormalRay)
 
         RaysInObject = mp.Parametrs(pathInRay, 'Sheet1')
         RayReflectedObject = mp.Parametrs(pathReflctedRay, 'Sheet1')
         RaysNormalObject = mp.Parametrs(pathNormalRay, 'Sheet1')
         plotFileName = mp.mainPath + 'result/htmlFiles/test.html'
+        plotFileName2D = mp.mainPath + 'result/htmlFiles/test2D' + '_' + mirrorIndex + '.html'
 
-        plotObject = PlotingRayTracing(Mirror.DataSheet, RaysInObject.DataSheet, RayReflectedObject.DataSheet, RaysNormalObject.DataSheet, mirrorList, plotFileName)
+        plotObject = PlotingRayTracing(Mirror.DataSheet, RaysInObject.DataSheet, RayReflectedObject.DataSheet, RaysNormalObject.DataSheet, mirrorIndex, plotFileName)
+        plotObject2D = Plotpolarization(Mirror.DataSheet, RaysInObject.DataSheet, RayReflectedObject.DataSheet,
+                                      RaysNormalObject.DataSheet, mirrorIndex, plotFileName2D)
 
         surfR = plotObject.setMirrorSurf()
         dataRays.append(plotObject.rayInDict)
         dataRays.append(plotObject.rayReflectedDict)
-        dataRays.append(surfR)
+        dataRays.append(plotObject.rayReflectedDictMarkers)
+        dataRays.append(plotObject.rayInDictMarkers)
+        dataRays.append(plotObject.pInData)
+        # dataRays.append(surfR)
+
+        data2D.append(plotObject.rayInDict)
+        data2D.append(plotObject.pInData)
+        if mirrorIndex == 'Mirror4':
+             data2D.append(plotObject.rayReflectedDict)
+        plotObject2D.plotIs(data2D, plotObject.layout, plotObject2D.plotFileName)
+
+        data2D = []
 
         countMirror += 1
     print('===========================================================================  End Plot Loop')
@@ -182,7 +198,7 @@ mirrorLoop(mirrorList)
 # R3 = mp.Parametrs(RinDirName + 'Ray_2_3.xls', 'Sheet1')
 # R4 = mp.Parametrs(RinDirName + 'Ray_3_4.xls', 'Sheet1')
 # R5 = mp.Parametrs(RinDirName + 'Ray_4_5.xls', 'Sheet1')
-#
+#-
 # mirrorIndex = 'Aperture-morror2'
 # plotFileName2 = mainDir + 'result/htmlFiles/Rin_vs_Rout_Section_In_Out_0_1' + '.html'
 # plotFileName3 = mainDir + 'result/htmlFiles/Rin_vs_Rout_Section_In_Out_0_2'  + '.html'
@@ -269,4 +285,4 @@ mirrorLoop(mirrorList)
 # plotObject.plotIs(data4Plot2, layout, plotFileName4)
 # #plotObject.plotIs(pAA, layout, plotFileName4)
 plotLoop(mirrorList)
-plotLoopPolar(mirrorList)
+#plotLoopPolar(mirrorList)

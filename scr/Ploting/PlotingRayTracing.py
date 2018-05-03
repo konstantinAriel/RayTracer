@@ -18,7 +18,7 @@ class PlotingRayTracing:
         self.rayInDF = RinDF
         self.rayReflected = Rreflected
         self.rayNormal = rNormal
-        self.rayInDict, self.rayReflectedDict = self.setRays4Plot(mirrorDataSheet)
+        self.rayInDict, self.rayReflectedDict, self.pInData, self.rayInDictMarkers, self.rayReflectedDictMarkers = self.setRays4Plot(mirrorDataSheet)
         self.layout = self.setLayout()
         self.Tline1, self.Tline2 = self.getTlineDict()
 
@@ -32,8 +32,13 @@ class PlotingRayTracing:
         yRayReflectedData = []
         zRayReflectedData = []
 
+        xPinData = []
+        yPinData = []
+        zPinData = []
+
         #Construct List of pairs of Rays
         for  rIndex in self.rayInDF.index:
+
             # print(rIndex)
             #  In DATA
             xRayInData.append(self.rayInDF.Xin[rIndex] + self.MirrorDF.Source[0])
@@ -61,26 +66,77 @@ class PlotingRayTracing:
             zRayReflectedData.append(self.rayReflected.Zin[rIndex] + self.MirrorDF.Detector[2])
             zRayReflectedData.append(np.nan)
 
+            # Pin
+
+            xPinData.append(self.rayInDF.Xin[rIndex] + self.MirrorDF.Source[0])
+            xPinData.append((self.rayInDF.Xin[rIndex] + self.MirrorDF.Source[0]) + self.rayInDF.Exin[rIndex]* self.rayInDF.Ain[rIndex])
+            xPinData.append(np.nan)
+
+            yPinData.append(self.rayInDF.Yin[rIndex] + self.MirrorDF.Source[1])
+            yPinData.append((self.rayInDF.Yin[rIndex] + self.MirrorDF.Source[1]) + self.rayInDF.Eyin[rIndex]*self.rayInDF.Ain[rIndex])
+            yPinData.append(np.nan)
+
+            zPinData.append(self.rayInDF.Zin[rIndex] + self.MirrorDF.Source[2])
+            zPinData.append((self.rayInDF.Zin[rIndex] + self.MirrorDF.Source[2]) + self.rayInDF.Ezin[rIndex]*self.rayInDF.Ain[rIndex])
+            zPinData.append(np.nan)
+
+            if self.mirrorIndex == 'Mirror4':
+                xPinData.append(self.rayReflected.Xin[rIndex] + self.MirrorDF.Detector[0])
+                xPinData.append((self.rayReflected.Xin[rIndex] + self.MirrorDF.Detector[0]) + self.rayReflected.Exin[rIndex] * self.rayReflected.Ain[rIndex])
+                xPinData.append(np.nan)
+
+                yPinData.append(self.rayReflected.Yin[rIndex] + self.MirrorDF.Detector[1])
+                yPinData.append((self.rayReflected.Yin[rIndex] + self.MirrorDF.Detector[1]) + self.rayReflected.Eyin[rIndex] * self.rayReflected.Ain[rIndex])
+                yPinData.append(np.nan)
+
+                zPinData.append(self.rayReflected.Zin[rIndex] + self.MirrorDF.Detector[2])
+                zPinData.append((self.rayReflected.Zin[rIndex] + self.MirrorDF.Detector[2]) + self.rayReflected.Ezin[rIndex] * self.rayReflected.Ain[rIndex])
+                zPinData.append(np.nan)
+
         rayInDict = dict(
             go.Scatter3d(x=xRayInData, y=yRayInData, z=zRayInData,
                          mode='lines',
                          name='rayIn' + str(self.mirrorIndex),
                          line=dict(width=2, color='blue')
                          ))
+        rayInDictMarkers = dict(
+            go.Scatter3d(x=xRayInData, y=yRayInData, z=zRayInData,
+                         mode='markers',
+                         name='rayIn' + str(self.mirrorIndex),
+                         marker = dict(size=3, color='blue')
+                         ))
+
         rayReflectedDict = dict(
             go.Scatter3d(x=xRayReflectedData, y=yRayReflectedData, z=zRayReflectedData,
                          mode = 'lines',
                          name = 'rayReflected' + str(self.mirrorIndex),
                          line = dict(width=2, color='red')
                          ))
-        return rayInDict, rayReflectedDict
+        rayReflectedDictMarkers = dict(
+            go.Scatter3d(x=xRayReflectedData, y=yRayReflectedData, z=zRayReflectedData,
+                         mode='markers',
+                         name='rayReflected' + str(self.mirrorIndex),
+                         marker = dict(size=3, color='red')
+                         ))
+        pInData = dict(
+            go.Scatter3d(x=xPinData, y=yPinData, z=zPinData,
+                         mode ='line-markers',
+                         name ='rayReflected' + str(self.mirrorIndex),
+                         line = dict(width=2, color='green'),
+                         marker=dict(size=3, color='green')
+                         ))
+
+        return rayInDict, rayReflectedDict,pInData, rayInDictMarkers, rayReflectedDictMarkers
 
     def setLayout(self):
-        layout = dict(width=1920, height=1200,
-                      xaxis=dict(range=[-10, 10], autorange=True, zeroline=False),
-                      yaxis=dict(range=[-10, 10], autorange=True, zeroline=False),
-                      title='Ray Tracing ', hovermode='closest',
-                      )
+        layout = go.Layout(width=1920, height=1200,
+                            autosize=False,
+                            margin=dict(
+                            autoexpand=False),
+                            xaxis=dict(autorange=False, range=[-130, 130],  zeroline=True),
+                            yaxis=dict( anchor="x", scaleratio=1, domain = [0, 0.45], autorange=True, zeroline=False),
+                            title='Ray Tracing ', hovermode='closest',
+                            )
         return layout
 
     def plotIs(self, data, layout):

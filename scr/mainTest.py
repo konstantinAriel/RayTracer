@@ -7,7 +7,7 @@ import plotly.graph_objs  as go
 import plotly as py
 
 from scr.Ploting import PlotingRayTracing
-from scr.Rays import Rays
+from scr import Rays
 from scr.MainParam import Parametrs
 from scr.TestMatrix import TestMatrix  as tm, TestMatrix
 from scr.getRaysFromMatrix import RaysFromMatrix
@@ -173,6 +173,7 @@ def testMatrixLoop(mirrorDictMain):
     # print(path2testMatrix)
     print('===========================================================================  End Mirror Loop')
     return path2testMatrix
+
 pathName()
 
 #==================   Test for Aberation 1 =====================================

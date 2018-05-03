@@ -128,6 +128,7 @@ class Plotpolarization:
             # print('i = ', i)
             if self.mirrorIndex == 'Mirror1':
                # print('self.rayInDF.Xin[i] = ', self.rayInDF.Xin[i])
+
                xIndata1.append(self.rayInDF.Xin[i])
                yIndata1.append(LsY)
                zIndata1.append(self.rayInDF.Zin[i])
@@ -169,6 +170,18 @@ class Plotpolarization:
                EzInData.append(self.rayInDF.Zin[i])
                EzInData.append(self.rayInDF.Zin[i] + self.Ain[i]*self.rayInDF.Ezin[i])
                EzInData.append(np.nan)
+
+               ExOutData.append(self.rayInDF.Xin[i])
+               ExOutData.append(self.rayInDF.Xe[i])
+               ExOutData.append(np.nan)
+
+               EyOutData.append(LsZ)
+               EyOutData.append(LsZ + self.rayInDF.Ze[i])
+               EyOutData.append(np.nan)
+
+               EzOutData.append(self.rayInDF.Yin[i])
+               EzOutData.append(self.rayInDF.Ye[i])
+               EzOutData.append(np.nan)
 
             elif  self.mirrorIndex == 'Mirror2':
                 xIndata1.append(self.rayInDF.Xin[i])
