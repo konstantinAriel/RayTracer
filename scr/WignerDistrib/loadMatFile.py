@@ -12,7 +12,7 @@ py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
 
 dataWx = []
 dataWz = []
-dirPathInDataW = '/home/konstantin/rt/RayTracer/files/inDataWxWz/'
+dirPathInDataW = 'C:/Users/konstantinsh/Google Drive/U4eba/Ariel University/TOAR_II/TEZA/RayTracer/files/inDataWxWz/'
 modeDir = 'm_1_n_2/'
 
 WxDir = 'wx/'
@@ -36,7 +36,7 @@ xPrime = SizeX / 2
 zPrime = SizeZ / 2
 
 xCell = 10
-# zCell = 5
+#zCell = 5
 zCell = xCell
 
 xLine = xCell+1
@@ -98,7 +98,6 @@ def PlotWxWzSurf():
 XinSize = len(Xin)
 ZinSize = len(Zin)
 
-
 xLineArray = np.linspace(0, SizeX, xLine)
 zLineArray = np.linspace(0, SizeZ, zLine)
 
@@ -108,7 +107,6 @@ xCellArray = np.empty(XinSize)
 zCellArray = np.empty(ZinSize)
 
 print(xPointArray)
-
 
 xVPointDict = []
 zVPointDict = []
@@ -172,6 +170,9 @@ for k in range(xLine):
     zGLineDict.append(np.nan)
 
 
+
+
+#####################################################################################################
 xzVLines = dict(
         go.Scatter(x=xVLineDict, y=zVLineDict,
                   mode='lines',
@@ -201,7 +202,6 @@ dataPlotDict.append(xzGLines)
 dataPlotDict.append(xzVPointsDict)
 # dataPlotDict.append(xzGPointsDict)
 
-
 layout = go.Layout(width=1920, height=1200,
                    autosize=True,
                    margin=dict(
@@ -209,14 +209,12 @@ layout = go.Layout(width=1920, height=1200,
                    title='Test NET', hovermode='closest',
                    )
 fig = dict(data=dataPlotDict, layout=layout)
-py.offline.plot(fig, filename='testNET.html')
+py.offline.plot(fig, filename = 'testNET.html')
+
 # x = np.array([0,0,0])
 # >>> x
 # array([0, 0, 0])
 # >>> x.fill(np.nan)
-
-
-
 ##############################################__R_U_N__##############################################
 
 
