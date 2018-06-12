@@ -18,12 +18,28 @@ modeDir = 'm_1_n_2/'
 WxDir = 'wx/'
 WyDir = 'wy/'
 
-XinZinMat   = sio.loadmat(dirPathInDataW + modeDir + 'xyPoints')
-KxKzMat     = sio.loadmat(dirPathInDataW + modeDir + 'KxKyPoints')
-wXMat       = sio.loadmat(dirPathInDataW + modeDir + WxDir + 'wx_X_1_Y_ 1' )
-wZMat       = sio.loadmat(dirPathInDataW + modeDir + WyDir + 'wy_X_1_Y_ 1')
+XinZinMat = sio.loadmat(dirPathInDataW + modeDir + 'xyPoints')
+KxKzMat   = sio.loadmat(dirPathInDataW + modeDir + 'KxKyPoints')
 
-###########################  Constants #########################################
+Xn = 2
+Yn = 2
+WxDict = {}
+WzDict = {}
+keyWxArr = np.empty(Xn)
+keyWzArr = np.empty(Yn)
+
+for X in range(Xn):
+    for Y in range(Yn):
+        keyWx = 'wx_X_' + str(X+1) + '_Y_' + str(Y+1)
+        keyWz = 'wy_X_' + str(X+1) + '_Y_' + str(Y+1)
+        wXMat = sio.loadmat(dirPathInDataW + modeDir + WxDir + keyWx)
+        wZMat = sio.loadmat(dirPathInDataW + modeDir + WyDir + keyWz)
+        Wx = wXMat['wX_xyKxKy_TM']
+        Wz = wZMat['wY_xyKxKy_TM']
+        WxDict[keyWx] = Wx
+        WzDict[keyWz] = Wz
+
+########################### Constants #########################################
 
 a=8
 b=16
@@ -35,7 +51,7 @@ SizeZ = 250 # [mm]
 xPrime = SizeX / 2
 zPrime = SizeZ / 2
 
-xCell = 10
+xCell = 21
 #zCell = 5
 zCell = xCell
 
@@ -45,13 +61,18 @@ zLine = xCell+1
 ###############################
 
 XinZin  =  XinZinMat['XY']
-Xin = XinZin[:,0]+(SizeX/2)
-Zin = XinZin[:,1]+(SizeZ/2)
+Xin = (XinZin[:,0])+(SizeX/2)
+# print('Xin', Xin)
+Zin = ((XinZin[:,1])+(SizeZ/2))
+# print('Zin', Zin)
 KxKz    =  KxKzMat['KxKy']
 Kx = KxKz[:,0]
 Kz = KxKz[:,1]
-Wx      =  wXMat['wX_xyKxKy_TM']
-Wz      =  wZMat['wY_xyKxKy_TM']
+
+SumWxRe = np.zeros([zCell,xCell])
+SumWxIm = np.zeros([zCell,xCell])
+SumWzRe = np.zeros([zCell,xCell])
+SumWzIm = np.zeros([zCell,xCell])
 
 # print('XY = ',  XinZin)
 # print('KxKz = ',   KxKz)
@@ -87,7 +108,7 @@ def PlotWxWzSurf():
                        title='Wigler Wx ', hovermode='closest',
                        )
     filenameHtmlWx = '/home/konstantin/rt/RayTracer/files/result/htmlFiles/Wigler_distrib/Wx.html'
-    filenameHtmlWz = '/home/konstantin/rt/RayTracer/files/result/htmlFiles/Wigler_distrib/WzX.html'
+    filenameHtmlWz = '/home/konstantin/rt/RayTracer/files/result/htmlFiles/Wigler_distrib/Wz.html'
     fig = dict(data=dataWx, layout=layout)
     fig = dict(data=dataWz, layout=layout)
     py.offline.plot(fig, filename=filenameHtmlWx)
@@ -106,29 +127,62 @@ zPointArray = np.empty(zCell)
 xCellArray = np.empty(XinSize)
 zCellArray = np.empty(ZinSize)
 
-print(xPointArray)
+# print(xPointArray)
 
 xVPointDict = []
 zVPointDict = []
-xGPointDict = []
-zGPointDict = []
+
+x0xCenterLine = []
+z0zCenterLine = []
+
+x0Dict = []
+z0Dict = []
+
 dataPlotDict = []
 
 ########################################## Grid Loop #############################################
 
-index = 0
-for X in  Xin:
-    xCellNum = (m.ceil((X/SizeX)*xCell))
-    xCellArray[index] = xCellNum-1
-    index = index+1
-    print('xCellArray = ')
-    print(xCellArray)
+indexX = 0
+xIn = Xin[0:2]
+zIn = Zin[0:2]
+for Xi in  xIn:
+    xCellNum = (m.ceil((Xi/SizeX)*xCell))
+    xCellArray[indexX] = xCellNum-1
+
+    indexZ = 0
+    for Zi in zIn:
+        zCellNum = (m.ceil((Zi / SizeZ) * zCell))
+        zCellArray[indexZ] = zCellNum - 1  ## number of ciel
+
+        for Kxi in Kx:
+            for Kzi in Kz:
+                Lx = 0
+                Lz = 0
+                keyWxi = 'wx_X_' + str(indexX+1) + '_Y_' + str(indexZ+1)
+                WxDicti = WxDict[keyWxi]
+                Wxi = WxDicti[xCellNum,zCellNum]
+
+                keyWzi = 'wy_X_' + str(indexX + 1) + '_Y_' + str(indexZ + 1)
+                WzDicti = WzDict[keyWzi]
+                Wzi = WzDicti[xCellNum, zCellNum]
+
+                SumWxRe[xCellNum, zCellNum] = SumWxRe[xCellNum, zCellNum]+ (Wxi*np.cos(Lx*Kxi))
+                SumWxIm[xCellNum, zCellNum] = SumWxIm[xCellNum, zCellNum]+ (Wxi*np.sin(Lx*Kxi))
+                SumWzRe[xCellNum, zCellNum] = SumWzRe[xCellNum, zCellNum] + (Wzi*np.cos(Lz*Kzi))
+                SumWzIm[xCellNum, zCellNum] = SumWzIm[xCellNum, zCellNum] + (Wzi*np.sin(Lz*Kzi))
+        indexZ = indexZ + 1
+    indexX = indexX + 1
+# print('xCellArray = ')
+# print(xCellArray)
+
+# print('zCellArray = ')
+# print(xCellArray)
 
 for i in range(xCell):
     xAverage = (xLineArray[i] + xLineArray[i+1])/2
     xPointArray[i] = xAverage
-    print('i = ', i)
-    print('xArray = ', xPointArray[i])
+# print('i = ', i)
+# print('xArray = ', xPointArray[i])
 
 for j in range(zCell):
     zAverage = (zLineArray[j] + zLineArray[j+1])/2
@@ -140,14 +194,28 @@ for ii in range(xCell):
     for jj in range(zCell):
         xVPointDict.append(xPointArray[ii])
         zVPointDict.append(zPointArray[jj])
-                           
-        # xGPointDict.append(xPointArray[jj])
-        # zGPointDict.append(zPointArray[ii])
-
     xVPointDict.append(np.nan)
     zVPointDict.append(np.nan)
-    # xGPointDict.append(np.nan)
-    # zGPointDict.append(np.nan)
+
+xIndex = 0
+
+for x0 in Xin:
+    zIndex = 0
+    for z0 in Zin:
+        iii = int(xCellArray[xIndex])
+        jjj = int(zCellArray[zIndex])
+
+        XcenterPoint = xPointArray[iii]
+        x0xCenterLine.append(x0)
+        x0xCenterLine.append(XcenterPoint)
+        x0xCenterLine.append(np.nan)
+
+        zCenterPoint = zPointArray[jjj]
+        z0zCenterLine.append(z0)
+        z0zCenterLine.append(zCenterPoint)
+        z0zCenterLine.append(np.nan)
+        zIndex = zIndex + 1
+    xIndex = xIndex + 1
 
 ##################################### Lines Loop ##############################
 
@@ -169,9 +237,6 @@ for k in range(xLine):
     xGLineDict.append(np.nan)
     zGLineDict.append(np.nan)
 
-
-
-
 #####################################################################################################
 xzVLines = dict(
         go.Scatter(x=xVLineDict, y=zVLineDict,
@@ -191,16 +256,17 @@ xzVPointsDict = dict(
                   name='V markers NET',
                   line=dict(width=Linewidth, color='black')
                   ))
-# xzGPointsDict = dict(
-#         go.Scatter(x=xGPointDict, y=zGPointDict,
-#                   mode='markers',
-#                   name='V markers NET',
-#                   line=dict(width=Linewidth, color='black')
-#                   ))
+x0z0xCzCLineDict =  dict(
+                        go.Scatter(x=x0xCenterLine, y=z0zCenterLine,
+                        mode='Line',
+                        name='find cell',
+                        line=dict(width=Linewidth, color='green')
+                        ))
+
 dataPlotDict.append(xzVLines)
 dataPlotDict.append(xzGLines)
 dataPlotDict.append(xzVPointsDict)
-# dataPlotDict.append(xzGPointsDict)
+dataPlotDict.append(x0z0xCzCLineDict)
 
 layout = go.Layout(width=1920, height=1200,
                    autosize=True,
