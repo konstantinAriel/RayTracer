@@ -3,12 +3,22 @@ import datetime
 import numpy as np
 import math as m
 import plotly as py
+import datetime
 
 import pandas as pd
 import plotly.tools as tls
 import plotly.graph_objs  as go
 
 py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
+
+now = datetime.datetime.now()
+
+# print ("Current year: %d" % now.year)
+# print ("Current month: %d" % now.month)
+# print ("Current day: %d" % now.day)
+# print ('Current day:', now.day)
+print ('Current Hour:', now.hour)
+print ('Current Hour:', now.minute)
 
 dataWx = []
 dataWz = []
@@ -21,8 +31,8 @@ WyDir = 'wy/'
 XinZinMat = sio.loadmat(dirPathInDataW + modeDir + 'xyPoints')
 KxKzMat   = sio.loadmat(dirPathInDataW + modeDir + 'KxKyPoints')
 
-Xn = 2
-Yn = 2
+Xn = 100
+Yn = 100
 WxDict = {}
 WzDict = {}
 keyWxArr = np.empty(Xn)
@@ -45,13 +55,13 @@ a=8
 b=16
 
 Linewidth = 0.5
-SizeX = 250 # [mm]
-SizeZ = 250 # [mm]
+SizeX = 40 # [mm]
+SizeZ = 40 # [mm]
 
 xPrime = SizeX / 2
 zPrime = SizeZ / 2
 
-xCell = 21
+xCell = 101
 #zCell = 5
 zCell = xCell
 
@@ -69,10 +79,10 @@ KxKz    =  KxKzMat['KxKy']
 Kx = KxKz[:,0]
 Kz = KxKz[:,1]
 
-SumWxRe = np.zeros([zCell,xCell])
-SumWxIm = np.zeros([zCell,xCell])
-SumWzRe = np.zeros([zCell,xCell])
-SumWzIm = np.zeros([zCell,xCell])
+SumWxRe = np.zeros([xCell,zCell])
+SumWxIm = np.zeros([xCell,zCell])
+SumWzRe = np.zeros([xCell,zCell])
+SumWzIm = np.zeros([xCell,zCell])
 
 # print('XY = ',  XinZin)
 # print('KxKz = ',   KxKz)
@@ -81,6 +91,7 @@ SumWzIm = np.zeros([zCell,xCell])
 # print('wY = ', Wz)
 
 KxMesh, KzMesh = np.meshgrid(Kx, Kz)
+
 
 def PlotWxWzSurf():
     SurfDictWx = dict(go.Surface(x=KxMesh, y=KzMesh, z=Wx,
@@ -135,43 +146,52 @@ zVPointDict = []
 x0xCenterLine = []
 z0zCenterLine = []
 
+x0x1Line = []
+z0z1Line = []
+x0x0Line = []
+z0z0Line = []
 x0Dict = []
 z0Dict = []
 
 dataPlotDict = []
-
+WxDataplot = []
 ########################################## Grid Loop #############################################
 
 indexX = 0
-xIn = Xin[0:2]
-zIn = Zin[0:2]
-for Xi in  xIn:
-    xCellNum = (m.ceil((Xi/SizeX)*xCell))
-    xCellArray[indexX] = xCellNum-1
+########################################  LOOP FOR CALCULATE  ELECTRICAL FIELD ###################################
+
+for Xi in  Xin:
+    xCellNum = ((m.ceil((Xi/SizeX)*xCell)))-1
+    xCellArray[indexX] = xCellNum
 
     indexZ = 0
-    for Zi in zIn:
-        zCellNum = (m.ceil((Zi / SizeZ) * zCell))
-        zCellArray[indexZ] = zCellNum - 1  ## number of ciel
-
+    for Zi in Zin:
+        zCellNum = ((m.ceil((Zi / SizeZ) * zCell)))-1
+        zCellArray[indexZ] = zCellNum  ## number of ciel
+        Kxindex=0
         for Kxi in Kx:
+            Kzindex = 0
             for Kzi in Kz:
                 Lx = 0
                 Lz = 0
                 keyWxi = 'wx_X_' + str(indexX+1) + '_Y_' + str(indexZ+1)
                 WxDicti = WxDict[keyWxi]
-                Wxi = WxDicti[xCellNum,zCellNum]
+                Wxi = WxDicti[Kxindex,Kzindex]
 
                 keyWzi = 'wy_X_' + str(indexX + 1) + '_Y_' + str(indexZ + 1)
                 WzDicti = WzDict[keyWzi]
-                Wzi = WzDicti[xCellNum, zCellNum]
+                Wzi = WzDicti[Kxindex, Kzindex]
 
-                SumWxRe[xCellNum, zCellNum] = SumWxRe[xCellNum, zCellNum]+ (Wxi*np.cos(Lx*Kxi))
-                SumWxIm[xCellNum, zCellNum] = SumWxIm[xCellNum, zCellNum]+ (Wxi*np.sin(Lx*Kxi))
+                SumWxRe[xCellNum, zCellNum] = SumWxRe[xCellNum, zCellNum] + (Wxi*np.cos(Lx*Kxi))
+                SumWxIm[xCellNum, zCellNum] = SumWxIm[xCellNum, zCellNum] + (Wxi*np.sin(Lx*Kxi))
                 SumWzRe[xCellNum, zCellNum] = SumWzRe[xCellNum, zCellNum] + (Wzi*np.cos(Lz*Kzi))
                 SumWzIm[xCellNum, zCellNum] = SumWzIm[xCellNum, zCellNum] + (Wzi*np.sin(Lz*Kzi))
+                Kzindex = Kzindex+1
+            Kxindex = Kxindex+1
         indexZ = indexZ + 1
     indexX = indexX + 1
+
+##########################################################################################################################
 # print('xCellArray = ')
 # print(xCellArray)
 
@@ -188,6 +208,28 @@ for j in range(zCell):
     zAverage = (zLineArray[j] + zLineArray[j+1])/2
     zPointArray[j] = zAverage
 
+#####################################   Save to MAT File #################################################################
+sio.savemat('C:/Users/konstantinsh/Google Drive/U4eba/Ariel University/TOAR_II/TEZA/RayTracer/files/WxWzOut/SumWxWzReImDict',
+            {'SumWxRe':SumWxRe,
+             'SumWxIm':SumWxIm,
+             'SumWzRe':SumWzRe,
+             'SumWzIm':SumWzIm,
+             'zPointArray':zPointArray,
+             'xPointArray':xPointArray,
+             'xCellArray':xCellArray,
+             'zCellArray':zCellArray,
+             },
+            appendmat=True, format='5', long_field_names=False, do_compression=False, oned_as='column')
+X1Mesh, X2Mesh = np.meshgrid(xPointArray,zPointArray)
+
+WxMeshDict = dict(
+                    go.Surface(x=X1Mesh, y=X2Mesh, z=SumWxRe,
+                    showscale = False,
+                    opacity = 1,
+                    type = 'surface',
+                    surfacecolor = 'blue',
+                    name = 'SumWxRe'))
+WxDataplot.append(WxMeshDict)
 ################################  Points Loop ###############################
 
 for ii in range(xCell):
@@ -196,9 +238,7 @@ for ii in range(xCell):
         zVPointDict.append(zPointArray[jj])
     xVPointDict.append(np.nan)
     zVPointDict.append(np.nan)
-
 xIndex = 0
-
 for x0 in Xin:
     zIndex = 0
     for z0 in Zin:
@@ -214,6 +254,36 @@ for x0 in Xin:
         z0zCenterLine.append(z0)
         z0zCenterLine.append(zCenterPoint)
         z0zCenterLine.append(np.nan)
+        zIndex = zIndex + 1
+    xIndex = xIndex + 1
+
+xIndex = 0
+for x0 in xPointArray:
+    zIndex = 0
+    for z0 in zPointArray:
+        # iii = int(xCellArray[xIndex])
+        # jjj = int(zCellArray[zIndex])
+
+        # XcenterPoint = xPointArray[iii]
+        x1 = x0+SumWxRe[xIndex, zIndex]
+        x0x1Line.append(x0)
+        x0x1Line.append(x1)
+        x0x1Line.append(np.nan)
+
+        x0x0Line.append(x0)
+        x0x0Line.append(x0)
+        x0x0Line.append(np.nan)
+
+        #zCenterPoint = zPointArray[jjj]
+        z1 = z0+SumWxRe[xIndex,zIndex]
+        z0z1Line.append(z0)
+        z0z1Line.append(z1)
+        z0z1Line.append(np.nan)
+
+        z0z0Line.append(z0)
+        z0z0Line.append(z0)
+        z0z0Line.append(np.nan)
+
         zIndex = zIndex + 1
     xIndex = xIndex + 1
 
@@ -262,11 +332,32 @@ x0z0xCzCLineDict =  dict(
                         name='find cell',
                         line=dict(width=Linewidth, color='green')
                         ))
+x0z0x1z1LineDict =  dict(
+                        go.Scatter(x=x0x1Line, y=z0z1Line,
+                        mode='Line',
+                        name='Electricasl Field_ Total',
+                        line=dict(width=Linewidth, color='green')
+                        ))
+x0z0x1z0LineDict =  dict(
+                        go.Scatter(x=x0x1Line, y=z0z0Line,
+                        mode='Line',
+                        name='Electricasl Field _Ex',
+                        line=dict(width=Linewidth, color='green')
+                        ))
 
+x0z0x0z1LineDict =  dict(
+                        go.Scatter(x=x0x0Line, y=z0z1Line,
+                        mode='Line',
+                        name='Electricasl Field',
+                        line=dict(width=Linewidth, color='green')
+                        ))
 dataPlotDict.append(xzVLines)
 dataPlotDict.append(xzGLines)
 dataPlotDict.append(xzVPointsDict)
 dataPlotDict.append(x0z0xCzCLineDict)
+dataPlotDict.append(x0z0x1z1LineDict)
+dataPlotDict.append(x0z0x1z0LineDict)
+dataPlotDict.append(x0z0x0z1LineDict)
 
 layout = go.Layout(width=1920, height=1200,
                    autosize=True,
@@ -277,15 +368,22 @@ layout = go.Layout(width=1920, height=1200,
 fig = dict(data=dataPlotDict, layout=layout)
 py.offline.plot(fig, filename = 'testNET.html')
 
+fig = dict(data=WxDataplot, layout=layout)
+py.offline.plot(fig, filename = 'testSum Wx Re.html')
+
 # x = np.array([0,0,0])
 # >>> x
 # array([0, 0, 0])
 # >>> x.fill(np.nan)
 ##############################################__R_U_N__##############################################
-
-
 #PlotWxWzSurf()
 
+now = datetime.datetime.now()
+
+# print ("Current year: %d" % now.year)
+# print ("Current month: %d" % now.month)
+print ('Current Hour:', now.hour)
+print ('Current Hour:', now.minute)
 
 
 
