@@ -2,27 +2,22 @@ import scipy.io as sio
 import datetime
 import numpy as np
 import math as m
-import plotly as py
-import datetime
-
 import pandas as pd
+import plotly as py
 import plotly.tools as tls
 import plotly.graph_objs  as go
 
-py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
+tls.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
 
 now = datetime.datetime.now()
 
-# print ("Current year: %d" % now.year)
-# print ("Current month: %d" % now.month)
-# print ("Current day: %d" % now.day)
-# print ('Current day:', now.day)
 print ('Current Hour:', now.hour)
 print ('Current Hour:', now.minute)
 
 dataWx = []
 dataWz = []
-dirPathInDataW = 'C:/Users/konstantinsh/Google Drive/U4eba/Ariel University/TOAR_II/TEZA/RayTracer/files/inDataWxWz/'
+# dirPathInDataW = 'C:/Users/konstantinsh/Google Drive/U4eba/Ariel University/TOAR_II/TEZA/RayTracer/files/inDataWxWz/'
+dirPathInDataW = 'C:/Users/konstantinsh/Desktop/resultXls/'
 modeDir = 'm_1_n_2/'
 
 WxDir = 'wx/'
@@ -62,7 +57,6 @@ xPrime = SizeX / 2
 zPrime = SizeZ / 2
 
 xCell = 101
-#zCell = 5
 zCell = xCell
 
 xLine = xCell+1
@@ -72,9 +66,7 @@ zLine = xCell+1
 
 XinZin  =  XinZinMat['XY']
 Xin = (XinZin[:,0])+(SizeX/2)
-# print('Xin', Xin)
 Zin = ((XinZin[:,1])+(SizeZ/2))
-# print('Zin', Zin)
 KxKz    =  KxKzMat['KxKy']
 Kx = KxKz[:,0]
 Kz = KxKz[:,1]
@@ -83,13 +75,6 @@ SumWxRe = np.zeros([xCell,zCell])
 SumWxIm = np.zeros([xCell,zCell])
 SumWzRe = np.zeros([xCell,zCell])
 SumWzIm = np.zeros([xCell,zCell])
-
-# print('XY = ',  XinZin)
-# print('KxKz = ',   KxKz)
-# print('Kx = ',   Kx)
-# print('wx = ', Wx)
-# print('wY = ', Wz)
-
 KxMesh, KzMesh = np.meshgrid(Kx, Kz)
 
 
