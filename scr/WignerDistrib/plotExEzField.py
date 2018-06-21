@@ -26,8 +26,8 @@ WxDir = 'wx/'
 WyDir = 'wy/'
 
 matVariable = sio.loadmat(dirPathInDataW + dirPathOutData + 'SumWxWzReImDict')
-XinZinMat   = sio.loadmat(dirPathInDataW + modeDir + 'xyPoints')
-KxKzMat = sio.loadmat(dirPathInDataW + modeDir + 'KxKyPoints')
+XinZinMat   = sio.loadmat(dirPathInDataW + modeDir        + 'xyPoints')
+KxKzMat     = sio.loadmat(dirPathInDataW + modeDir        + 'KxKyPoints')
 
 SumWxRe     = matVariable['SumWxRe']
 SumWxIm     = matVariable['SumWxIm']
@@ -250,69 +250,6 @@ py.offline.plot(figDataPlotDict, filename = 'testNET.html')
 
 ##############################################__R_U_N__##############################################
 #PlotWxWzSurf()
-
 ######################################################################################################
 now = datetime.datetime.now()
 print ('Start -> ', now.hour, ':', now.minute)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

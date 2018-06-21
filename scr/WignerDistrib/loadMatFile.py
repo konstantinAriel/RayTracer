@@ -28,6 +28,7 @@ KxKzMat   = sio.loadmat(dirPathInDataW + modeDir + 'KxKyPoints')
 
 Xn = 100
 Yn = 100
+
 WxDict = {}
 WzDict = {}
 keyWxArr = np.empty(Xn)
@@ -56,7 +57,7 @@ SizeZ = 40 # [mm]
 xPrime = SizeX / 2
 zPrime = SizeZ / 2
 
-xCell = 101
+xCell = 11
 zCell = xCell
 
 xLine = xCell+1
@@ -142,13 +143,11 @@ dataPlotDict = []
 WxDataplot = []
 ########################################## Grid Loop #############################################
 
-indexX = 0
 ########################################  LOOP FOR CALCULATE  ELECTRICAL FIELD ###################################
-
+indexX = 0
 for Xi in  Xin:
     xCellNum = ((m.ceil((Xi/SizeX)*xCell)))-1
     xCellArray[indexX] = xCellNum
-
     indexZ = 0
     for Zi in Zin:
         zCellNum = ((m.ceil((Zi / SizeZ) * zCell)))-1
@@ -364,9 +363,6 @@ py.offline.plot(fig, filename = 'testSum Wx Re.html')
 #PlotWxWzSurf()
 
 now = datetime.datetime.now()
-
-# print ("Current year: %d" % now.year)
-# print ("Current month: %d" % now.month)
 print ('Current Hour:', now.hour)
 print ('Current Hour:', now.minute)
 
