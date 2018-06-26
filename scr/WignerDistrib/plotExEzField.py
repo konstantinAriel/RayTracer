@@ -42,6 +42,7 @@ zCellArray = matVariable['zCellArray']
 xCellSize = xCellArray.size
 zCellSize = zCellArray.size
 print('xCellSize = ', xCellSize)
+print('zCellArray = ', zCellArray)
 XinZin  =  XinZinMat['XY']
 Xin = (XinZin[:,0])+(SizeX/2)
 Zin = ((XinZin[:,1])+(SizeZ/2))
@@ -90,10 +91,15 @@ WxDataplot.append(WxMeshDict)
 WzDataplot.append(WzMeshDict)
 
 ####################################################  P o i n t s   L o o p  ###############################################
+print('zPointArray == ', zPointArray)
 for ii in range(xCellSize):
     for jj in range(zCellSize):
         xVi = xPointArray[ii]
         zVj = zPointArray[jj]
+        print('jj =', zVj)
+        print('zVj =', zVj)
+        print('zPointArray[jj] =', zPointArray[jj])
+
         xVPointDict.append(xVi[0])
         zVPointDict.append(zVj[0])
     xVPointDict.append(np.nan)

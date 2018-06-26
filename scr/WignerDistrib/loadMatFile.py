@@ -10,9 +10,7 @@ import plotly.graph_objs  as go
 tls.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
 
 now = datetime.datetime.now()
-
-print ('Current Hour:', now.hour)
-print ('Current Hour:', now.minute)
+print ('Start -> ', now.hour, ':', now.minute)
 
 dataWx = []
 dataWz = []
@@ -51,13 +49,13 @@ a=8
 b=16
 
 Linewidth = 0.5
-SizeX = 40 # [mm]
-SizeZ = 40 # [mm]
+SizeX = 20 # [mm]
+SizeZ = 20 # [mm]
 
 xPrime = SizeX / 2
 zPrime = SizeZ / 2
 
-xCell = 11
+xCell = 10
 zCell = xCell
 
 xLine = xCell+1
@@ -66,8 +64,10 @@ zLine = xCell+1
 ###############################
 
 XinZin  =  XinZinMat['XY']
-Xin = (XinZin[:,0])+(SizeX/2)
-Zin = ((XinZin[:,1])+(SizeZ/2))
+# Xin = (XinZin[:,0])+(SizeX/2)
+# Zin = ((XinZin[:,1]))
+Xin = (XinZin[:,0])
+Zin = ((XinZin[:,1]))
 KxKz    =  KxKzMat['KxKy']
 Kx = KxKz[:,0]
 Kz = KxKz[:,1]
@@ -116,8 +116,10 @@ def PlotWxWzSurf():
 XinSize = len(Xin)
 ZinSize = len(Zin)
 
-xLineArray = np.linspace(0, SizeX, xLine)
-zLineArray = np.linspace(0, SizeZ, zLine)
+# xLineArray = np.linspace(0, SizeX, xLine)
+# zLineArray = np.linspace(0, SizeZ, zLine)
+xLineArray = np.linspace(-SizeX/2, SizeX/2, xLine)
+zLineArray = np.linspace(-SizeZ/2, SizeZ/2, zLine)
 
 xPointArray = np.empty(xCell)
 zPointArray = np.empty(zCell)
@@ -146,11 +148,11 @@ WxDataplot = []
 ########################################  LOOP FOR CALCULATE  ELECTRICAL FIELD ###################################
 indexX = 0
 for Xi in  Xin:
-    xCellNum = ((m.ceil((Xi/SizeX)*xCell)))-1
+    xCellNum = ((m.ceil(((Xi+SizeX/2)/SizeX)*xCell)))-1
     xCellArray[indexX] = xCellNum
     indexZ = 0
     for Zi in Zin:
-        zCellNum = ((m.ceil((Zi / SizeZ) * zCell)))-1
+        zCellNum = ((m.ceil(((Zi+SizeZ/2) / SizeZ) * zCell)))-1
         zCellArray[indexZ] = zCellNum  ## number of ciel
         Kxindex=0
         for Kxi in Kx:
@@ -178,7 +180,7 @@ for Xi in  Xin:
 ##########################################################################################################################
 # print('xCellArray = ')
 # print(xCellArray)
-
+#
 # print('zCellArray = ')
 # print(xCellArray)
 
@@ -193,7 +195,7 @@ for j in range(zCell):
     zPointArray[j] = zAverage
 
 #####################################   Save to MAT File #################################################################
-sio.savemat('C:/Users/konstantinsh/Google Drive/U4eba/Ariel University/TOAR_II/TEZA/RayTracer/files/WxWzOut/SumWxWzReImDict',
+sio.savemat('C:/Users/konstantinsh/Desktop/resultXls//WxWzOut/SumWxWzReImDict',
             {'SumWxRe':SumWxRe,
              'SumWxIm':SumWxIm,
              'SumWzRe':SumWzRe,
@@ -337,8 +339,9 @@ x0z0x0z1LineDict =  dict(
                         ))
 dataPlotDict.append(xzVLines)
 dataPlotDict.append(xzGLines)
-dataPlotDict.append(xzVPointsDict)
 dataPlotDict.append(x0z0xCzCLineDict)
+dataPlotDict.append(xzVPointsDict)
+
 dataPlotDict.append(x0z0x1z1LineDict)
 dataPlotDict.append(x0z0x1z0LineDict)
 dataPlotDict.append(x0z0x0z1LineDict)
@@ -363,8 +366,7 @@ py.offline.plot(fig, filename = 'testSum Wx Re.html')
 #PlotWxWzSurf()
 
 now = datetime.datetime.now()
-print ('Current Hour:', now.hour)
-print ('Current Hour:', now.minute)
+print ('Start -> ', now.hour, ':', now.minute)
 
 
 
