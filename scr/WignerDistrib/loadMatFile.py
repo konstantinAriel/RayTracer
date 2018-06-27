@@ -52,10 +52,10 @@ Linewidth = 0.5
 SizeX = 20 # [mm]
 SizeZ = 20 # [mm]
 
-xPrime = SizeX / 2
-zPrime = SizeZ / 2
+xPrime = SizeX/2
+zPrime = SizeZ/2
 
-xCell = 10
+xCell = 101
 zCell = xCell
 
 xLine = xCell+1
@@ -143,8 +143,17 @@ z0Dict = []
 
 dataPlotDict = []
 WxDataplot = []
+WAmplDataplot = []
 ########################################## Grid Loop #############################################
+for i in range(xCell):
+    xAverage = (xLineArray[i] + xLineArray[i+1])/2
+    xPointArray[i] = xAverage
+# print('i = ', i)
+# print('xArray = ', xPointArray[i])
 
+for j in range(zCell):
+    zAverage = (zLineArray[j] + zLineArray[j+1])/2
+    zPointArray[j] = zAverage
 ########################################  LOOP FOR CALCULATE  ELECTRICAL FIELD ###################################
 indexX = 0
 for Xi in  Xin:
@@ -183,16 +192,6 @@ for Xi in  Xin:
 #
 # print('zCellArray = ')
 # print(xCellArray)
-
-for i in range(xCell):
-    xAverage = (xLineArray[i] + xLineArray[i+1])/2
-    xPointArray[i] = xAverage
-# print('i = ', i)
-# print('xArray = ', xPointArray[i])
-
-for j in range(zCell):
-    zAverage = (zLineArray[j] + zLineArray[j+1])/2
-    zPointArray[j] = zAverage
 
 #####################################   Save to MAT File #################################################################
 sio.savemat('C:/Users/konstantinsh/Desktop/resultXls//WxWzOut/SumWxWzReImDict',
@@ -242,7 +241,7 @@ for x0 in Xin:
         z0zCenterLine.append(np.nan)
         zIndex = zIndex + 1
     xIndex = xIndex + 1
-
+Wampl = np.zeros((xPointArray.size,zPointArray.size))
 xIndex = 0
 for x0 in xPointArray:
     zIndex = 0
@@ -251,7 +250,8 @@ for x0 in xPointArray:
         # jjj = int(zCellArray[zIndex])
 
         # XcenterPoint = xPointArray[iii]
-        x1 = x0+SumWxRe[xIndex, zIndex]
+        x01 = SumWxRe[xIndex, zIndex]
+        x1 = x0+x01
         x0x1Line.append(x0)
         x0x1Line.append(x1)
         x0x1Line.append(np.nan)
@@ -261,7 +261,8 @@ for x0 in xPointArray:
         x0x0Line.append(np.nan)
 
         #zCenterPoint = zPointArray[jjj]
-        z1 = z0+SumWxRe[xIndex,zIndex]
+        z01 = SumWzRe[xIndex,zIndex]
+        z1 = z0+z01
         z0z1Line.append(z0)
         z0z1Line.append(z1)
         z0z1Line.append(np.nan)
@@ -269,10 +270,17 @@ for x0 in xPointArray:
         z0z0Line.append(z0)
         z0z0Line.append(z0)
         z0z0Line.append(np.nan)
-
+        Wampl[xIndex,zIndex] = (x1**2+z1)**0.5
         zIndex = zIndex + 1
     xIndex = xIndex + 1
-
+WamplDict = dict(
+                    go.Surface(x=X1Mesh, y=X2Mesh, z=Wampl,
+                    showscale = False,
+                    opacity = 1,
+                    type = 'surface',
+                    surfacecolor = 'blue',
+                    name = 'SumWxRe'))
+WAmplDataplot.append(WxMeshDict)
 ##################################### Lines Loop ##############################
 
 xVLineDict = []
@@ -358,6 +366,9 @@ py.offline.plot(fig, filename = 'testNET.html')
 fig = dict(data=WxDataplot, layout=layout)
 py.offline.plot(fig, filename = 'testSum Wx Re.html')
 
+fig = dict(data=WAmplDataplot, layout=layout)
+py.offline.plot(fig, filename = 'Wampl Re.html')
+
 # x = np.array([0,0,0])
 # >>> x
 # array([0, 0, 0])
@@ -367,40 +378,3 @@ py.offline.plot(fig, filename = 'testSum Wx Re.html')
 
 now = datetime.datetime.now()
 print ('Start -> ', now.hour, ':', now.minute)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

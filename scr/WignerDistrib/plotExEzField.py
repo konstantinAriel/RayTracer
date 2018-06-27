@@ -12,12 +12,10 @@ print ('Start -> ', now.hour, ':', now.minute)
 a=8
 b=16
 Linewidth = 1
-SizeX = 40 # [mm]
-SizeZ = 40 # [mm]
-xCell = 101
-zCell = xCell
-xLine = xCell+1
-zLine = xCell+1
+LinewidthEF = 3
+SizeX = 20 # [mm]
+SizeZ = 20 # [mm]
+
 
 dirPathInDataW = 'C:/Users/konstantinsh/Desktop/resultXls/'
 dirPathOutData = 'WxWzOut/'
@@ -41,13 +39,17 @@ xCellArray = matVariable['xCellArray']
 zCellArray = matVariable['zCellArray']
 xCellSize = xCellArray.size
 zCellSize = zCellArray.size
+xCell = xPointArray.size
+zCell = zPointArray.size
+xLine = xCell+1
+zLine = xCell+1
 print('xCellSize = ', xCellSize)
 print('zCellArray = ', zCellArray)
 XinZin  =  XinZinMat['XY']
-Xin = (XinZin[:,0])+(SizeX/2)
-Zin = ((XinZin[:,1])+(SizeZ/2))
+Xin = (XinZin[:,0])
+Zin = (XinZin[:,1])
 
-KxKz    =  KxKzMat['KxKy']
+KxKz = KxKzMat['KxKy']
 Kx = KxKz[:,0]
 Kz = KxKz[:,1]
 KxMesh, KzMesh = np.meshgrid(Kx, Kz)
@@ -69,6 +71,7 @@ dataPlotDict = []
 
 WxDataplot = []
 WzDataplot = []
+WAmplDataplot = []
 
 xPointMesh, zPointMesh = np.meshgrid(xPointArray,zPointArray)
 
@@ -85,20 +88,16 @@ WzMeshDict = dict(
                     opacity = 1,
                     type = 'surface',
                     surfacecolor = 'blue',
-                    name = 'SumWxRe'))
+                    name = 'SumWzRe'))
 
 WxDataplot.append(WxMeshDict)
 WzDataplot.append(WzMeshDict)
 
 ####################################################  P o i n t s   L o o p  ###############################################
-print('zPointArray == ', zPointArray)
-for ii in range(xCellSize):
-    for jj in range(zCellSize):
+for ii in range(xCell):
+    for jj in range(zCell):
         xVi = xPointArray[ii]
         zVj = zPointArray[jj]
-        print('jj =', zVj)
-        print('zVj =', zVj)
-        print('zPointArray[jj] =', zPointArray[jj])
 
         xVPointDict.append(xVi[0])
         zVPointDict.append(zVj[0])
@@ -125,7 +124,8 @@ for x0 in Xin:
         z0zCenterLine.append(np.nan)
         zIndex = zIndex + 1
     xIndex = xIndex + 1
-
+Wampl = np.zeros((xPointArray.size,zPointArray.size))
+X1Mesh, X2Mesh = np.meshgrid(xPointArray,zPointArray)
 xIndex = 0
 for x0 in xPointArray:
     zIndex = 0
@@ -150,13 +150,21 @@ for x0 in xPointArray:
         z0z0Line.append(z0[0])
         z0z0Line.append(z0[0])
         z0z0Line.append(np.nan)
+        Wampl[xIndex, zIndex] = (WxRei ** 2 + WzRej) ** 0.5
 
         zIndex = zIndex + 1
     xIndex = xIndex + 1
+WamplDict = dict(go.Surface(x=X1Mesh, y=X2Mesh, z=Wampl,
+                    showscale = False,
+                    opacity = 1,
+                    type = 'surface',
+                    surfacecolor = 'blue',
+                    name = 'SumWxRe'))
 
+WAmplDataplot.append(WamplDict)
 ##################################### Lines Loop ##############################
-xLineArray = np.linspace(0, SizeX, xLine)
-zLineArray = np.linspace(0, SizeZ, zLine)
+xLineArray = np.linspace(-SizeX/2, SizeX/2, xLine)
+zLineArray = np.linspace(-SizeZ/2, SizeZ/2, zLine)
 xVLineDict = []
 zVLineDict = []
 xGLineDict = []
@@ -202,20 +210,20 @@ x0z0xCzCLineDict =  dict(
 x0z0x1z1LineDict =  dict(
                         go.Scatter(x=x0x1Line, y=z0z1Line,
                         mode='Line',
-                        name='Electricasl Field_ Total',
-                        line=dict(width=Linewidth, color='green')
+                        name='Electric Field_Total',
+                        line=dict(width=LinewidthEF, color='red')
                         ))
 x0z0x1z0LineDict =  dict(
                         go.Scatter(x=x0x1Line, y=z0z0Line,
                         mode='Line',
-                        name='Electricasl Field _Ex',
-                        line=dict(width=Linewidth, color='green')
+                        name='E Field_Ex',
+                        line=dict(width=LinewidthEF, color='blue')
                         ))
 x0z0x0z1LineDict =  dict(
                         go.Scatter(x=x0x0Line, y=z0z1Line,
                         mode='Line',
-                        name='Electricasl Field',
-                        line=dict(width=Linewidth, color='green')
+                        name='E Field_Ez',
+                        line=dict(width=LinewidthEF, color='blue')
                         ))
 dataPlotDict.append(xzVLines)
 dataPlotDict.append(xzGLines)
@@ -244,15 +252,24 @@ layoutWzDataplot = go.Layout(width=1920, height=1200,
                        autoexpand=False),
                    title='Re_Wz', hovermode='closest',
                    )
+layoutWamplDataplot = go.Layout(width=1920, height=1200,
+                   autosize=True,
+                   margin=dict(
+                       autoexpand=False),
+                   title='W ampl Re', hovermode='closest',
+                   )
 
 figDataPlotDict = dict(data=dataPlotDict, layout=layoutDataPlot)
 py.offline.plot(figDataPlotDict, filename = 'testNET.html')
 
-# figWxDataplot = dict(data=WxDataplot, layout=layoutWxDataplot)
-# py.offline.plot(figWxDataplot, filename = 'Re_Wx.html')
-#
-# figWzDataplot = dict(data=WzDataplot, layout=layoutWzDataplot)
-# py.offline.plot(figWzDataplot, filename = 'Re_Wz.html')
+figWxDataplot = dict(data=WxDataplot, layout=layoutWxDataplot)
+py.offline.plot(figWxDataplot, filename = 'Re_Wx.html')
+
+figWzDataplot = dict(data=WzDataplot, layout=layoutWzDataplot)
+py.offline.plot(figWzDataplot, filename = 'Re_Wz.html')
+
+fig = dict(data=WAmplDataplot, layout=layoutWamplDataplot)
+py.offline.plot(fig, filename = 'Wampl Re.html')
 
 ##############################################__R_U_N__##############################################
 #PlotWxWzSurf()
