@@ -4,9 +4,10 @@ import  numpy as np
 
 global mainPath, xlsDir, fExtend, rInDir, rOutDir, systemSettingsDir, sysParamFilename, raysInFname, raysNormalisedFname, ray4TestMatrix3PointFname
 
-mainPath = "/home/konstantin/rt/RayTracer/files/"
+mainPath = "C:/Users/konstantinsh/Google Drive/U4eba/Ariel University/TOAR_II/TEZA/RayTracer/files/"
 xlsDir  =  'XLS/'
 fExtend = '.xls'
+fMatExtend = '.mat'
 rInDir = 'Rin/'
 rOutDir = 'Rout/'
 systemSettingsDir = 'systemSetting/'
@@ -31,7 +32,7 @@ class Parametrs:
         return  pd.ExcelFile(path)
 
     def getDataSheet(self, xlsFile, sheetname):
-        return xlsFile.parse(sheetname=sheetname)
+        return xlsFile.parse(sheetname)
 
     def getmirrorNumber (self, sheetNames):
         return len(sheetNames) - 3

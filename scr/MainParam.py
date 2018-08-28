@@ -24,7 +24,7 @@ class Parametrs:
         self.mainPathForMatrix = self.getmMainPathForMatrix()
 
     def getParam(self, paramDataFile, sheetName):
-        self.dataSheet = paramDataFile.parse(sheetname=sheetName)
+        self.dataSheet = paramDataFile.parse(sheetName)
         return self.dataSheet
 
     # def setParam(self, paramDataFile, paramName):
@@ -47,7 +47,8 @@ class Parametrs:
         return mirrorDict
 
     def getMainPath(self):
-        mainPath = "/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/"
+        # mainPath = "/home/konstantin/PycharmProjects/RayTracer/files/settingsfiles/"
+        mainPath = "C:/Users/konstantinsh/Google Drive/U4eba/Ariel University/TOAR_II/TEZA/RayTracer/files/settingsfiles"
         return  mainPath
 
     def getFextend(self):
@@ -55,7 +56,7 @@ class Parametrs:
         return  fExtend
 
     def getSysParamFname(self):
-        sysParamFname = 'sysParam_1'
+        sysParamFname = 'sysParam'
         return sysParamFname
 
     def getRaysInFname(self):

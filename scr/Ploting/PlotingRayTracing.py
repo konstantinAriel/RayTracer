@@ -11,18 +11,19 @@ from scr.RayTracing.Rays import Rays
 py.tools.set_credentials_file(username='DemoAccount', api_key='lr1c37zw81')
 
 class PlotingRayTracing:
-    def __init__(self, mirrorDataSheet, RinDF, Rreflected, rNormal, mirrorIndex, fileName):
+    def __init__(self, mirrorDataSheet, mirrorIndex, RinDF, Rreflected, rNormal, fileName):
         self.MirrorDF = mirrorDataSheet
         self.mirrorIndex = mirrorIndex
         self.plotFileName = fileName
         self.rayInDF = RinDF
         self.rayReflected = Rreflected
         self.rayNormal = rNormal
-        self.rayInDict, self.rayReflectedDict, self.pInData, self.rayInDictMarkers, self.rayReflectedDictMarkers = self.setRays4Plot(mirrorDataSheet)
+        #self.rayInDict, self.rayReflectedDict, self.pInData, self.rayInDictMarkers, self.rayReflectedDictMarkers = self.setRays4Plot(mirrorDataSheet)
+        self.rayInDict, self.rayReflectedDict = self.setRays4Plot()
         self.layout = self.setLayout()
         self.Tline1, self.Tline2 = self.getTlineDict()
 
-    def setRays4Plot(self, mirrorDataSheet):
+    def setRays4Plot(self):
 
         xRayInData = []
         yRayInData = []
@@ -32,78 +33,40 @@ class PlotingRayTracing:
         yRayReflectedData = []
         zRayReflectedData = []
 
-        xPinData = []
-        yPinData = []
-        zPinData = []
-
         #Construct List of pairs of Rays
         for  rIndex in self.rayInDF.index:
 
-            # print(rIndex)
             #  In DATA
-            xRayInData.append(self.rayInDF.Xin[rIndex] + self.MirrorDF.Source[0])
-            xRayInData.append(self.rayNormal.Xin[rIndex])
+            xRayInData.append(self.rayInDF.X[rIndex] + self.MirrorDF.Source[0])
+            xRayInData.append(self.rayNormal.X[rIndex])
             xRayInData.append(np.nan)
 
-            yRayInData.append(self.rayInDF.Yin[rIndex] + self.MirrorDF.Source[1])
-            yRayInData.append(self.rayNormal.Yin[rIndex])
+            yRayInData.append(self.rayInDF.Y[rIndex] + self.MirrorDF.Source[1])
+            yRayInData.append(self.rayNormal.Y[rIndex])
             yRayInData.append(np.nan)
 
-            zRayInData.append(self.rayInDF.Zin[rIndex] + self.MirrorDF.Source[2])
-            zRayInData.append(self.rayNormal.Zin[rIndex])
+            zRayInData.append(self.rayInDF.Z[rIndex] + self.MirrorDF.Source[2])
+            zRayInData.append(self.rayNormal.Z[rIndex])
             zRayInData.append(np.nan)
 
             #  Reflected Data
-            xRayReflectedData.append(self.rayNormal.Xin[rIndex])
-            xRayReflectedData.append(self.rayReflected.Xin[rIndex] + self.MirrorDF.Detector[0])
+            xRayReflectedData.append(self.rayNormal.X[rIndex])
+            xRayReflectedData.append(self.rayReflected.X[rIndex] + self.MirrorDF.Detector[0])
             xRayReflectedData.append(np.nan)
 
-            yRayReflectedData.append(self.rayNormal.Yin[rIndex])
-            yRayReflectedData.append(self.rayReflected.Yin[rIndex] + self.MirrorDF.Detector[1])
+            yRayReflectedData.append(self.rayNormal.Y[rIndex])
+            yRayReflectedData.append(self.rayReflected.Y[rIndex] + self.MirrorDF.Detector[1])
             yRayReflectedData.append(np.nan)
 
-            zRayReflectedData.append(self.rayNormal.Zin[rIndex])
-            zRayReflectedData.append(self.rayReflected.Zin[rIndex] + self.MirrorDF.Detector[2])
+            zRayReflectedData.append(self.rayNormal.Z[rIndex])
+            zRayReflectedData.append(self.rayReflected.Z[rIndex] + self.MirrorDF.Detector[2])
             zRayReflectedData.append(np.nan)
-
-            # Pin
-
-            xPinData.append(self.rayInDF.Xin[rIndex] + self.MirrorDF.Source[0])
-            xPinData.append((self.rayInDF.Xin[rIndex] + self.MirrorDF.Source[0]) + self.rayInDF.Exin[rIndex]* self.rayInDF.Ain[rIndex])
-            xPinData.append(np.nan)
-
-            yPinData.append(self.rayInDF.Yin[rIndex] + self.MirrorDF.Source[1])
-            yPinData.append((self.rayInDF.Yin[rIndex] + self.MirrorDF.Source[1]) + self.rayInDF.Eyin[rIndex]*self.rayInDF.Ain[rIndex])
-            yPinData.append(np.nan)
-
-            zPinData.append(self.rayInDF.Zin[rIndex] + self.MirrorDF.Source[2])
-            zPinData.append((self.rayInDF.Zin[rIndex] + self.MirrorDF.Source[2]) + self.rayInDF.Ezin[rIndex]*self.rayInDF.Ain[rIndex])
-            zPinData.append(np.nan)
-
-            if self.mirrorIndex == 'Mirror4':
-                xPinData.append(self.rayReflected.Xin[rIndex] + self.MirrorDF.Detector[0])
-                xPinData.append((self.rayReflected.Xin[rIndex] + self.MirrorDF.Detector[0]) + self.rayReflected.Exin[rIndex] * self.rayReflected.Ain[rIndex])
-                xPinData.append(np.nan)
-
-                yPinData.append(self.rayReflected.Yin[rIndex] + self.MirrorDF.Detector[1])
-                yPinData.append((self.rayReflected.Yin[rIndex] + self.MirrorDF.Detector[1]) + self.rayReflected.Eyin[rIndex] * self.rayReflected.Ain[rIndex])
-                yPinData.append(np.nan)
-
-                zPinData.append(self.rayReflected.Zin[rIndex] + self.MirrorDF.Detector[2])
-                zPinData.append((self.rayReflected.Zin[rIndex] + self.MirrorDF.Detector[2]) + self.rayReflected.Ezin[rIndex] * self.rayReflected.Ain[rIndex])
-                zPinData.append(np.nan)
 
         rayInDict = dict(
             go.Scatter3d(x=xRayInData, y=yRayInData, z=zRayInData,
                          mode='lines',
                          name='rayIn' + str(self.mirrorIndex),
                          line=dict(width=2, color='blue')
-                         ))
-        rayInDictMarkers = dict(
-            go.Scatter3d(x=xRayInData, y=yRayInData, z=zRayInData,
-                         mode='markers',
-                         name='rayIn' + str(self.mirrorIndex),
-                         marker = dict(size=3, color='blue')
                          ))
 
         rayReflectedDict = dict(
@@ -112,21 +75,7 @@ class PlotingRayTracing:
                          name = 'rayReflected' + str(self.mirrorIndex),
                          line = dict(width=2, color='red')
                          ))
-        rayReflectedDictMarkers = dict(
-            go.Scatter3d(x=xRayReflectedData, y=yRayReflectedData, z=zRayReflectedData,
-                         mode='markers',
-                         name='rayReflected' + str(self.mirrorIndex),
-                         marker = dict(size=3, color='red')
-                         ))
-        pInData = dict(
-            go.Scatter3d(x=xPinData, y=yPinData, z=zPinData,
-                         mode ='line-markers',
-                         name ='rayReflected' + str(self.mirrorIndex),
-                         line = dict(width=2, color='green'),
-                         marker=dict(size=3, color='green')
-                         ))
-
-        return rayInDict, rayReflectedDict,pInData, rayInDictMarkers, rayReflectedDictMarkers
+        return rayInDict, rayReflectedDict
 
     def setLayout(self):
         layout = go.Layout(width=1920, height=1200,
@@ -140,7 +89,6 @@ class PlotingRayTracing:
         return layout
 
     def plotIs(self, data, layout):
-        #print('Data = ', data)
         fig = dict(data = data, layout = layout)
         print('plotFileName = ')
         print(self.plotFileName)
@@ -172,7 +120,6 @@ class PlotingRayTracing:
 
     def setMirrorSurf(self):
         rayDFtemp = []
-        #rayObject = Rays(self.MirrorDF, rayDFtemp, 0)
 
         v1 = self.MirrorDF.Vertex.x
         v2 = self.MirrorDF.Vertex.y
@@ -201,11 +148,17 @@ class PlotingRayTracing:
 
         # x3R = (xLim1 - v1) * Mr[2, 0] + (yLim1 - v2) * Mr[2, 1] + (zLim1 - v3) * Mr[2, 2]
 
-        x1Lim1 = ((xLim1 - v1) * MrNegativ[0, 0] + (yLim1 - v2) * MrNegativ[0, 1] + (zLim1 - v3) * MrNegativ[0, 2]) + v1
-        x1Lim2 = ((xLim2 - v1) * MrNegativ[0, 0] + (yLim2 - v2) * MrNegativ[0, 1] + (zLim2 - v3) * MrNegativ[0, 2]) + v1
+        # x1Lim1 = ((xLim1 - v1) * MrNegativ[0, 0] + (yLim1 - v2) * MrNegativ[0, 1] + (zLim1 - v3) * MrNegativ[0, 2]) + v1
+        # x1Lim2 = ((xLim2 - v1) * MrNegativ[0, 0] + (yLim2 - v2) * MrNegativ[0, 1] + (zLim2 - v3) * MrNegativ[0, 2]) + v1
+        #
+        # x2Lim1 = ((xLim1 - v1) * MrNegativ[1, 0] + (yLim1 - v2) * MrNegativ[1, 1] + (zLim1 - v3) * MrNegativ[1, 2]) + v2
+        # x2Lim2 = ((xLim2 - v1) * MrNegativ[1, 0] + (yLim2 - v2) * MrNegativ[1, 1] + (zLim2 - v3) * MrNegativ[1, 2]) + v2
 
-        x2Lim1 = ((xLim1 - v1) * MrNegativ[1, 0] + (yLim1 - v2) * MrNegativ[1, 1] + (zLim1 - v3) * MrNegativ[1, 2]) + v2
-        x2Lim2 = ((xLim2 - v1) * MrNegativ[1, 0] + (yLim2 - v2) * MrNegativ[1, 1] + (zLim2 - v3) * MrNegativ[1, 2]) + v2
+        x1Lim1 = ((xLim1 - v1) * MrNegativ[0, 0] + (yLim1 - v2) * MrNegativ[1, 0] + (zLim1 - v3) * MrNegativ[2, 0]) + v1
+        x1Lim2 = ((xLim2 - v1) * MrNegativ[0, 0] + (yLim2 - v2) * MrNegativ[1, 0] + (zLim2 - v3) * MrNegativ[2, 0]) + v1
+
+        x2Lim1 = ((xLim1 - v1) * MrNegativ[0, 1] + (yLim1 - v2) * MrNegativ[1, 1] + (zLim1 - v3) * MrNegativ[2, 1]) + v2
+        x2Lim2 = ((xLim2 - v1) * MrNegativ[0, 1] + (yLim2 - v2) * MrNegativ[1, 1] + (zLim2 - v3) * MrNegativ[2, 1]) + v2
 
         if x1Lim1 < x1Lim2:
             x1array = np.linspace(x1Lim1, x1Lim2,10)
@@ -223,24 +176,25 @@ class PlotingRayTracing:
         X3Mesh = (a11*((X1Mesh-v1)**2) + a22*((X2Mesh-v2)**2)) + v3
 
         x1R = ((X1Mesh - v1)*M2Positive[0, 0] +
-               (X2Mesh - v2)*M2Positive[0, 1] +
-               (X3Mesh - v3)*M2Positive[0, 2]) + v1
+               (X2Mesh - v2)*M2Positive[1, 0] +
+               (X3Mesh - v3)*M2Positive[2, 0]) + v1
 
-        x2R = ((X1Mesh - v1)*M2Positive[1, 0] +
+        x2R = ((X1Mesh - v1)*M2Positive[0, 1] +
                (X2Mesh - v2)*M2Positive[1, 1] +
-               (X3Mesh - v3)*M2Positive[1, 2]) + v2
+               (X3Mesh - v3)*M2Positive[2, 1]) + v2
 
-        x3R = ((X1Mesh - v1)*M2Positive[2, 0] +
-               (X2Mesh - v2)*M2Positive[2, 1] +
+        x3R = ((X1Mesh - v1)*M2Positive[0, 2] +
+               (X2Mesh - v2)*M2Positive[1, 2] +
                (X3Mesh - v3)*M2Positive[2, 2]) +v3
+        SurfDict = dict(
+                        go.Surface(x=x1R, y=x2R, z=x3R,
+                        showscale=False,
+                        opacity=1,
+                        type='surface',
+                        surfacecolor='blue',
+                        name=str(self.mirrorIndex)))
 
-        return  dict(
-                    go.Surface(x=x1R, y=x2R, z=x3R,
-                            showscale = False,
-                            opacity = 1,
-                            type = 'surface',
-                            surfacecolor = 'blue',
-                            name = str(self.mirrorIndex)))
+        return  SurfDict
 
     def getRotateMatrix(self, xDegree, yDegree, zDegree):
         csX = self.cs(xDegree)

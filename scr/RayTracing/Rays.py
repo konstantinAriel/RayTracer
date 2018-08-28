@@ -3,42 +3,61 @@ from numpy import sin, cos, pi
 import numpy as np
 import pandas as pd
 
-
 class Rays:
     def __init__(self, mirrorDF, rayinDF, getRefRay):
             self.mirrorDF = self.getMirrorDF(mirrorDF)
             self.rayInDF = self.getRaysInDF(rayinDF)
             # print('rayinDF =  IN RAYS CLASS')
             # print(rayinDF)
-            self.EinHeaders = 7
+            self.EinHeaders = 3
             self.L =100
             if getRefRay == 1:
-                self.NormalRayDF, self.ReflectedRayDF = self.getReflectedRays()
+                self.NormalRayDF, self.ReflectedRayDF, self.xPleneLineRaysDF = self.getReflectedRays()
             elif getRefRay == 0:
                 self.RaysDFnormal =  self.rInNormalise()
 
+    # def rInNormalise(self):
+    #     #RaysHeads = self.rayInDF.columns
+    #     RayCount = 0
+    #     numberOfRays = len(self.rayInDF.Kx)
+    #     KinNormalArray2D, XinArray2D, EinArray2D = self.initArrasy2D(numberOfRays)
+    #     for RinIndex in self.rayInDF.index:
+    #         # print(RinIndex)
+    #         KinArray = self.getKinArray(RinIndex)
+    #         KinNormal = self.normalVector(KinArray)
+    #         KinNormalArray2D[RinIndex, :] = KinNormal
+    #
+    #         XinArray2D[RinIndex, :] = self.getXinArray(RinIndex)
+    #
+    #         # Ey = self.getEy(RinIndex)
+    #
+    #         EinArray2D[RinIndex, :] = self.getEinArray(RinIndex)
+    #
+    #         RayCount += 1
+    #
+    #     raysDF = self.setRaysDataFrame(XinArray2D, KinNormalArray2D, EinArray2D)
+    #     return raysDF
     def rInNormalise(self):
         #RaysHeads = self.rayInDF.columns
         RayCount = 0
-        numberOfRays = len(self.rayInDF.Kxin)
+        numberOfRays = len(self.rayInDF.Kx)
         KinNormalArray2D, XinArray2D, EinArray2D = self.initArrasy2D(numberOfRays)
         for RinIndex in self.rayInDF.index:
             # print(RinIndex)
-            KinArray = self.getKinArray(RinIndex, )
+            KinArray = self.getKinArray(RinIndex)
             KinNormal = self.normalVector(KinArray)
             KinNormalArray2D[RinIndex, :] = KinNormal
 
             XinArray2D[RinIndex, :] = self.getXinArray(RinIndex)
 
-            Eyin = self.getEy(RinIndex)
+            # Ey = self.getEy(RinIndex)
 
-            EinArray2D[RinIndex, :] = self.getEinArray(RinIndex, Eyin)
+            EinArray2D[RinIndex, :] = self.getEinArray(RinIndex)
 
             RayCount += 1
 
         raysDF = self.setRaysDataFrame(XinArray2D, KinNormalArray2D, EinArray2D)
         return raysDF
-
     def getMirrorDF(self, mirrorDF):
         return mirrorDF
 
@@ -46,47 +65,44 @@ class Rays:
         return rayinDF
 
     def getKinArray(self, RinIndex, ):
-        return np.array([self.rayInDF.Kxin[RinIndex],
-                         self.rayInDF.Kyin[RinIndex],
-                         self.rayInDF.Kzin[RinIndex]
+        return np.array([self.rayInDF.Kx[RinIndex],
+                         self.rayInDF.Ky[RinIndex],
+                         self.rayInDF.Kz[RinIndex]
                          ])
 
     def getXinArray(self, RinIndex):
-        return np.array([self.rayInDF.Xin[RinIndex],
-                         self.rayInDF.Yin[RinIndex],
-                         self.rayInDF.Zin[RinIndex]
+        return np.array([self.rayInDF.X[RinIndex],
+                         self.rayInDF.Y[RinIndex],
+                         self.rayInDF.Z[RinIndex]
                          ])
 
     def getEy(self, RinIndex):
-        return -(self.rayInDF.Exin[RinIndex] * self.rayInDF.Kxin[RinIndex] +
-                 self.rayInDF.Ezin[RinIndex] * self.rayInDF.Kzin[RinIndex]) / self.rayInDF.Kyin[RinIndex]
-
-    def getEinArray(self, RinIndex, Eyin):
-        return np.array([self.rayInDF.Exin[RinIndex],
-                         Eyin,
-                         self.rayInDF.Ezin[RinIndex],
-                         self.rayInDF.Ex[RinIndex],
+        return  np.array([self.rayInDF.Ex[RinIndex],
                          self.rayInDF.Ey[RinIndex],
-                         self.rayInDF.Ez[RinIndex],
-                         self.rayInDF.Ain[RinIndex],
+                         self.rayInDF.Ez[RinIndex]
                          ])
+
+    def getEinArray(self, RinIndex):
+        return np.array([self.rayInDF.Ex[RinIndex],
+                         self.rayInDF.Ey[RinIndex],
+                         self.rayInDF.Ez[RinIndex]
+                         ])
+    # def normalVector(self, inArray):
+    #     return inArray / ((np.dot(inArray, inArray.T))) ** 0.5
+
     def normalVector(self, inArray):
-        return inArray / ((np.dot(inArray, inArray.T))) ** 0.5
+        return inArray
 
     def setRaysDataFrame(self, XinArray, KinNormalArray, EinArray):
-        raysDF = pd.DataFrame({'Xin': XinArray[:, 0],
-                               'Yin': XinArray[:, 1],
-                               'Zin': XinArray[:, 2],
-                               'Kxin': KinNormalArray[:, 0],
-                               'Kyin': KinNormalArray[:, 1],
-                               'Kzin': KinNormalArray[:, 2],
-                               'Exin': EinArray[:, 0],
-                               'Eyin': EinArray[:, 1],
-                               'Ezin': EinArray[:, 2],
-                               'Xe': EinArray[:, 3],
-                               'Ye': EinArray[:, 4],
-                               'Ze': EinArray[:, 5],
-                               'Ain': EinArray[:, 6],
+        raysDF = pd.DataFrame({'X': XinArray[:, 0],
+                               'Y': XinArray[:, 1],
+                               'Z': XinArray[:, 2],
+                               'Kx': KinNormalArray[:, 0],
+                               'Ky': KinNormalArray[:, 1],
+                               'Kz': KinNormalArray[:, 2],
+                               'Ex': EinArray[:, 0],
+                               'Ey': EinArray[:, 1],
+                               'Ez': EinArray[:, 2],
                                })
         return raysDF
 
@@ -106,9 +122,9 @@ class Rays:
 
         ## SET INIT VALUE ***********************************
         Mr, a11, a22, a3, \
-        eCrossArray2D, eDetectorArray2D, kReflectedArray2D, nNormallArray2D, \
+        eCrossArray2D, eDetectorArray2D, kReflectedArray2D, nNormallArray2D, eInArraay2D, \
         v1, v2, v3, \
-        xDetectorlArray2D, xRayCrossArray2D = self.setInitValue(
+        xDetectorlArray2D, xRayCrossArray2D,xPlaneCrossArray2D, Kin2DArray  = self.setInitValue(
                                                                 a11, a22, a3, v1, v2, v3)
         #***********************************************
         # Loop for all Rays
@@ -119,35 +135,69 @@ class Rays:
 
             eInArray, kinArray, x0RayAray = self.getInArray(RinIndex)
 
+            x1Plane, x2Plane, x3Plane = self.getPlaneLinePoint(kinArray, x0RayAray, -200)
+
+            xPlaneCrossArray2D[RinIndex,0] = x1Plane
+            xPlaneCrossArray2D[RinIndex,1] = x2Plane
+            xPlaneCrossArray2D[RinIndex,2] = x3Plane
+
             x1RaySym = x01Ray + k1 * t
             x2RaySym = x02Ray + k2 * t
             x3RaySym = x03Ray + k3 * t
 
-            x1R = (x1 - v1) * Mr[0, 0] + (x2 - v2) * Mr[0, 1] + (x3 - v3) * Mr[0, 2]
-            x2R = (x1 - v1) * Mr[1, 0] + (x2 - v2) * Mr[1, 1] + (x3 - v3) * Mr[1, 2]
-            x3R = (x1 - v1) * Mr[2, 0] + (x2 - v2) * Mr[2, 1] + (x3 - v3) * Mr[2, 2]
+            # x1R = (x1 - v1) * Mr[0, 0] + (x2 - v2) * Mr[0, 1] + (x3 - v3) * Mr[0, 2]
+            # x2R = (x1 - v1) * Mr[1, 0] + (x2 - v2) * Mr[1, 1] + (x3 - v3) * Mr[1, 2]
+            # x3R = (x1 - v1) * Mr[2, 0] + (x2 - v2) * Mr[2, 1] + (x3 - v3) * Mr[2, 2]
 
-            # print('x1R = ', x1R)
-            # print('x2R = ', x2R)
-            # print('x3R = ', x3R)
+            x1R = (x1 - v1) * Mr[0, 0] + (x2 - v2) * Mr[1, 0] + (x3 - v3) * Mr[2, 0]
+            x2R = (x1 - v1) * Mr[0, 1] + (x2 - v2) * Mr[1, 1] + (x3 - v3) * Mr[2, 1]
+            x3R = (x1 - v1) * Mr[0, 2] + (x2 - v2) * Mr[1, 2] + (x3 - v3) * Mr[2, 2]
+
+            print('x1R = ', x1R)
+            print('x2R = ', x2R)
+            print('x3R = ', x3R)
+            print('Mr')
+            print(Mr)
+            print('Mr[0, 0]', Mr[0, 0])
+            print('Mr[0, 1]', Mr[0, 1])
+            print('Mr[0, 2]', Mr[0, 2])
+            print('Mr[1, 0]', Mr[1, 0])
+            print('Mr[1, 1]', Mr[1, 1])
+            print('Mr[1, 2]', Mr[1, 2])
+            print('Mr[2, 0]', Mr[2, 0])
+            print('Mr[2, 1]', Mr[2, 1])
+            print('Mr[2, 2]', Mr[2, 2])
 
             Expr_A11 = x1R ** 2
             Expr_A22 = x2R ** 2
             Expr_A3 = x3R
+            print('Expr_A11')
+            print(Expr_A11)
+            print('Expr_A22')
+            print(Expr_A22)
+            print('Expr_A3')
+            print(Expr_A3)
 
             x1RayNum = x0RayAray[0] + kinArray[0] * t
             x2RayNum = x0RayAray[1] + kinArray[1] * t
             x3RayNum = x0RayAray[2] + kinArray[2] * t
 
             mainExpr = a11 * Expr_A11 + a22 * Expr_A22 - a3 * Expr_A3
+            # print('mainExpr')
+            # print(mainExpr)
             mainExprSubs = mainExpr.subs(x1, x1RaySym)
             mainExprSubsN = mainExpr.subs(x1, x1RayNum)
             mainExprSubs = mainExprSubs.subs(x2, x2RaySym)
             mainExprSubsN = mainExprSubsN.subs(x2, x2RayNum)
             mainExprSubs = mainExprSubs.subs(x3, x3RaySym)
             mainExprSubsN = mainExprSubsN.subs(x3, x3RayNum)
+
+            # print(mainExprSubsN)
+            # print('mainExprSubsN')
             mainExprExpanded = sp.expand(mainExprSubs)
             mainExprExpandedN = sp.expand(mainExprSubsN)
+            # print(mainExprExpandedN)
+            # print('mainExprExpandedN')
             mainExprCollctedSym = sp.collect(mainExprExpanded, t)
             mainExprCollctedN = sp.collect(mainExprExpandedN, t)
             A = mainExprCollctedN.coeff(t, 2)
@@ -204,7 +254,8 @@ class Rays:
 
                                                 ##          P o l a r i z a t i o n
 
-            Ampl = self.rayInDF.Ain[RinIndex]
+            #Ampl = self.rayInDF.Ain[RinIndex]
+            Ampl = 1
 
             N1 = (eInNormalArray.dot(nNormalArray.T)) * nNormalArray
             Er1 = self.rotor(nNormalArray, eInNormalArray)
@@ -219,15 +270,15 @@ class Rays:
             # eRefMaxIndex = ErefNormalArraayAbs.argmax(0)
             #eRefMaxIndex = ErefNormalArray.argmax(0)
 
-##   The point of vector polarization from the  mirror surf
+            ##   The point of vector polarization from the  mirror surf
             #  X = X0 + t*Ampl
-            XeCross =  (xRayCrossArray[0]  +  ErefNormalArray[0] * Ampl)
-            YeCross =  (xRayCrossArray[1]  +  ErefNormalArray[1] * Ampl)
-            ZeCross =  (xRayCrossArray[2]  +  ErefNormalArray[2] * Ampl)
-##   The point of vector polarization the  detector  surf
-            XeDetector =  xRayDetectorArray[0]  +  ErefNormalArray[0] * Ampl
-            YeDetector =  xRayDetectorArray[1]  +  ErefNormalArray[1] * Ampl
-            ZeDetector =  xRayDetectorArray[2]  +  ErefNormalArray[2] * Ampl
+            # XeCross =  (xRayCrossArray[0]  +  ErefNormalArray[0] * Ampl)
+            # YeCross =  (xRayCrossArray[1]  +  ErefNormalArray[1] * Ampl)
+            # ZeCross =  (xRayCrossArray[2]  +  ErefNormalArray[2] * Ampl)
+            ##   The point of vector polarization the  detector  surf
+            # XeDetector =  xRayDetectorArray[0]  +  ErefNormalArray[0] * Ampl
+            # YeDetector =  xRayDetectorArray[1]  +  ErefNormalArray[1] * Ampl
+            # ZeDetector =  xRayDetectorArray[2]  +  ErefNormalArray[2] * Ampl
 
             # if eRefMaxIndex == 0:
             #     XeCross= xRayCrossArray[0]
@@ -266,13 +317,14 @@ class Rays:
                                  [ErefNormalArray[0],
                                   ErefNormalArray[1],
                                   ErefNormalArray[2],
-                                  XeCross, YeCross, ZeCross, Ampl])
+                                  ])
 
             eXRefDetectorArray = np.array(
                                     [ErefNormalArray[0],
                                     ErefNormalArray[1],
                                     ErefNormalArray[2],
-                                    XeDetector, YeDetector, ZeDetector, Ampl])
+                                    ])
+
 
             xRayCrossArray2D[RinIndex, :] = xRayCrossArray
             nNormallArray2D[RinIndex, :] = nNormalArray
@@ -281,33 +333,41 @@ class Rays:
             xDetectorlArray2D[RinIndex, :] = xRayDetectorArray
             kReflectedArray2D[RinIndex, :] = kReflectedNormalArray
             eDetectorArray2D[RinIndex, :] = eXRefDetectorArray
+            eInArraay2D[RinIndex, :] = eInNormalArray
+            Kin2DArray[RinIndex, :] = kinArray
+        print('*********************************************************************** End Ray Loop', RinIndex)
 
-        print('***********************************************************************        End Ray Loop', RinIndex)
         NormalRaysDF = self.setRaysDataFrame(xRayCrossArray2D,
                                             nNormallArray2D,
                                             eCrossArray2D)
         ReflectedRaysDF = self.setRaysDataFrame(xDetectorlArray2D,
                                                 kReflectedArray2D,
                                                 eDetectorArray2D)
-        return NormalRaysDF, ReflectedRaysDF
+
+        xPleneLineRaysDF = self.setRaysDataFrame(xPlaneCrossArray2D,
+                                                 Kin2DArray,
+                                                 eInArraay2D)
         # self.saveRays2Execel(pathNormalRay,
-        #                      NormalRaysDataFrame)
+        #                      NormalRaysDF)
         # self.saveRays2Execel(pathReflctedRay,
-        #                      ReflectedRaysDataFrame)
+        #                      ReflectedRaysDF)
+        return NormalRaysDF, ReflectedRaysDF, xPleneLineRaysDF
+
 
     def getInArray(self, RinIndex):
-        x0RayArray = np.array([self.rayInDF.Xin[RinIndex] + self.mirrorDF.Source[0],
-                              self.rayInDF.Yin[RinIndex] + self.mirrorDF.Source[1],
-                              self.rayInDF.Zin[RinIndex] + self.mirrorDF.Source[2]
+        x0RayArray = np.array([self.rayInDF.X[RinIndex] + self.mirrorDF.Source[0],
+                              self.rayInDF.Y[RinIndex] + self.mirrorDF.Source[1],
+                              self.rayInDF.Z[RinIndex] + self.mirrorDF.Source[2]
                               ])
-        kinArray = np.array([self.rayInDF.Kxin[RinIndex],
-                             self.rayInDF.Kyin[RinIndex],
-                             self.rayInDF.Kzin[RinIndex]
+        kinArray = np.array([self.rayInDF.Kx[RinIndex],
+                             self.rayInDF.Ky[RinIndex],
+                             self.rayInDF.Kz[RinIndex]
                              ])
 
-        Ex = self.rayInDF.Exin[RinIndex]
-        Ez = self.rayInDF.Ezin[RinIndex]
-        Ey = -(self.rayInDF.Kxin[RinIndex]*Ex + self.rayInDF.Kzin[RinIndex]*Ez)/self.rayInDF.Kyin[RinIndex]
+        Ex = self.rayInDF.Ex[RinIndex]
+        Ez = self.rayInDF.Ez[RinIndex]
+        Ey = self.rayInDF.Ey[RinIndex]
+        # Ey = -(self.rayInDF.Kx[RinIndex]*Ex + self.rayInDF.Kz[RinIndex]*Ez)/self.rayInDF.Ky[RinIndex]
 
         eInArray = np.array([Ex,
                              Ey,
@@ -332,9 +392,15 @@ class Rays:
         nNormallArray2D = np.zeros((len(self.rayInDF.index), 3))
         eCrossArray2D = np.zeros((len(self.rayInDF.index), self.EinHeaders))
         xDetectorlArray2D = np.zeros((len(self.rayInDF.index), 3))
+        xPleneCrossArray2D = np.zeros((len(self.rayInDF.index), 3))
         kReflectedArray2D = np.zeros((len(self.rayInDF.index), 3))
         eDetectorArray2D = np.zeros((len(self.rayInDF.index), self.EinHeaders))
-        return Mr, a11, a22, a3, eCrossArray2D, eDetectorArray2D, kReflectedArray2D, nNormallArray2D, v1, v2, v3, xDetectorlArray2D, xRayCrossArray2D
+        eInArraay2D = np.zeros((len(self.rayInDF.index), 3))
+        Kin2DArray = np.zeros((len(self.rayInDF.index), 3))
+        return Mr, a11, a22, a3, \
+               eCrossArray2D, eDetectorArray2D, kReflectedArray2D, \
+               nNormallArray2D, eInArraay2D, v1, v2, v3, \
+               xDetectorlArray2D, xRayCrossArray2D, xPleneCrossArray2D, Kin2DArray
 
     def getRotateMatrix(self, xDegree, yDegree, zDegree):
         csX = self.cs(xDegree)
@@ -456,3 +522,10 @@ class Rays:
 
     def saveRays2Execel(self, fileName, raysDataFrame):
         raysDataFrame.to_excel(fileName)
+
+    def getPlaneLinePoint(self, kinArray, x0RayAray, D ):
+        t = -(x0RayAray[1]+D)/(kinArray[1])
+        x1 = x0RayAray[0] + kinArray[0] * t
+        x2 = x0RayAray[1] + kinArray[1] * t
+        x3 = x0RayAray[2] + kinArray[2] * t
+        return x1, x2, x3

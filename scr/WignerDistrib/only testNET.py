@@ -191,7 +191,6 @@ for x0 in Xin:
     xIndex = xIndex + 1
 
 xIndex = 0
-
 ##################################### Lines Loop ##############################
 
 xVLineDict = []
@@ -251,9 +250,6 @@ layout = go.Layout(width=1920, height=1200,
                    )
 fig = dict(data=dataPlotDict, layout=layout)
 py.offline.plot(fig, filename = 'testNET.html')
-
-
-
 
 ##############################################__R_U_N__##############################################
 #PlotWxWzSurf()
