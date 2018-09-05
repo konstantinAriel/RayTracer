@@ -1,0 +1,312 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>TestRay</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-08"><meta name="DC.source" content="TestRay.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput">clear <span class="string">all</span>; close <span class="string">all</span>; clc;
+</pre><pre class="codeinput">dl = 0;
+[L, Lm, rTline] = Lparam(dl);
+Lparam = struct(<span class="string">'L'</span>, L, <span class="string">'Lm'</span>, Lm);
+unit = [-0.5 0.5 1]';
+w = [1 0 0];
+Xmax = Lm.F1/Lm.F2*(rTline-10);
+Kmax = (Xmax/Lm.F1);
+<span class="comment">% dS = [ Xmax 0 Xmax  ];</span>
+<span class="comment">% K = [Kmax 1 Kmax];</span>
+di = -50: 50;
+sDi = size(di);
+R_Out = zeros(sDi(2), 4);
+ cd(<span class="string">'C:\Users\konstantinsh\Google Drive\U4eba\Ariel University\TOAR_II\TEZA\MatlabFiles\Results'</span>);
+load(<span class="string">'MainTest_M1_M2'</span>)
+cd(<span class="string">'C:\Users\konstantinsh\Google Drive\U4eba\Ariel University\TOAR_II\TEZA\MatlabFiles'</span>)
+A1 = Summury.A1;
+A2 = Summury.A2;
+A3 = Summury.A3;
+j=0;
+Rout1T = zeros(sDi(2), 4);
+Rout2T = zeros(sDi(2), 4);
+Rout2T = zeros(sDi(2), 4);
+
+<span class="keyword">for</span> j =1: sDi(2)
+</pre><pre class="codeinput">sizeDs = [1 1];
+sizeK = [1 1];
+dS = [0 0 di(j)];
+K  = [0 1 0];
+[Ray_S_1,  RefRay_2_3,  M1, M2, Mirror] = MainFinction(L, Lm, rTline, dS ,K, sizeDs, sizeK);
+xIn     =   Ray_S_1(1,1).X0-M1.S.X;
+kXIn  =   Ray_S_1(1,1).kX;
+zIn     =   Ray_S_1(1,1).Z0-M1.S.Z;
+kZIn   =   Ray_S_1(1,1).kZ;
+R_in = [xIn kXIn  zIn kZIn];
+xOut     =  RefRay_2_3(1,1).X-M2.R.X;
+kXOut  =  RefRay_2_3(1,1).kX;
+zOut     =  RefRay_2_3(1,1).Z-M2.R.Z;
+ kZOut   = RefRay_2_3(1,1).kZ;
+ V_Out(j, :) = [xOut kXOut  zOut kZOut];
+</pre><img vspace="5" hspace="5" src="TestRay_01.png" alt=""> <img vspace="5" hspace="5" src="TestRay_02.png" alt=""> <img vspace="5" hspace="5" src="TestRay_03.png" alt=""> <img vspace="5" hspace="5" src="TestRay_04.png" alt=""> <img vspace="5" hspace="5" src="TestRay_05.png" alt=""> <img vspace="5" hspace="5" src="TestRay_06.png" alt=""> <img vspace="5" hspace="5" src="TestRay_07.png" alt=""> <img vspace="5" hspace="5" src="TestRay_08.png" alt=""> <img vspace="5" hspace="5" src="TestRay_09.png" alt=""> <img vspace="5" hspace="5" src="TestRay_10.png" alt=""> <img vspace="5" hspace="5" src="TestRay_11.png" alt=""> <img vspace="5" hspace="5" src="TestRay_12.png" alt=""> <img vspace="5" hspace="5" src="TestRay_13.png" alt=""> <img vspace="5" hspace="5" src="TestRay_14.png" alt=""> <img vspace="5" hspace="5" src="TestRay_15.png" alt=""> <img vspace="5" hspace="5" src="TestRay_16.png" alt=""> <img vspace="5" hspace="5" src="TestRay_17.png" alt=""> <img vspace="5" hspace="5" src="TestRay_18.png" alt=""> <img vspace="5" hspace="5" src="TestRay_19.png" alt=""> <img vspace="5" hspace="5" src="TestRay_20.png" alt=""> <img vspace="5" hspace="5" src="TestRay_21.png" alt=""> <img vspace="5" hspace="5" src="TestRay_22.png" alt=""> <img vspace="5" hspace="5" src="TestRay_23.png" alt=""> <img vspace="5" hspace="5" src="TestRay_24.png" alt=""> <img vspace="5" hspace="5" src="TestRay_25.png" alt=""> <img vspace="5" hspace="5" src="TestRay_26.png" alt=""> <img vspace="5" hspace="5" src="TestRay_27.png" alt=""> <img vspace="5" hspace="5" src="TestRay_28.png" alt=""> <img vspace="5" hspace="5" src="TestRay_29.png" alt=""> <img vspace="5" hspace="5" src="TestRay_30.png" alt=""> <img vspace="5" hspace="5" src="TestRay_31.png" alt=""> <img vspace="5" hspace="5" src="TestRay_32.png" alt=""> <img vspace="5" hspace="5" src="TestRay_33.png" alt=""> <img vspace="5" hspace="5" src="TestRay_34.png" alt=""> <img vspace="5" hspace="5" src="TestRay_35.png" alt=""> <img vspace="5" hspace="5" src="TestRay_36.png" alt=""> <img vspace="5" hspace="5" src="TestRay_37.png" alt=""> <img vspace="5" hspace="5" src="TestRay_38.png" alt=""> <img vspace="5" hspace="5" src="TestRay_39.png" alt=""> <img vspace="5" hspace="5" src="TestRay_40.png" alt=""> <img vspace="5" hspace="5" src="TestRay_41.png" alt=""> <img vspace="5" hspace="5" src="TestRay_42.png" alt=""> <img vspace="5" hspace="5" src="TestRay_43.png" alt=""> <img vspace="5" hspace="5" src="TestRay_44.png" alt=""> <img vspace="5" hspace="5" src="TestRay_45.png" alt=""> <img vspace="5" hspace="5" src="TestRay_46.png" alt=""> <img vspace="5" hspace="5" src="TestRay_47.png" alt=""> <img vspace="5" hspace="5" src="TestRay_48.png" alt=""> <img vspace="5" hspace="5" src="TestRay_49.png" alt=""> <img vspace="5" hspace="5" src="TestRay_50.png" alt=""> <img vspace="5" hspace="5" src="TestRay_51.png" alt=""> <img vspace="5" hspace="5" src="TestRay_52.png" alt=""> <img vspace="5" hspace="5" src="TestRay_53.png" alt=""> <img vspace="5" hspace="5" src="TestRay_54.png" alt=""> <img vspace="5" hspace="5" src="TestRay_55.png" alt=""> <img vspace="5" hspace="5" src="TestRay_56.png" alt=""> <img vspace="5" hspace="5" src="TestRay_57.png" alt=""> <img vspace="5" hspace="5" src="TestRay_58.png" alt=""> <img vspace="5" hspace="5" src="TestRay_59.png" alt=""> <img vspace="5" hspace="5" src="TestRay_60.png" alt=""> <img vspace="5" hspace="5" src="TestRay_61.png" alt=""> <img vspace="5" hspace="5" src="TestRay_62.png" alt=""> <img vspace="5" hspace="5" src="TestRay_63.png" alt=""> <img vspace="5" hspace="5" src="TestRay_64.png" alt=""> <img vspace="5" hspace="5" src="TestRay_65.png" alt=""> <img vspace="5" hspace="5" src="TestRay_66.png" alt=""> <img vspace="5" hspace="5" src="TestRay_67.png" alt=""> <img vspace="5" hspace="5" src="TestRay_68.png" alt=""> <img vspace="5" hspace="5" src="TestRay_69.png" alt=""> <img vspace="5" hspace="5" src="TestRay_70.png" alt=""> <img vspace="5" hspace="5" src="TestRay_71.png" alt=""> <img vspace="5" hspace="5" src="TestRay_72.png" alt=""> <img vspace="5" hspace="5" src="TestRay_73.png" alt=""> <img vspace="5" hspace="5" src="TestRay_74.png" alt=""> <img vspace="5" hspace="5" src="TestRay_75.png" alt=""> <img vspace="5" hspace="5" src="TestRay_76.png" alt=""> <img vspace="5" hspace="5" src="TestRay_77.png" alt=""> <img vspace="5" hspace="5" src="TestRay_78.png" alt=""> <img vspace="5" hspace="5" src="TestRay_79.png" alt=""> <img vspace="5" hspace="5" src="TestRay_80.png" alt=""> <img vspace="5" hspace="5" src="TestRay_81.png" alt=""> <img vspace="5" hspace="5" src="TestRay_82.png" alt=""> <img vspace="5" hspace="5" src="TestRay_83.png" alt=""> <img vspace="5" hspace="5" src="TestRay_84.png" alt=""> <img vspace="5" hspace="5" src="TestRay_85.png" alt=""> <img vspace="5" hspace="5" src="TestRay_86.png" alt=""> <img vspace="5" hspace="5" src="TestRay_87.png" alt=""> <img vspace="5" hspace="5" src="TestRay_88.png" alt=""> <img vspace="5" hspace="5" src="TestRay_89.png" alt=""> <img vspace="5" hspace="5" src="TestRay_90.png" alt=""> <img vspace="5" hspace="5" src="TestRay_91.png" alt=""> <img vspace="5" hspace="5" src="TestRay_92.png" alt=""> <img vspace="5" hspace="5" src="TestRay_93.png" alt=""> <img vspace="5" hspace="5" src="TestRay_94.png" alt=""> <img vspace="5" hspace="5" src="TestRay_95.png" alt=""> <img vspace="5" hspace="5" src="TestRay_96.png" alt=""> <img vspace="5" hspace="5" src="TestRay_97.png" alt=""> <img vspace="5" hspace="5" src="TestRay_98.png" alt=""> <img vspace="5" hspace="5" src="TestRay_99.png" alt=""> <img vspace="5" hspace="5" src="TestRay_100.png" alt=""> <pre class="codeinput">Rout1 = zeros(4,1);
+Rout2 = zeros(4,1);
+Rout3 = zeros(4,1);
+
+Rout1 = (A1*R_in');
+
+<span class="keyword">for</span> i = 1:4
+    a2 = A2(:,:,i);
+    rin = R_in;
+    a2rin = A2(:,:,i)*R_in';
+
+ Rout2 = Rout2  +  ((A2(:,:,i)*R_in').*R_in(1,i));
+<span class="keyword">end</span>
+<span class="keyword">for</span> k=1:4
+    <span class="keyword">for</span> m=k:4
+        a3 = A3(:,:,m,k);
+        R_in(1,k);
+        R_in(1,m);
+        a3rKrM = a3*R_in';
+        R_in_t= R_in'.* R_in(1,k).*R_in(1,m);
+        Rout3 = Rout3+(A3(:,:,m,k)*R_in_t);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+Rout2;
+Rout3;
+Rout1T(j,:) =Rout1';
+Rout2T(j,:) =Rout2' ;
+Rout3T(j,:) =Rout3';
+R_Out1  =  Rout1+Rout2+Rout3;
+R_Out2  =  (Rout1+Rout2+Rout3)';
+R_Out(j,:) = R_Out2;
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><pre class="codeinput">xtext  = <span class="string">'Xin, [mm]'</span>;
+figure
+subplot(2,4,1)
+plot( di, Rout1T(:,1), <span class="string">'--b'</span>, di, Rout2T(:,1), <span class="string">'-r'</span>, di, Rout3T(:,1), <span class="string">'.black'</span>)
+xlabel (xtext)
+ylabel(<span class="string">'Xout, [mm]'</span>)
+title(<span class="string">'M1, M2;  &gt; X out = M*Xin&lt;'</span>)
+legend( <span class="string">'Xout 1order'</span>,  <span class="string">'Xout 2order'</span>,  <span class="string">'Xout 3 order'</span> )
+subplot(2,4,2)
+plot(  di, Rout1T(:,2),  <span class="string">'--b'</span>, di, Rout2T(:,2),  <span class="string">'-r'</span>, di, Rout3T(:,2), <span class="string">'.black'</span> )
+xlabel (xtext)
+ylabel(<span class="string">'KX out, angel'</span>)
+title(<span class="string">'M1, M 2;  &gt; KX  out = M*Xin&lt;'</span>)
+subplot(2,4,3)
+plot(di, Rout1T(:,3), <span class="string">'--b'</span>, di, Rout2T(:,3), <span class="string">'-r'</span>, di, Rout3T(:,3), <span class="string">'.black'</span>)
+xlabel (xtext)
+ylabel(<span class="string">'Z  out, [mm]'</span>)
+title(<span class="string">'M1, M 2;  &gt; Z  out = M*Xin&lt;'</span>)
+subplot(2,4,4)
+plot( di, Rout1T(:,4), <span class="string">'--b'</span>, di, Rout2T(:,4), <span class="string">'-r'</span>, di, Rout3T(:,4), <span class="string">'.black'</span>)
+xlabel (xtext)
+ylabel(<span class="string">'KZ  out, angel'</span>)
+title(<span class="string">'M1, M 2;  &gt;KZ  out = M*Xin&lt;'</span>)
+
+subplot(2,4,5)
+plot(di, V_Out(:, 1), <span class="string">'- b'</span>,  di, R_Out(:, 1), <span class="string">'-.r'</span>)
+xlabel (xtext)
+ylabel(<span class="string">'Xout, [mm]'</span>)
+title(<span class="string">'M1, M 2;   &gt;  Xout(Xin)   R T&lt;'</span>)
+legend( <span class="string">'Xout RT'</span>,  <span class="string">'Xout  Mtotal'</span>)
+subplot(2,4,6)
+plot(di, V_Out(:, 2), <span class="string">'- b'</span>,  di, R_Out(:, 2), <span class="string">'-.r'</span>)
+xlabel (xtext)
+ylabel(<span class="string">'KX out'</span>)
+title(<span class="string">'M1, M 2;   &gt;  KX out(Xin)   R T&lt;'</span>)
+subplot(2,4,7)
+plot(di, V_Out(:, 3), <span class="string">'- b'</span>,  di, R_Out(:, 3), <span class="string">'-.r'</span>)
+xlabel (xtext)
+ylabel(<span class="string">'Z out, [mm]'</span>)
+title(<span class="string">'M1, M 2;   &gt;  Z out(Xin)   R T&lt;'</span>)
+subplot(2,4,8)
+plot(di, V_Out(:, 4), <span class="string">'-b'</span>,  di, R_Out(:, 4), <span class="string">'-.r'</span>)
+xlabel (xtext)
+ylabel(<span class="string">'Xout'</span>)
+title(<span class="string">'M1, M 2;   &gt;KZout(Xin)   R T&lt;'</span>)
+</pre><img vspace="5" hspace="5" src="TestRay_101.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clear all; close all; clc;
+%%
+dl = 0;
+[L, Lm, rTline] = Lparam(dl);
+Lparam = struct('L', L, 'Lm', Lm);
+unit = [-0.5 0.5 1]';
+w = [1 0 0];
+Xmax = Lm.F1/Lm.F2*(rTline-10);
+Kmax = (Xmax/Lm.F1);
+% dS = [ Xmax 0 Xmax  ];
+% K = [Kmax 1 Kmax];
+di = -50: 50;
+sDi = size(di);
+R_Out = zeros(sDi(2), 4);
+ cd('C:\Users\konstantinsh\Google Drive\U4eba\Ariel University\TOAR_II\TEZA\MatlabFiles\Results');
+load('MainTest_M1_M2')
+cd('C:\Users\konstantinsh\Google Drive\U4eba\Ariel University\TOAR_II\TEZA\MatlabFiles')
+A1 = Summury.A1;
+A2 = Summury.A2;
+A3 = Summury.A3;
+j=0;
+Rout1T = zeros(sDi(2), 4);
+Rout2T = zeros(sDi(2), 4);
+Rout2T = zeros(sDi(2), 4);
+
+for j =1: sDi(2) 
+sizeDs = [1 1];
+sizeK = [1 1];
+dS = [0 0 di(j)];
+K  = [0 1 0];
+[Ray_S_1,  RefRay_2_3,  M1, M2, Mirror] = MainFinction(L, Lm, rTline, dS ,K, sizeDs, sizeK);
+xIn     =   Ray_S_1(1,1).X0-M1.S.X;
+kXIn  =   Ray_S_1(1,1).kX;
+zIn     =   Ray_S_1(1,1).Z0-M1.S.Z;
+kZIn   =   Ray_S_1(1,1).kZ;
+R_in = [xIn kXIn  zIn kZIn];
+xOut     =  RefRay_2_3(1,1).X-M2.R.X; 
+kXOut  =  RefRay_2_3(1,1).kX;   
+zOut     =  RefRay_2_3(1,1).Z-M2.R.Z;  
+ kZOut   = RefRay_2_3(1,1).kZ;    
+ V_Out(j, :) = [xOut kXOut  zOut kZOut];
+ %%
+
+Rout1 = zeros(4,1);
+Rout2 = zeros(4,1);
+Rout3 = zeros(4,1);
+
+Rout1 = (A1*R_in');
+
+for i = 1:4
+    a2 = A2(:,:,i);
+    rin = R_in;
+    a2rin = A2(:,:,i)*R_in';
+
+ Rout2 = Rout2  +  ((A2(:,:,i)*R_in').*R_in(1,i));
+end
+for k=1:4
+    for m=k:4     
+        a3 = A3(:,:,m,k);
+        R_in(1,k);
+        R_in(1,m);
+        a3rKrM = a3*R_in';
+        R_in_t= R_in'.* R_in(1,k).*R_in(1,m);
+        Rout3 = Rout3+(A3(:,:,m,k)*R_in_t);
+    end
+end
+Rout2;
+Rout3;
+Rout1T(j,:) =Rout1';
+Rout2T(j,:) =Rout2' ;
+Rout3T(j,:) =Rout3';
+R_Out1  =  Rout1+Rout2+Rout3;
+R_Out2  =  (Rout1+Rout2+Rout3)';
+R_Out(j,:) = R_Out2;
+end
+%%
+xtext  = 'Xin, [mm]';
+figure
+subplot(2,4,1)
+plot( di, Rout1T(:,1), 'REPLACE_WITH_DASH_DASHb', di, Rout2T(:,1), '-r', di, Rout3T(:,1), '.black')
+xlabel (xtext)
+ylabel('Xout, [mm]')
+title('M1, M2;  > X out = M*Xin<')
+legend( 'Xout 1order',  'Xout 2order',  'Xout 3 order' )
+subplot(2,4,2)
+plot(  di, Rout1T(:,2),  'REPLACE_WITH_DASH_DASHb', di, Rout2T(:,2),  '-r', di, Rout3T(:,2), '.black' )
+xlabel (xtext)
+ylabel('KX out, angel')
+title('M1, M 2;  > KX  out = M*Xin<')
+subplot(2,4,3)
+plot(di, Rout1T(:,3), 'REPLACE_WITH_DASH_DASHb', di, Rout2T(:,3), '-r', di, Rout3T(:,3), '.black')
+xlabel (xtext)
+ylabel('Z  out, [mm]')
+title('M1, M 2;  > Z  out = M*Xin<')
+subplot(2,4,4)
+plot( di, Rout1T(:,4), 'REPLACE_WITH_DASH_DASHb', di, Rout2T(:,4), '-r', di, Rout3T(:,4), '.black')
+xlabel (xtext)
+ylabel('KZ  out, angel')
+title('M1, M 2;  >KZ  out = M*Xin<')
+
+subplot(2,4,5)
+plot(di, V_Out(:, 1), '- b',  di, R_Out(:, 1), '-.r')
+xlabel (xtext)
+ylabel('Xout, [mm]')
+title('M1, M 2;   >  Xout(Xin)   R T<')
+legend( 'Xout RT',  'Xout  Mtotal')
+subplot(2,4,6)
+plot(di, V_Out(:, 2), '- b',  di, R_Out(:, 2), '-.r')
+xlabel (xtext)
+ylabel('KX out')
+title('M1, M 2;   >  KX out(Xin)   R T<')
+subplot(2,4,7)
+plot(di, V_Out(:, 3), '- b',  di, R_Out(:, 3), '-.r')
+xlabel (xtext)
+ylabel('Z out, [mm]')
+title('M1, M 2;   >  Z out(Xin)   R T<')
+subplot(2,4,8)
+plot(di, V_Out(:, 4), '-b',  di, R_Out(:, 4), '-.r')
+xlabel (xtext)
+ylabel('Xout')
+title('M1, M 2;   >KZout(Xin)   R T<')
+
+
+##### SOURCE END #####
+--></body></html>

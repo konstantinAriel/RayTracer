@@ -1,0 +1,16 @@
+<NotepadPlus>
+    <Project name="RayTracer">
+        <File name="Deg2Rad.m" />
+        <File name="Main.m" />
+        <File name="Ploting.m" />
+        <File name="ShiftMir.m" />
+        <File name="CoeffParabola.m" />
+        <File name="Rad2Degree.m" />
+        <File name="Rotor.m" />
+        <File name="SetMir.m" />
+        <File name="SetRay.m" />
+        <File name="RaysData.m" />
+        <File name="PolarVector.m" />
+        <File name="Test.m" />
+    </Project>
+</NotepadPlus>
